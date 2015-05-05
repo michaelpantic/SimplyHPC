@@ -112,6 +112,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
+    <None Include="Startup\MountAnsys.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Startup\DisableFirewall.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

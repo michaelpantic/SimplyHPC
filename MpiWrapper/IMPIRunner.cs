@@ -18,7 +18,7 @@ namespace HSR.AzureEE.MpiWrapper
     public interface IMPIRunner
     {
         [OperationContract]
-        int RunApplication(string executable, string parameters, string[] hosts = null, int numCores = 1, int nHosts = 0);
+        int RunApplication(string executable, string parameters, string[] hosts = null, int numCores = 1, int nHosts = 0, bool ansys = false); //FIXME: Quick and dirty interface extension!!!!
 
         [OperationContract]
         string GetCurrentStandardOutput();

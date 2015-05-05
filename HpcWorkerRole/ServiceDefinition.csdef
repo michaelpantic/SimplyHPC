@@ -9,6 +9,7 @@
     </Imports>
     <Startup>
       <!--TODO: ONLY FOR TEST - disable all firewall ... needs to be redone for production-->
+      <Task commandLine="Startup\MountAnsys.cmd" taskType ="simple" executionContext ="elevated"></Task>
       <Task commandLine="Startup\DisableFirewall.cmd" taskType="simple" executionContext="elevated"></Task>
       <Task commandLine="Startup\MSMPISetup.exe -unattend -force -minimal" taskType="simple" executionContext="elevated"></Task>
       <Task commandLine="Startup\installservices.bat" taskType="simple" executionContext="elevated"></Task>

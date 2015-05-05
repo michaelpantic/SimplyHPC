@@ -37,12 +37,37 @@ namespace HSR.AzureEE.HpcWorkerRole
                     
         }
 
+        protected void MakeNextJobReady()
+        {
+            var nextJob = this.azureStorage.GetNextJob();
 
+            if (nextJob == null)
+            {
+                return; //do nothing
+            }
+            if (availableJobs.Contains(nextJob.RowKey))
+            {
+                return;
+            }
+
+            azureStorage.WriteLog("Dequeed Job " + nextJob.RowKey);
+
+            //download job to a new temporary directory
+            var newDir = Directory.CreateDirectory(GetJobDirectory(nextJob.RowKey));
+            var zipFilePath = Path.Combine(newDir.FullName, "job.zip");
+            azureStorage.DownloadBlob(nextJob.FileName, zipFilePath);
+
+            var zipFile = new ZipFile(zipFilePath);
+            zipFile.ExtractAll(newDir.FullName, ExtractExistingFileAction.OverwriteSilently);
+            availableJobs.Add(nextJob.RowKey);
+            azureStorage.WriteLog("Job ready " + nextJob.RowKey);
+            SetInstanceActive();
+        }
 
         public override void RunJob()
         {
             //prepare new jobs
-            base.MakeNextJobReady();
+            MakeNextJobReady();
 
 
 
@@ -82,6 +107,10 @@ namespace HSR.AzureEE.HpcWorkerRole
                 //run the exe using the Wrapper
                 switch (nextJob.JobType)
                 {
+                    case (int)JobItem.Type.ANSYS:
+                        runner.RunApplication(executable, nextJob.Parameters, hosts.Select(x => x.Address).ToArray(), nextJob.CorePerNode, nextJob.NumNodes, true);
+                        break;
+
                     case (int)JobItem.Type.MPI:
                         runner.RunApplication(executable, nextJob.Parameters, hosts.Select(x => x.Address).ToArray(), nextJob.CorePerNode, nextJob.NumNodes);
                         break;
@@ -89,6 +118,7 @@ namespace HSR.AzureEE.HpcWorkerRole
                         runner.RunApplication(executable, nextJob.Parameters);
                         break;
                 }
+
                 
 
                 //Wait for the exe to terminate

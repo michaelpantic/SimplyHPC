@@ -15,7 +15,6 @@ namespace HSR.AzureEE.MpiWrapper
     public class WCFMPIRunner : IMPIRunner
     {
         protected static Process currentProcess;
-        protected static string currentExecutable;
         protected static string currentWorkingDir;
         protected static StringBuilder currentStandardOutput;
         protected static StringBuilder currentErrorOutput;
@@ -33,7 +32,7 @@ namespace HSR.AzureEE.MpiWrapper
             }
         }
 
-        public int RunApplication(string executable, string parameters, string[] hosts = null, int numCores = 1, int nHosts = 1)
+        public int RunApplication(string executable, string parameters, string[] hosts = null, int numCores = 1, int nHosts = 1, bool ansys = false)
         {
             lock (threadLock)
             {
@@ -44,8 +43,14 @@ namespace HSR.AzureEE.MpiWrapper
                         if (hosts != null) // MPI job
                         {
                             //create a new process with the correct arguments
-                            currentProcess = PrepareMPIExec(executable, parameters, hosts, numCores, nHosts);
-                            currentExecutable = executable;
+                            if (ansys)
+                            {
+                                currentProcess = PrepareAnsysExec(executable, hosts, numCores, nHosts);
+                            }
+                            else
+                            {
+                                currentProcess = PrepareMPIExec(executable, parameters, hosts, numCores, nHosts);
+                            }
                             currentWorkingDir = GetRootedDirectory(executable);
 
                             //Redirect standard and error output to strings
@@ -66,7 +71,6 @@ namespace HSR.AzureEE.MpiWrapper
                         {
                             //create a new process with the correct arguments
                             currentProcess = PrepareExec(executable, parameters);
-                            currentExecutable = executable;
                             currentWorkingDir = GetRootedDirectory(executable);
 
                             //Redirect standard and error output to strings
@@ -192,6 +196,40 @@ namespace HSR.AzureEE.MpiWrapper
             return Path.GetFullPath(Path.GetDirectoryName(filename));
         }
 
+        //here: Executable is the submit_v15.bat file!
+        protected static Process PrepareAnsysExec(string executable, string[] hosts, int nCores, int nHosts)
+        {
+            //build arguments to replace
+            //rem CCP_NODES=[num_of_machines] [machine01] [num_of_mpi_processes_machine01] [machine02] [num_of_mpi_processes_machine02] ...
+            var CCP_NODES = new StringBuilder();
+            CCP_NODES.AppendFormat("{0} ", hosts.Count());
+            hosts.ToList().ForEach(x => CCP_NODES.AppendFormat("{0} {1} ", x, nCores));
+            string num_of_partitions = (nCores*nHosts).ToString();
+            
+            //prepare cmd
+            var workdirpath =   GetRootedDirectory(executable);
+
+            var ansysConf = new AnsysSubmitConfig(executable);
+            ansysConf.SetConfigItems("CCP_NODES", CCP_NODES.ToString());
+            ansysConf.SetConfigItems("num_of_partitions", num_of_partitions);
+            ansysConf.SetConfigItems("workdirpath", workdirpath);
+
+            var newExec = ansysConf.ApplyAndSave();
+
+            var ansysProcess = new Process();
+            ansysProcess.StartInfo = new ProcessStartInfo()
+            {
+                FileName = newExec,
+                WorkingDirectory = workdirpath,
+                Arguments = String.Empty,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            };
+
+            return ansysProcess;
+        }
+        
         protected static Process PrepareMPIExec(string executable, string arguments, string[] hosts, int nCores, int nHosts)
         {
              //build command line args

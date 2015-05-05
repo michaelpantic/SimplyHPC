@@ -22,7 +22,8 @@ namespace HSR.AzureEE.Controller.Storage
         public enum Type
         {
             MPI = 0,
-            Normal
+            Normal,
+            ANSYS
         }
     }
 }
