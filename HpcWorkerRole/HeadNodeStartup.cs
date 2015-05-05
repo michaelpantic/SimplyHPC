@@ -88,7 +88,7 @@ namespace HSR.AzureEE.HpcWorkerRole
             }
 
             //run the job!
-            var executable = Path.Combine(GetJobDirectory(nextJob.RowKey), nextJob.Executable);
+            var executable = Path.Combine(GetJobDirectoryAsShare(nextJob.RowKey), nextJob.Executable);
 
             azureStorage.WriteLog("Starting " + nextJob.RowKey +" with exe ="+executable+", params="+nextJob.Parameters ?? "");
 

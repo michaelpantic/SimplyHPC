@@ -26,6 +26,7 @@ namespace HSR.AzureEE.HpcWorkerRole
 
             azureStorage.WriteLog("Dequeed Job " + nextJob.RowKey);
             //ansys: only headnode downloads job... here for compatibility purposes
+            availableJobs.Add(nextJob.RowKey);
             azureStorage.WriteLog("Job ready " + nextJob.RowKey);
             SetInstanceActive();
         }

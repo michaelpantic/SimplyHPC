@@ -27,23 +27,38 @@ namespace HSR.AzureEE.HpcWorkerRole
 
         protected string GetJobDirectory(string jobid)
         {
-            string basePath = @"X:\simplyHpcData"; //Temporary: Fixed basepath to shared storage
-            return Path.Combine(basePath, hpcDeploymentLabel, jobid);
+            string basePath = RoleEnvironment.GetLocalResource("jobdata").RootPath;
+            return Path.Combine(basePath, jobid);
+        }
+
+        protected string GetJobDirectoryAsShare(string jobid)
+        {
+            string basePath = RoleEnvironment.GetLocalResource("jobdata").RootPath;
+            string machineUNC = @"\\" + InternalIP + @"\";
+            string basePathUNC = basePath.Replace(":", "$");
+            return Path.Combine(machineUNC, basePathUNC, jobid);
         }
 
         public abstract void Start();
         public abstract void RunJob();
 
-       
 
+        public string InternalIP
+        {
+
+            get
+            {
+                return RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["mpiEndpointTCP"].IPEndpoint.Address.ToString();
+            }
+        }
         
         public void SetInstanceActive()
         { 
             //get IP of this instance
-            var internalIP = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["mpiEndpointTCP"].IPEndpoint.Address.ToString();
+          
 
             //set this host as ready
-            azureStorage.SetHostStatus(instanceIndex, internalIP, availableJobs);
+            azureStorage.SetHostStatus(instanceIndex, InternalIP, availableJobs);
             azureStorage.WriteLog("Instance state update");
         }
     }

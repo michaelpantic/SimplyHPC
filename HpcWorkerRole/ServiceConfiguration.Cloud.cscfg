@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceConfiguration serviceName="WindowsAzure_test" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2014-06.2.4">
+<ServiceConfiguration serviceName="WindowsAzure_test" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2015-04.2.6">
   <Role name="HSR.AzureEE.HpcWorkerRole">
     <Instances count="1" />
      <!-- See MSDN HH124107 article for more information about the remoteaccess plugin and http://azurephp.interoperabilitybridges.com/articles/enable-remote-desktop -->

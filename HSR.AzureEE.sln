@@ -35,6 +35,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Powershell.scripts", "Power
 		Powershell.scripts\SubmitAzureJob.ps1 = Powershell.scripts\SubmitAzureJob.ps1
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jobtemplates", "Jobtemplates", "{9FFD6928-A99D-484E-82C1-606B8C80070F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ansys", "Ansys", "{CC12A9B9-971C-4EF8-99C4-36A1308B3172}"
+	ProjectSection(SolutionItems) = preProject
+		Jobtemplates\Ansys\submit_v15.bat = Jobtemplates\Ansys\submit_v15.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,5 +120,6 @@ Global
 		{D456B913-F21A-4CFC-BF4A-78F39FB75D57} = {BC538C80-F97D-4B83-915E-27ED8E4BF31A}
 		{FCA0623D-0138-4200-AD3C-BDE9D1CCC557} = {8C3D7A2A-2651-46D2-9C03-ABC32EC672B6}
 		{733EAFD1-8EE7-4E46-9633-2797C5240B4F} = {8C3D7A2A-2651-46D2-9C03-ABC32EC672B6}
+		{CC12A9B9-971C-4EF8-99C4-36A1308B3172} = {9FFD6928-A99D-484E-82C1-606B8C80070F}
 	EndGlobalSection
 EndGlobal
