@@ -2,19 +2,27 @@
 <ServiceConfiguration serviceName="WindowsAzure_test" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2014-06.2.4">
   <Role name="HSR.AzureEE.HpcWorkerRole">
     <Instances count="1" />
+     <!-- See MSDN HH124107 article for more information about the remoteaccess plugin and http://azurephp.interoperabilitybridges.com/articles/enable-remote-desktop -->
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="admin" />
-      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBpQYJKoZIhvcNAQcDoIIBljCCAZICAQAxggFWMIIBUgIBADA6MCYxJDAiBgNVBAMTG0hTUiBSRFAgRGVmYXVsdCBDZXJ0aWZpY2F0ZQIQE15uX4GIGZ1Fyr0uW9oz3DANBgkqhkiG9w0BAQEFAASCAQClnIQYlQhySQAHpIpXswsyatYXI5HR3zdjKI+RKHuk0v2WTFk8xQCPWyb2i0s9Tn2vWMzvsmppGx6YWYqYYMLBHRHBy2L4V/PxehjiS4NgpcZ1g31+TvwYxK5gbiDW1/PVb8xM0i/asMD4DUqC5+01y7lAZAH4oIlUsxHwKps8yO9X0722YjhJFzAyX5CCsqu2pEhpY8ByKvg/uB1RKmZDPc8pJPWjAGvlF89P3bEGavk5QsOHoxMpjaNAitvYGrA0YDfTMlHoDXdpDjE9C0daePGJkQ+pYbCcyFtvaeTpAl2iKoe39dpE+mhv9p1PH8II4vBhNxY8GDuZd1j+qRaPMDMGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQI+YuuyKPBDAaAENTBbVIEt9QKSXBjG5acmp8=" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBlQYJKoZIhvcNAQcDoIIBhjCCAYICAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMTE1dpbmRvd3MgQXp1cmUgVG9vbHMCEGidaJhmcGmWSjSfdJJGjo0wDQYJKoZIhvcNAQEBBQAEggEARkMqCLPM59Zyh+2EtMj+A+6dZFvWjSI5xoYKlw4lKlzN0yRwV8ra6Jll+GoVZr6mxiQIy73T537ttHHsMGBEvCzeadPIN3xQJMRmHt2aqWQq2gQ3sQ+QhXRN84yZ7P4BPxfYqgFKwkY9WiXOGeeTEKO0BBQ7A4sFr+liViUbP3anF9VopsPZmcMaRVpnVtapfFYMtO7FOWQdkNjjtW3fuLQ4i2D8Ns5yXRi0Op8eual8chkxneZYEpH2DZ5uBAi7sbDVxKZeKfjX6Mzbwwpe8+xZQV53fr2oGsThZ3j3ZYKb5CgEQSerifeBm8lLAbZ+o+UR/+A+Mm1U3/dfcM0BLzArBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECKn37+eYE/FogAioTnMR9C63QQ==" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2020-03-05T23:59:59.0000000+01:00" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
       <Setting name="HSR.DeploymentName" value="hsrpnmauto" />
       <Setting name="HSR.StorageAccountName" value="none"/>
       <Setting name="HSR.StorageAccountKey" value="none"/>
+     
     </ConfigurationSettings>
     <Certificates>
-      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="F5F0BA5358D26B2C990455795C6565D332A327D6" thumbprintAlgorithm="sha1" />
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="23B87121FA79ABFD15BA32E3B9A240F502179D40
+" thumbprintAlgorithm="sha1" />
     </Certificates>
+
+    
   </Role>
- 
+  <NetworkConfiguration>
+    <VirtualNetworkSite name="ansys_vn"/>
+    
+  </NetworkConfiguration>
 </ServiceConfiguration>
