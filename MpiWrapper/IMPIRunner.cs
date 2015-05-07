@@ -27,7 +27,7 @@ namespace HSR.AzureEE.MpiWrapper
         RunnerState GetState();
 
         [OperationContract]
-        string GetResultFilePath();
+        string GetResultFileName();
 
     }
 }

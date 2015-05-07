@@ -136,7 +136,7 @@ namespace HSR.AzureEE.MpiWrapper
             }
         }
 
-        public string GetResultFilePath()
+        public string GetResultFileName()
         {
             lock (threadLock)
             {
@@ -145,7 +145,8 @@ namespace HSR.AzureEE.MpiWrapper
 
                 var changedFiles = files.Where(x => File.GetLastWriteTime(x) > currentProcess.StartTime);
 
-                var zipFilePath = Path.Combine(currentWorkingDir, DateTime.Now.Ticks+"results.zip");
+                var zipFileName = DateTime.Now.Ticks + "results.zip";
+                var zipFilePath = Path.Combine(currentWorkingDir, zipFileName);
                 using (var zipFile = new ZipFile(zipFilePath))
                 {
                     zipFile.AddFiles(changedFiles, "");
@@ -155,7 +156,7 @@ namespace HSR.AzureEE.MpiWrapper
                 //clear process
                 currentProcess.Dispose();
                 currentProcess = null;
-                return zipFilePath;
+                return zipFileName;
             }
         }
 

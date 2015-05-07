@@ -78,7 +78,7 @@ namespace HSR.AzureEE.Module.Cmdlets
         private string _executableFileName;
         private string _executableArguments = "";
         private int _coresPerNode = 1;
-        private int _jobType = (int)JobItem.Type.MPI; // MPI is the default job type
+        private int _jobType = (int)JobItem.Type.ANSYS; // ANSYS for now!
 
         #endregion
 

@@ -135,7 +135,7 @@ namespace HSR.AzureEE.HpcWorkerRole
                 //retrieve results and upload to blob storage
                 azureStorage.WriteLog("Uploading job results");
                 blobName = nextJob.RowKey + "-" + DateTime.Now.ToString("HHMMss") + "-" + nextJob.InfoTag + "-" + nextJob.NumNodes + "n-" + nextJob.CorePerNode + "c-result.zip";
-                azureStorage.UploadBlob(blobName, runner.GetResultFilePath());
+                azureStorage.UploadBlob(blobName, Path.Combine(GetJobDirectory(nextJob.RowKey), runner.GetResultFileName()));
                 
 
                 azureStorage.WriteLog("Job " + nextJob.RowKey + " finished");

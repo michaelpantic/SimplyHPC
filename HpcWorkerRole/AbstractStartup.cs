@@ -35,7 +35,7 @@ namespace HSR.AzureEE.HpcWorkerRole
         {
             string basePath = RoleEnvironment.GetLocalResource("jobdata").RootPath;
             string machineUNC = @"\\" + InternalIP + @"\";
-            string basePathUNC = basePath.Replace(":", "$");
+            string basePathUNC = basePath.Replace(":", "");
             return Path.Combine(machineUNC, basePathUNC, jobid);
         }
 

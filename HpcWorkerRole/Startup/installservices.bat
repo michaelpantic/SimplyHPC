@@ -13,6 +13,10 @@ rem Create user
 net user /add "%username%" "%password%"
 net localgroup administrators "%username%" /add
 
+rem share drives
+net share C=C: /GRANT:mpiuser,FULL
+net share D=D: /GRANT:mpiuser,FULL
+
 
 rem Install smpd service
 call Startup\nssm install "SMPD service" "%programfiles%\Microsoft MPI\Bin\smpd.exe" "-p 8677"
