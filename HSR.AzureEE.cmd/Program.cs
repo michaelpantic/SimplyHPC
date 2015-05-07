@@ -21,7 +21,7 @@ namespace HSR.AzureEE.cmd
             const string pathToManagementCertificate = @"";
             const string mgmtCertificatePassword = @"";
             const string storageAccountName = @"";
-            const string affinityGroupName = @"";
+            const string affinityGroupName = @"hsrdev";
             const string storageAccountKey = @"";
 
             //Cluster Configuration
@@ -57,7 +57,7 @@ namespace HSR.AzureEE.cmd
 
             //create Cluster
             Console.WriteLine("Creating cluster..");
-            cluster.CreateCluster();
+           cluster.CreateCluster();
             Console.WriteLine("Creating cluster finished.. Please wait until it is ready (may take about 10 min)");
 
 
@@ -127,7 +127,7 @@ namespace HSR.AzureEE.cmd
                            Parameters = arguments,
                            NumNodes = nodeNumber,
                            InfoTag = "test",
-                           JobType = (int)JobItem.Type.MPI
+                           JobType = (int)JobItem.Type.ANSYS
                        },
                       pathToZip);
 
