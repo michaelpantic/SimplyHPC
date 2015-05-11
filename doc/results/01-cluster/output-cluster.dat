@@ -1,0 +1,8 @@
+machineSize numNodes numCores totNumCores totCost mpiThroughput mpiThroughputDeviation mpiLatency mpiLatencyDeviation tStage1Ruepel tMatLoadRuepel tKSPSolveRuepel nIterationRuepel tIterationRuepel mFlopsRuepel tStage1Nordborg tMatLoadNordborg tKSPSolveNordborg nIterationNordborg tIterationNordborg mFlopsNordborg winhpcgGFlops 
+cluster 1 1 1 0.89 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA 0.569746 
+cluster 1 2 2 0.89 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA 1.0184 
+cluster 1 4 4 0.89 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA 1.63595 
+cluster 1 8 8 0.89 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA 2.4076 
+cluster 2 8 16 1.78 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA 3.38933 
+cluster 3 12 32 2.68 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA 5.58457 
+cluster 6 12 64 5.35 NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA 10.6447 
