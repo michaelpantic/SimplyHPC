@@ -1,0 +1,1050 @@
+ This run of the CFX-15.0.7 Solver started at 14:22:22 on 20 May 2015 by
+ user MpiUser on RD000D3A20748E (intel_xeon64.sse2_winnt) using the
+ command:
+ 
+  "\\hsransys.file.core.windows.net\main\apps\ANSYS Inc\v150\CFX\bin\perllib\cfx5solve.pl"
+    -def pipe01.def -chdir
+    \\10.10.13.13\C\Resources\directory\ac06609b2c804792bc1dc56b4bbdc10d.HSR.AzureEE.HpcWorkerRole.jobdata\job-1
+    -start-method MSMPI2 -part 8
+ 
+ Point Releases and Patches installed:
+ 
+  ANSYS, Inc. Products 15.0.7
+  ANSYS Mechanical Products 15.0.7
+  ANSYS Autodyn 15.0.7
+  ANSYS LS-DYNA 15.0.7
+  ANSYS CFX (includes ANSYS CFD-Post) 15.0.7
+  ANSYS Fluent (includes ANSYS CFD-Post) 15.0.7
+  ANSYS TurboGrid 15.0.7
+  ANSYS Polyflow (includes ANSYS CFD-Post) 15.0.7
+  ANSYS Aqwa 15.0.7
+  ANSYS ICEM CFD 15.0.7
+  ANSYS Icepak (includes ANSYS CFD-Post) 15.0.7
+  Catia, Version 6 15.0.7
+  ANSYS, Inc. License Manager 15.0.7
+ 
+ Setting up CFX Solver run ...
+ 
+
+ +--------------------------------------------------------------------+
+ |                              Warning!                              |
+ |                                                                    |
+ | The working directory is a UNC path, but the Windows command shell |
+ | is currently not configured to support UNC paths. This may cause   |
+ | failure of the CFX Solver.                                         |
+ |                                                                    |
+ | Command shell support for UNC paths can be enabled by setting the  |
+ | Windows registry key DisableUNCCheck.                              |
+ +--------------------------------------------------------------------+
+
+
+ +--------------------------------------------------------------------+
+ |                                                                    |
+ |                    CFX Command Language Upgrade                    |
+ |                                                                    |
+ +--------------------------------------------------------------------+
+
+ Added /SIMULATION CONTROL/EXECUTION CONTROL/EXECUTABLE SELECTION/Double
+ Precision = Off.
+ 
+
+ +--------------------------------------------------------------------+
+ |                                                                    |
+ |                    CFX Command Language for Run                    |
+ |                                                                    |
+ +--------------------------------------------------------------------+
+
+ LIBRARY:
+   MATERIAL: Air at 25 C
+     Material Description = Air at 25 C and 1 atm (dry)
+     Material Group = Air Data, Constant Property Gases
+     Option = Pure Substance
+     Thermodynamic State = Gas
+     PROPERTIES:
+       Option = General Material
+       EQUATION OF STATE:
+         Density = 1.185 [kg m^-3]
+         Molar Mass = 28.96 [kg kmol^-1]
+         Option = Value
+       END
+       SPECIFIC HEAT CAPACITY:
+         Option = Value
+         Specific Heat Capacity = 1.0044E+03 [J kg^-1 K^-1]
+         Specific Heat Type = Constant Pressure
+       END
+       REFERENCE STATE:
+         Option = Specified Point
+         Reference Pressure = 1 [atm]
+         Reference Specific Enthalpy = 0. [J/kg]
+         Reference Specific Entropy = 0. [J/kg/K]
+         Reference Temperature = 25 [C]
+       END
+       DYNAMIC VISCOSITY:
+         Dynamic Viscosity = 1.831E-05 [kg m^-1 s^-1]
+         Option = Value
+       END
+       THERMAL CONDUCTIVITY:
+         Option = Value
+         Thermal Conductivity = 2.61E-02 [W m^-1 K^-1]
+       END
+       ABSORPTION COEFFICIENT:
+         Absorption Coefficient = 0.01 [m^-1]
+         Option = Value
+       END
+       SCATTERING COEFFICIENT:
+         Option = Value
+         Scattering Coefficient = 0.0 [m^-1]
+       END
+       REFRACTIVE INDEX:
+         Option = Value
+         Refractive Index = 1.0 [m m^-1]
+       END
+       THERMAL EXPANSIVITY:
+         Option = Value
+         Thermal Expansivity = 0.003356 [K^-1]
+       END
+     END
+   END
+ END
+ FLOW: Flow Analysis 1
+   SOLUTION UNITS:
+     Angle Units = [rad]
+     Length Units = [m]
+     Mass Units = [kg]
+     Solid Angle Units = [sr]
+     Temperature Units = [K]
+     Time Units = [s]
+   END
+   ANALYSIS TYPE:
+     Option = Steady State
+     EXTERNAL SOLVER COUPLING:
+       Option = None
+     END
+   END
+   DOMAIN: Default Domain
+     Coord Frame = Coord 0
+     Domain Type = Fluid
+     Location = B16
+     BOUNDARY: Default Domain Default
+       Boundary Type = WALL
+       Location = F17.16,F18.16,F19.16
+       BOUNDARY CONDITIONS:
+         MASS AND MOMENTUM:
+           Option = No Slip Wall
+         END
+         WALL ROUGHNESS:
+           Option = Smooth Wall
+         END
+       END
+     END
+     BOUNDARY: Inlet
+       Boundary Type = INLET
+       Location = Inlet
+       BOUNDARY CONDITIONS:
+         FLOW REGIME:
+           Option = Subsonic
+         END
+         MASS AND MOMENTUM:
+           Normal Speed = 0.01 [m s^-1]
+           Option = Normal Speed
+         END
+         TURBULENCE:
+           Option = Medium Intensity and Eddy Viscosity Ratio
+         END
+       END
+     END
+     BOUNDARY: Outlet
+       Boundary Type = OUTLET
+       Location = Outlet
+       BOUNDARY CONDITIONS:
+         FLOW REGIME:
+           Option = Subsonic
+         END
+         MASS AND MOMENTUM:
+           Option = Average Static Pressure
+           Pressure Profile Blend = 0.05
+           Relative Pressure = 0 [Pa]
+         END
+         PRESSURE AVERAGING:
+           Option = Average Over Whole Outlet
+         END
+       END
+     END
+     BOUNDARY: Symmetry
+       Boundary Type = SYMMETRY
+       Location = Symmetry
+     END
+     DOMAIN MODELS:
+       BUOYANCY MODEL:
+         Option = Non Buoyant
+       END
+       DOMAIN MOTION:
+         Option = Stationary
+       END
+       MESH DEFORMATION:
+         Option = None
+       END
+       REFERENCE PRESSURE:
+         Reference Pressure = 1 [atm]
+       END
+     END
+     FLUID DEFINITION: Fluid 1
+       Material = Air at 25 C
+       Option = Material Library
+       MORPHOLOGY:
+         Option = Continuous Fluid
+       END
+     END
+     FLUID MODELS:
+       COMBUSTION MODEL:
+         Option = None
+       END
+       HEAT TRANSFER MODEL:
+         Fluid Temperature = 25 [C]
+         Option = Isothermal
+       END
+       THERMAL RADIATION MODEL:
+         Option = None
+       END
+       TURBULENCE MODEL:
+         Option = k epsilon
+       END
+       TURBULENT WALL FUNCTIONS:
+         Option = Scalable
+       END
+     END
+   END
+   OUTPUT CONTROL:
+     RESULTS:
+       File Compression Level = Default
+       Option = Standard
+     END
+   END
+   SOLVER CONTROL:
+     Turbulence Numerics = First Order
+     ADVECTION SCHEME:
+       Option = High Resolution
+     END
+     CONVERGENCE CONTROL:
+       Length Scale Option = Conservative
+       Maximum Number of Iterations = 100
+       Minimum Number of Iterations = 1
+       Timescale Control = Auto Timescale
+       Timescale Factor = 1.0
+     END
+     CONVERGENCE CRITERIA:
+       Residual Target = 1.E-4
+       Residual Type = RMS
+     END
+     DYNAMIC MODEL CONTROL:
+       Global Dynamic Model Control = On
+     END
+   END
+ END
+ COMMAND FILE:
+   Version = 15.0
+   Results Version = 15.0.7
+ END
+ SIMULATION CONTROL:
+   EXECUTION CONTROL:
+     EXECUTABLE SELECTION:
+       Double Precision = Off
+     END
+     PARALLEL HOST LIBRARY:
+       HOST DEFINITION: rd000d3a20748e
+         Host Architecture String = winnt-amd64
+         Installation Root = \\hsransys.file.core.windows.net\main\apps\ANSYS \
+           Inc\v%v\CFX
+       END
+     END
+     PARTITIONER STEP CONTROL:
+       PARTITIONING TYPE:
+         Option = MeTiS
+         MeTiS Type = k-way
+         Partition Size Rule = Automatic
+         Partition Weight Factors = 0.12500, 0.12500, 0.12500, 0.12500, \
+           0.12500, 0.12500, 0.12500, 0.12500
+       END
+     END
+     RUN DEFINITION:
+       Solver Input File = \
+         \\10.10.13.13\C\Resources\directory\ac06609b2c804792bc1dc56b4bbdc10d.\
+         HSR.AzureEE.HpcWorkerRole.jobdata\job-1\pipe01.def
+       Run Mode = Full
+     END
+     SOLVER STEP CONTROL:
+       PARALLEL ENVIRONMENT:
+         Start Method = MSMPI2
+         Number of Processes = 8
+         Parallel Host List = rd000d3a20748e*8
+       END
+     END
+   END
+ END
+ 
+
+ +--------------------------------------------------------------------+
+ |                                                                    |
+ |                            Partitioning                            |
+ |                                                                    |
+ +--------------------------------------------------------------------+
+
+
+
+
+ +--------------------------------------------------------------------+
+ |                                                                    |
+ |                 ANSYS(R) CFX(R) Partitioner 15.0.7                 |
+ |                                                                    |
+ | Version 2014.04.10-23.00-131675     Thu Apr 10 23:23:37 GMTDT 2014 |
+ |                                                                    |
+ |                        Executable Attributes                       |
+ |                                                                    |
+ |          single-64bit-int32-supfort-optimised-noprof-lcomp         |
+ |                                                                    |
+ | (C) 2014 ANSYS, Inc.                                               |
+ |                                                                    |
+ | All rights reserved. Unauthorized use, distribution or duplication |
+ | is prohibited. This product is subject to U.S. laws governing      |
+ | export and re-export. For full Legal Notice, see documentation.    |
+ +--------------------------------------------------------------------+
+
+
+
+
+ +--------------------------------------------------------------------+
+ |                  Job Information at Start of Run                   |
+ +--------------------------------------------------------------------+
+
+ Run mode:       partitioning run
+
+ +------------------------------+------+--------+----------+----------+
+ | Host                         | Mesh |  PID   |     Job Started     |
+ |                              | Part |        | DD/MM/YY | hh:mm:ss |
+ +------------------------------+------+--------+----------+----------+
+ | RD000D3A20748E               |    1 |   3780 | 20/05/15 | 14:22:31 |
+ +------------------------------+------+--------+----------+----------+
+
+
+ +--------------------------------------------------------------------+
+ |        Memory Allocated for Run  (Actual usage may be less)        |
+ +--------------------------------------------------------------------+
+
+           | Real       | Integer    | Character | Logical  | Double
+ ----------+------------+------------+-----------+----------+----------
+ Mwords    |       1.05 |       1.55 |      3.26 |     0.12 |     0.07
+ Mbytes    |       4.00 |       5.90 |      3.10 |     0.46 |     0.52
+ ----------+------------+------------+-----------+----------+----------
+
+
+ +--------------------------------------------------------------------+
+ |                  Host Memory Information (Mbytes)                  |
+ +--------------------------------------------------------------------+
+ |          Host           |     System     |   Allocated    |   %    |
+ +-------------------------+----------------+----------------+--------+
+ | RD000D3A20748E          |     57343.55   |        13.98   |   0.02 |
+ +-------------------------+----------------+----------------+--------+
+
+ +--------------------------------------------------------------------+
+ |                          Mesh Statistics                           |
+ +--------------------------------------------------------------------+
+
+ Domain Name : Default Domain
+
+     Total Number of Nodes                                =        8478
+
+     Total Number of Elements                             =        5634
+         Total Number of Hexahedrons                      =        5634
+
+     Total Number of Faces                                =        5044
+
+ +--------------------------------------------------------------------+
+ |                     Vertex Based Partitioning                      |
+ +--------------------------------------------------------------------+
+
+ Partitioning of domain: Default Domain
+
+ - Partitioning tool:       MeTiS multilevel k-way algorithm
+ - Number of partitions:             8
+ - Number of graph-nodes:         8478
+ - Number of graph-edges:        44534
+
+ +--------------------------------------------------------------------+
+ |                      Partitioning Information                      |
+ +--------------------------------------------------------------------+
+
+ Partitioning information for domain: Default Domain
+
+        +------------------+------------------------+-----------------+
+        |     Elements     |        Vertices        |     Faces       |
+ +------+------------------+------------------------+-----------------+
+ | Part |   Number     %   |   Number     %   %Ovlp |  Number     %   |
+ +------+------------------+------------------------+-----------------+
+ | Full |      5634        |      8478              |     5044        |
+ +------+------------------+------------------------+-----------------+
+ |    1 |       736   12.7 |      1135   12.6   5.6 |      653   12.6 |
+ |    2 |       731   12.6 |      1140   12.7   7.1 |      654   12.6 |
+ |    3 |       726   12.5 |      1121   12.5   3.2 |      664   12.8 |
+ |    4 |       762   13.1 |      1179   13.1   7.4 |      668   12.9 |
+ |    5 |       702   12.1 |      1080   12.0   2.5 |      642   12.4 |
+ |    6 |       705   12.1 |      1087   12.1   5.2 |      628   12.1 |
+ |    7 |       734   12.6 |      1133   12.6   6.5 |      644   12.4 |
+ |    8 |       710   12.2 |      1103   12.3   6.8 |      633   12.2 |
+ +------+------------------+------------------------+-----------------+
+ | Min  |       702   12.1 |      1080   12.0   2.5 |      628   12.1 |
+ |(part)|           (    5)|           (    5     5)|          (    6)|
+ +------+------------------+------------------------+-----------------+
+ | Max  |       762   13.1 |      1179   13.1   7.4 |      668   12.9 |
+ |(part)|           (    4)|           (    4     4)|          (    4)|
+ +------+------------------+------------------------+-----------------+
+ | Ave  |       726   12.5 |      1122   12.5   5.6 |      648   12.5 |
+ +------+------------------+------------------------+-----------------+
+ | Sum  |      5806  100.0 |      8978  100.0   5.6 |     5186  100.0 |
+ +------+------------------+------------------------+-----------------+
+
+ +--------------------------------------------------------------------+
+ |                 Partitioning CPU-Time Requirements                 |
+ +--------------------------------------------------------------------+
+  
+ - Preparations                                       4.700E-02 seconds
+ - Low-level mesh partitioning                        4.700E-02 seconds
+ - Global partitioning information                    0.000E+00 seconds
+ - Element and face partitioning information          0.000E+00 seconds
+ - Vertex partitioning information                    0.000E+00 seconds
+ - Partitioning information compression               0.000E+00 seconds
+ - Summed CPU-time for mesh partitioning              1.960E-01 seconds
+
+ +--------------------------------------------------------------------+
+ |                   Job Information at End of Run                    |
+ +--------------------------------------------------------------------+
+
+ +---------------------------+------+----------+----------+-----------+
+ | Host                      | Mesh |     Job Finished    |    CPU    |
+ |                           | Part | DD/MM/YY | hh:mm:ss |  seconds  |
+ +---------------------------+------+----------+----------+-----------+
+ | RD000D3A20748E            |    1 | 20/05/15 | 14:22:34 | 4.583E+00 |
+ +---------------------------+------+----------+----------+-----------+
+
+ Total wall clock time: 3.714E+00 seconds
+             or: (          0:         0:         0:     3.714 )
+                 (       Days:     Hours:   Minutes:   Seconds )
+
+
+ +--------------------------------------------------------------------+
+ |                                                                    |
+ |                               Solver                               |
+ |                                                                    |
+ +--------------------------------------------------------------------+
+
+
+
+
+ +--------------------------------------------------------------------+
+ |                                                                    |
+ |                    ANSYS(R) CFX(R) Solver 15.0.7                   |
+ |                                                                    |
+ | Version 2014.04.10-23.00-131675     Thu Apr 10 23:23:23 GMTDT 2014 |
+ |                                                                    |
+ |                        Executable Attributes                       |
+ |                                                                    |
+ |          single-64bit-int32-supfort-optimised-noprof-lcomp         |
+ |                                                                    |
+ | (C) 2014 ANSYS, Inc.                                               |
+ |                                                                    |
+ | All rights reserved. Unauthorized use, distribution or duplication |
+ | is prohibited. This product is subject to U.S. laws governing      |
+ | export and re-export. For full Legal Notice, see documentation.    |
+ +--------------------------------------------------------------------+
+
+
+
+
+ +--------------------------------------------------------------------+
+ |                  Job Information at Start of Run                   |
+ +--------------------------------------------------------------------+
+
+ Run mode:       parallel run (MS MPI)
+
+ +------------------------------+------+--------+----------+----------+
+ | Host                         | Mesh |  PID   |     Job Started     |
+ |                              | Part |        | DD/MM/YY | hh:mm:ss |
+ +------------------------------+------+--------+----------+----------+
+ | RD000D3A20748E               |    1 |    792 | 20/05/15 | 14:22:46 |
+ |                              |    2 |   1224 | 20/05/15 | 14:22:46 |
+ |                              |    3 |   3472 | 20/05/15 | 14:22:46 |
+ |                              |    4 |   3452 | 20/05/15 | 14:22:46 |
+ |                              |    5 |   3812 | 20/05/15 | 14:22:46 |
+ |                              |    6 |   2504 | 20/05/15 | 14:22:46 |
+ |                              |    7 |   2884 | 20/05/15 | 14:22:46 |
+ |                              |    8 |   2164 | 20/05/15 | 14:22:46 |
+ +------------------------------+------+--------+----------+----------+
+
+ +--------------------------------------------------------------------+
+ |                        License Information                         |
+ +--------------------------------------------------------------------+
+ 
+ License Cap:    ANSYS CFX Solver (Max 128K Nodes)
+ License Cap:     Parallel
+ License ID:     hsrAnsysLS-SYSTEM-320-029948
+
+
+ +--------------------------------------------------------------------+
+ |        Memory Allocated for Run  (Actual usage may be less)        |
+ +--------------------------------------------------------------------+
+
+ Allocated storage in:    Mwords
+                          Mbytes
+
+ Partition | Real       | Integer    | Character | Logical  | Double
+ ----------+------------+------------+-----------+----------+----------
+   Minimum |       5.56 |       1.73 |      3.71 |     0.12 |     0.08
+  (     5) |      21.21 |       6.59 |      3.53 |     0.11 |     0.58
+ ----------+------------+------------+-----------+----------+----------
+   Maximum |       5.93 |       1.74 |      3.71 |     0.12 |     0.08
+  (     4) |      22.62 |       6.62 |      3.53 |     0.11 |     0.58
+ ----------+------------+------------+-----------+----------+----------
+   Average |       5.71 |       1.73 |      3.71 |     0.12 |     0.08
+           |      21.78 |       6.60 |      3.53 |     0.11 |     0.58
+ ----------+------------+------------+-----------+----------+----------
+     Total |      45.68 |      13.84 |     29.65 |     0.96 |     0.60
+           |     174.27 |      52.79 |     28.27 |     0.92 |     4.61
+ ----------+------------+------------+-----------+----------+----------
+
+
+ +--------------------------------------------------------------------+
+ |                  Host Memory Information (Mbytes)                  |
+ +--------------------------------------------------------------------+
+ |           Host         | Npart |   System    |  Allocated  |   %   |
+ +------------------------+-------+-------------+-------------+-------+
+ | RD000D3A20748E         |    8  |    57343.55 |      260.86 |  0.45 |
+ +------------------------+-------+-------------+-------------+-------+
+
+ +--------------------------------------------------------------------+
+ |                          Mesh Statistics                           |
+ +--------------------------------------------------------------------+
+ | Domain Name          | Orthog. Angle | Exp. Factor  | Aspect Ratio |
+ +----------------------+---------------+--------------+--------------+
+ |                      | Minimum [deg] |   Maximum    |    Maximum   |
+ +----------------------+---------------+--------------+--------------+
+ | Default Domain       |       69.3 OK |         4 OK |         4 OK |
+ +----------------------+---------------+--------------+--------------+
+ |                      |  %!  %ok  %OK | %!  %ok  %OK | %!  %ok  %OK |
+ +----------------------+---------------+--------------+--------------+
+ | Default Domain       |   0    0  100 |  0    0  100 |  0    0  100 |
+ +----------------------+---------------+--------------+--------------+
+
+ Domain Name : Default Domain
+
+     Total Number of Nodes                                =        8478
+
+     Total Number of Elements                             =        5634
+         Total Number of Hexahedrons                      =        5634
+
+     Total Number of Faces                                =        5044
+
+ +--------------------------------------------------------------------+
+ |                     Average Scale Information                      |
+ +--------------------------------------------------------------------+
+
+ Domain Name : Default Domain
+     Global Length                                         = 8.6454E-02
+     Minimum Extent                                        = 1.6000E-02
+     Maximum Extent                                        = 8.3800E-01
+     Density                                               = 1.1850E+00
+     Dynamic Viscosity                                     = 1.8310E-05
+     Velocity                                              = 8.1802E-03
+     Advection Time                                        = 1.0569E+01
+     Reynolds Number                                       = 4.5770E+01
+ 
+ +--------------------------------------------------------------------+
+ | ERROR #002100004 has occurred in subroutine Out_Scales_Flu.        |
+ | Message:                                                           |
+ | The Reynolds number is outside of the range expected based on the  |
+ | Option selected for the TURBULENCE MODEL. Check this setting,      |
+ | the values of the properties, mesh scale, consistency of units     |
+ | and solution values in the input file. Execution will proceed.     |
+ +--------------------------------------------------------------------+
+
+ +--------------------------------------------------------------------+
+ |                Checking for Isolated Fluid Regions                 |
+ +--------------------------------------------------------------------+
+ 
+ No isolated fluid regions were found.
+
+ +--------------------------------------------------------------------+
+ |              The Equations Solved in This Calculation              |
+ +--------------------------------------------------------------------+
+
+ Subsystem : Momentum and Mass
+
+   U-Mom
+   V-Mom
+   W-Mom
+   P-Mass
+
+ Subsystem : TurbKE and Diss.K
+
+   K-TurbKE
+   E-Diss.K
+                   
+ CFD Solver started: Wed May 20 14:22:54 2015
+
+
+ +--------------------------------------------------------------------+
+ |                       Convergence History                          |
+ +--------------------------------------------------------------------+
+
+ ======================================================================
+ |                        Timescale Information                       |
+ ----------------------------------------------------------------------
+ |       Equation       |         Type          |      Timescale      |
+ +----------------------+-----------------------+---------------------+
+ | U-Mom                | Auto Timescale        |     2.59362E+00     |
+ | V-Mom                | Auto Timescale        |     2.59362E+00     |
+ | W-Mom                | Auto Timescale        |     2.59362E+00     |
+ +----------------------+-----------------------+---------------------+
+ | K-TurbKE             | Auto Timescale        |     2.59362E+00     |
+ | E-Diss.K             | Auto Timescale        |     2.59362E+00     |
+ +----------------------+-----------------------+---------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    1                    CPU SECONDS = 9.045E+01
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.00 | 4.8E-04 | 2.1E-03 |       3.3E+00  ok|
+ | V-Mom                | 0.00 | 4.9E-04 | 2.1E-03 |       4.3E+00  ok|
+ | W-Mom                | 0.00 | 1.4E-05 | 5.9E-05 |       2.1E+01  ok|
+ | P-Mass               | 0.00 | 2.1E-02 | 9.0E-02 |  8.8  2.1E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.00 | 2.5E-03 | 5.3E-02 | 10.1  6.0E-02  OK|
+ | E-Diss.K             | 0.00 | 8.4E-02 | 1.0E+00 | 11.4  1.4E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    2                    CPU SECONDS = 9.959E+01
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 8.93 | 4.3E-03 | 3.7E-02 |       1.2E-01  ok|
+ | V-Mom                | 9.27 | 4.6E-03 | 3.7E-02 |       1.4E-01  ok|
+ | W-Mom                |99.99 | 2.4E-03 | 8.4E-03 |       4.7E-02  OK|
+ | P-Mass               | 0.33 | 6.8E-03 | 1.2E-01 |  8.8  7.3E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.20 | 5.0E-04 | 6.9E-03 | 14.6  5.6E-02  OK|
+ | E-Diss.K             | 1.07 | 9.0E-02 | 9.7E-01 | 11.6  1.6E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    3                    CPU SECONDS = 1.002E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 1.12 | 4.7E-03 | 5.0E-02 |       4.3E-02  OK|
+ | V-Mom                | 1.08 | 4.9E-03 | 5.3E-02 |       5.3E-02  OK|
+ | W-Mom                | 0.82 | 1.9E-03 | 9.5E-03 |       2.6E-02  OK|
+ | P-Mass               | 0.36 | 2.5E-03 | 7.1E-02 | 12.6  7.4E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 1.27 | 6.3E-04 | 7.2E-03 | 10.0  5.7E-02  OK|
+ | E-Diss.K             | 0.57 | 5.1E-02 | 4.3E-01 | 11.8  1.4E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    4                    CPU SECONDS = 1.008E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.57 | 2.7E-03 | 3.5E-02 |       1.4E-01  ok|
+ | V-Mom                | 0.56 | 2.8E-03 | 3.3E-02 |       1.5E-01  ok|
+ | W-Mom                | 0.71 | 1.4E-03 | 8.9E-03 |       5.1E-02  OK|
+ | P-Mass               | 2.22 | 5.5E-03 | 8.4E-02 |  4.9  4.2E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 1.60 | 1.0E-03 | 1.3E-02 | 10.1  3.2E-02  OK|
+ | E-Diss.K             | 0.69 | 3.5E-02 | 4.0E-01 | 11.8  9.7E-03  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    5                    CPU SECONDS = 1.013E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.50 | 1.4E-03 | 2.1E-02 |       1.1E-01  ok|
+ | V-Mom                | 0.49 | 1.4E-03 | 1.9E-02 |       1.2E-01  ok|
+ | W-Mom                | 0.54 | 7.4E-04 | 5.9E-03 |       4.0E-02  OK|
+ | P-Mass               | 0.92 | 5.0E-03 | 9.2E-02 |  4.9  4.0E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 1.13 | 1.1E-03 | 1.7E-02 | 10.2  2.6E-02  OK|
+ | E-Diss.K             | 1.35 | 4.7E-02 | 5.0E-01 | 11.8  1.3E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ |                        Timescale Information                       |
+ ----------------------------------------------------------------------
+ |       Equation       |         Type          |      Timescale      |
+ +----------------------+-----------------------+---------------------+
+ | U-Mom                | Auto Timescale        |     2.58144E+00     |
+ | V-Mom                | Auto Timescale        |     2.58144E+00     |
+ | W-Mom                | Auto Timescale        |     2.58144E+00     |
+ +----------------------+-----------------------+---------------------+
+ | K-TurbKE             | Auto Timescale        |     2.58144E+00     |
+ | E-Diss.K             | Auto Timescale        |     2.58144E+00     |
+ +----------------------+-----------------------+---------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    6                    CPU SECONDS = 1.020E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.50 | 6.9E-04 | 1.3E-02 |       1.0E-01  ok|
+ | V-Mom                | 0.50 | 6.8E-04 | 1.1E-02 |       1.1E-01  ok|
+ | W-Mom                | 0.46 | 3.4E-04 | 3.0E-03 |       3.6E-02  OK|
+ | P-Mass               | 0.67 | 3.3E-03 | 6.9E-02 |  4.9  2.5E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.86 | 9.8E-04 | 1.1E-02 | 10.2  2.2E-02  OK|
+ | E-Diss.K             | 0.99 | 4.7E-02 | 4.2E-01 | 11.8  1.2E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    7                    CPU SECONDS = 1.025E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.53 | 3.6E-04 | 7.1E-03 |       1.0E-01  OK|
+ | V-Mom                | 0.52 | 3.5E-04 | 5.7E-03 |       1.1E-01  ok|
+ | W-Mom                | 0.51 | 1.8E-04 | 1.6E-03 |       4.0E-02  OK|
+ | P-Mass               | 0.65 | 2.2E-03 | 4.7E-02 |  4.9  1.8E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.82 | 8.1E-04 | 7.2E-03 |  5.6  9.6E-02  OK|
+ | E-Diss.K             | 0.84 | 3.9E-02 | 3.2E-01 | 11.8  1.1E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    8                    CPU SECONDS = 1.031E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.53 | 1.9E-04 | 4.0E-03 |       7.1E-02  OK|
+ | V-Mom                | 0.53 | 1.9E-04 | 2.9E-03 |       1.2E-01  ok|
+ | W-Mom                | 0.55 | 9.7E-05 | 7.5E-04 |       3.8E-02  OK|
+ | P-Mass               | 0.56 | 1.2E-03 | 2.7E-02 |  4.9  2.0E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.85 | 6.9E-04 | 6.3E-03 |  5.6  9.5E-02  OK|
+ | E-Diss.K             | 0.87 | 3.4E-02 | 2.6E-01 | 11.8  9.6E-03  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =    9                    CPU SECONDS = 1.036E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.58 | 1.1E-04 | 2.3E-03 |       6.8E-02  OK|
+ | V-Mom                | 0.60 | 1.1E-04 | 2.1E-03 |       1.5E-01  ok|
+ | W-Mom                | 0.65 | 6.3E-05 | 5.4E-04 |       3.9E-02  OK|
+ | P-Mass               | 0.53 | 6.5E-04 | 1.3E-02 |  4.9  2.3E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.87 | 6.0E-04 | 5.2E-03 |  5.6  9.0E-02  OK|
+ | E-Diss.K             | 0.90 | 3.1E-02 | 2.2E-01 | 11.8  8.6E-03  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =   10                    CPU SECONDS = 1.042E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.65 | 7.3E-05 | 1.5E-03 |       6.6E-02  OK|
+ | V-Mom                | 0.70 | 7.9E-05 | 1.7E-03 |       1.9E-01  ok|
+ | W-Mom                | 0.71 | 4.5E-05 | 5.1E-04 |       4.2E-02  OK|
+ | P-Mass               | 0.51 | 3.3E-04 | 5.6E-03 |  4.9  3.3E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.88 | 5.3E-04 | 4.2E-03 |  5.6  8.4E-02  OK|
+ | E-Diss.K             | 0.91 | 2.8E-02 | 1.9E-01 | 11.8  7.4E-03  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ |                        Timescale Information                       |
+ ----------------------------------------------------------------------
+ |       Equation       |         Type          |      Timescale      |
+ +----------------------+-----------------------+---------------------+
+ | U-Mom                | Auto Timescale        |     2.59362E+00     |
+ | V-Mom                | Auto Timescale        |     2.59362E+00     |
+ | W-Mom                | Auto Timescale        |     2.59362E+00     |
+ +----------------------+-----------------------+---------------------+
+ | K-TurbKE             | Auto Timescale        |     2.59362E+00     |
+ | E-Diss.K             | Auto Timescale        |     2.59362E+00     |
+ +----------------------+-----------------------+---------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =   11                    CPU SECONDS = 1.047E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.73 | 5.3E-05 | 1.2E-03 |       7.3E-02  OK|
+ | V-Mom                | 0.79 | 6.2E-05 | 1.4E-03 |       2.1E-01  ok|
+ | W-Mom                | 0.74 | 3.3E-05 | 4.2E-04 |       4.8E-02  OK|
+ | P-Mass               | 0.53 | 1.8E-04 | 2.0E-03 |  4.9  5.3E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.89 | 4.8E-04 | 3.3E-03 |  5.6  7.9E-02  OK|
+ | E-Diss.K             | 0.92 | 2.6E-02 | 1.6E-01 | 11.8  6.2E-03  OK|
+ +----------------------+------+---------+---------+------------------+
+
+ ======================================================================
+ OUTER LOOP ITERATION =   12                    CPU SECONDS = 1.052E+02
+ ----------------------------------------------------------------------
+ |       Equation       | Rate | RMS Res | Max Res |  Linear Solution |
+ +----------------------+------+---------+---------+------------------+
+ | U-Mom                | 0.78 | 4.2E-05 | 1.0E-03 |       8.3E-02  OK|
+ | V-Mom                | 0.84 | 5.2E-05 | 1.2E-03 |       2.2E-01  ok|
+ | W-Mom                | 0.74 | 2.4E-05 | 3.2E-04 |       5.6E-02  OK|
+ | P-Mass               | 0.56 | 9.9E-05 | 1.2E-03 |  4.9  7.9E-02  OK|
+ +----------------------+------+---------+---------+------------------+
+ | K-TurbKE             | 0.90 | 4.3E-04 | 2.6E-03 |  5.6  7.5E-02  OK|
+ | E-Diss.K             | 0.92 | 2.4E-02 | 1.4E-01 | 11.8  5.2E-03  OK|
+ +----------------------+------+---------+---------+------------------+
+                   
+ CFD Solver finished: Wed May 20 14:22:56 2015
+ CFD Solver wall clock seconds: 2.0690E+00
+
+ ======================================================================
+              Termination and Interrupt Condition Summary
+ ======================================================================
+    
+ CFD Solver: All target criteria reached
+   (Equation residuals)
+
+ ======================================================================
+              Boundary Flow and Total Source Term Summary
+ ======================================================================
+
+ +--------------------------------------------------------------------+
+ |                               U-Mom                                |
+ +--------------------------------------------------------------------+
+ Boundary         : Default Domain Default                 -1.5648E-07
+ Boundary         : Inlet                                   1.5801E-07
+ Boundary         : Outlet                                 -2.5981E-12
+                                                           -----------
+ Domain Imbalance :                                         1.5337E-09
+
+ +--------------------------------------------------------------------+
+ |                               V-Mom                                |
+ +--------------------------------------------------------------------+
+ Boundary         : Default Domain Default                 -4.3523E-08
+ Boundary         : Inlet                                  -1.3044E-12
+ Boundary         : Outlet                                  4.6863E-08
+                                                           -----------
+ Domain Imbalance :                                         3.3385E-09
+
+ +--------------------------------------------------------------------+
+ |                               W-Mom                                |
+ +--------------------------------------------------------------------+
+ Boundary         : Default Domain Default                 -8.1697E-06
+ Boundary         : Inlet                                   8.6481E-12
+ Boundary         : Outlet                                 -2.4678E-11
+ Boundary         : Symmetry                                8.1694E-06
+                                                           -----------
+ Domain Imbalance :                                        -3.9381E-10
+
+ +--------------------------------------------------------------------+
+ |                               P-Mass                               |
+ +--------------------------------------------------------------------+
+ Boundary         : Inlet                                   4.6871E-06
+ Boundary         : Outlet                                 -4.6863E-06
+                                                           -----------
+ Domain Imbalance :                                         8.1263E-10
+
+
+ +--------------------------------------------------------------------+
+ |                     Normalised Imbalance Summary                   |
+ +--------------------------------------------------------------------+
+ |       Equation       |      Maximum Flow     |     Imbalance (%)   |
+ +--------------------------------------------------------------------+
+ | U-Mom                |       8.1697E-06      |        0.0188       |
+ | V-Mom                |       8.1697E-06      |        0.0409       |
+ | W-Mom                |       8.1697E-06      |       -0.0048       |
+ | P-Mass               |       4.6871E-06      |        0.0173       |
+ +----------------------+-----------------------+---------------------+
+
+ ======================================================================
+                     Wall Force and Moment Summary
+ ======================================================================
+                                                                          
+ Notes:
+ 1. Pressure integrals exclude the reference pressure.  To include
+    it, set the expert parameter 'include pref in forces = t'.
+
+
+ +--------------------------------------------------------------------+
+ |                      Pressure Force On Walls                       |
+ +--------------------------------------------------------------------+
+                                    X-Comp.      Y-Comp.      Z-Comp.
+
+ Domain Group: Default Domain
+
+ Default Domain Default           1.3288E-07   1.1146E-07   8.1697E-06
+                                  -----------  -----------  -----------
+ Domain Group Totals :            1.3288E-07   1.1146E-07   8.1697E-06
+
+
+ +--------------------------------------------------------------------+
+ |                       Viscous Force On Walls                       |
+ +--------------------------------------------------------------------+
+                                    X-Comp.      Y-Comp.      Z-Comp.
+
+ Domain Group: Default Domain
+
+ Default Domain Default           2.3591E-08  -6.7934E-08  -9.6195E-12
+                                  -----------  -----------  -----------
+ Domain Group Totals :            2.3591E-08  -6.7934E-08  -9.6195E-12
+
+
+ +--------------------------------------------------------------------+
+ |                      Pressure Moment On Walls                      |
+ +--------------------------------------------------------------------+
+                                    X-Comp.      Y-Comp.      Z-Comp.
+
+ Domain Group: Default Domain
+
+ Default Domain Default          -3.1657E-07   2.8819E-06   5.1630E-10
+                                  -----------  -----------  -----------
+ Domain Group Totals :           -3.1657E-07   2.8819E-06   5.1630E-10
+
+
+ +--------------------------------------------------------------------+
+ |                       Viscous Moment On Walls                      |
+ +--------------------------------------------------------------------+
+                                    X-Comp.      Y-Comp.      Z-Comp.
+
+ Domain Group: Default Domain
+
+ Default Domain Default           6.8446E-10   2.3668E-10  -2.8781E-11
+                                  -----------  -----------  -----------
+ Domain Group Totals :            6.8446E-10   2.3668E-10  -2.8781E-11
+
+
+ +--------------------------------------------------------------------+
+ |                   Locations of Maximum Residuals                   |
+ +--------------------------------------------------------------------+
+ |       Equation       |      Domain Name      |     Node Number     |
+ +--------------------------------------------------------------------+
+ | U-Mom                | Default Domain        |           5193      |
+ | V-Mom                | Default Domain        |           5202      |
+ | W-Mom                | Default Domain        |           6578      |
+ | P-Mass               | Default Domain        |           6561      |
+ +----------------------+-----------------------+---------------------+
+ | K-TurbKE             | Default Domain        |           5201      |
+ | E-Diss.K             | Default Domain        |           6481      |
+ +----------------------+-----------------------+---------------------+
+
+ ======================================================================
+ |                     False Transient Information                    |
+ +--------------------------------------------------------------------+
+ |       Equation       |         Type          | Elapsed Pseudo-Time |
+ +--------------------------------------------------------------------+
+ | U-Mom                | Auto Timescale        |     3.10625E+01     |
+ | V-Mom                | Auto Timescale        |     3.10625E+01     |
+ | W-Mom                | Auto Timescale        |     3.10625E+01     |
+ +----------------------+-----------------------+---------------------+
+ | K-TurbKE             | Auto Timescale        |     3.10625E+01     |
+ | E-Diss.K             | Auto Timescale        |     3.10625E+01     |
+ +----------------------+-----------------------+---------------------+
+
+ +--------------------------------------------------------------------+
+ |                     Average Scale Information                      |
+ +--------------------------------------------------------------------+
+
+ Domain Name : Default Domain
+     Global Length                                         = 8.6454E-02
+     Minimum Extent                                        = 1.6000E-02
+     Maximum Extent                                        = 8.3800E-01
+     Density                                               = 1.1850E+00
+     Dynamic Viscosity                                     = 1.8310E-05
+     Velocity                                              = 9.9992E-03
+     Advection Time                                        = 8.6461E+00
+     Reynolds Number                                       = 5.5947E+01
+ 
+ +--------------------------------------------------------------------+
+ | ERROR #002100004 has occurred in subroutine Out_Scales_Flu.        |
+ | Message:                                                           |
+ | The Reynolds number is outside of the range expected based on the  |
+ | Option selected for the TURBULENCE MODEL. Check this setting,      |
+ | the values of the properties, mesh scale, consistency of units     |
+ | and solution values in the input file. Execution will proceed.     |
+ +--------------------------------------------------------------------+
+
+ +--------------------------------------------------------------------+
+ |                     Variable Range Information                     |
+ +--------------------------------------------------------------------+
+
+ Domain Name : Default Domain
+ +--------------------------------------------------------------------+
+ |      Variable Name                         |    min    |    max    |
+ +--------------------------------------------------------------------+
+ | Density                                    |  1.18E+00 |  1.18E+00 |
+ | Specific Heat Capacity at Constant Pressure|  1.00E+03 |  1.00E+03 |
+ | Dynamic Viscosity                          |  1.83E-05 |  1.83E-05 |
+ | Thermal Conductivity                       |  2.61E-02 |  2.61E-02 |
+ | Static Entropy                             |  0.00E+00 |  0.00E+00 |
+ | Velocity u                                 | -1.02E-03 |  1.12E-02 |
+ | Velocity v                                 | -1.44E-02 |  2.27E-04 |
+ | Velocity w                                 | -2.90E-04 |  2.76E-04 |
+ | Pressure                                   | -8.04E-06 |  2.81E-04 |
+ | Turbulence Kinetic Energy                  |  3.75E-07 |  2.35E-05 |
+ | Turbulence Eddy Dissipation                |  1.22E-10 |  7.34E-07 |
+ | Eddy Viscosity                             |  6.11E-05 |  1.23E-04 |
+ | Temperature                                |  2.98E+02 |  2.98E+02 |
+ +--------------------------------------------------------------------+
+
+ +--------------------------------------------------------------------+
+ |           CPU Requirements of Numerical Solution - Total           |
+ +--------------------------------------------------------------------+
+
+ Subsystem Name                  Discretization       Linear Solution
+                                (secs.   %total)     (secs.   %total) 
+ ----------------------------------------------------------------------
+ Momentum and Mass              8.56E+00   7.7 %     1.04E+00   0.9 %
+ TurbKE and Diss.K              1.67E+00   1.5 %     1.01E+00   0.9 %
+                                -------- -------     --------  ------
+ Subsystem Summary              1.02E+01   9.2 %     2.05E+00   1.8 %
+
+ Variable Updates               3.99E+00    3.6 %
+ File Reading                   4.34E-01    0.4 %
+ File Writing                   3.88E-01    0.4 %
+ Miscellaneous                  9.36E+01   84.6 %
+                                --------
+ Total                          1.11E+02
+
+ +--------------------------------------------------------------------+
+ |                   Job Information at End of Run                    |
+ +--------------------------------------------------------------------+
+
+ +---------------------------+------+----------+----------+-----------+
+ | Host                      | Mesh |     Job Finished    |    CPU    |
+ |                           | Part | DD/MM/YY | hh:mm:ss |  seconds  |
+ +---------------------------+------+----------+----------+-----------+
+ | RD000D3A20748E            |    1 | 20/05/15 | 14:22:57 | 1.386E+01 |
+ |                           |    2 | 20/05/15 | 14:22:57 | 1.386E+01 |
+ |                           |    3 | 20/05/15 | 14:22:57 | 1.386E+01 |
+ |                           |    4 | 20/05/15 | 14:22:57 | 1.386E+01 |
+ |                           |    5 | 20/05/15 | 14:22:57 | 1.386E+01 |
+ |                           |    6 | 20/05/15 | 14:22:57 | 1.386E+01 |
+ |                           |    7 | 20/05/15 | 14:22:57 | 1.386E+01 |
+ |                           |    8 | 20/05/15 | 14:22:57 | 1.386E+01 |
+ +---------------------------+------+----------+----------+-----------+
+
+ Total wall clock time: 1.262E+01 seconds
+             or: (          0:         0:         0:    12.618 )
+                 (       Days:     Hours:   Minutes:   Seconds )
+
+
+
+ --> Final synchronization point reached by all partitions.
+End of solution stage.
+
+ +--------------------------------------------------------------------+
+ | The results from this run of the ANSYS CFX Solver have been        |
+ | written to                                                         |
+ | \\10.10.13.13\C\Resources\directory\ac06609b2c804792bc1dc56b4bbdc- |
+ | 10d.HSR.AzureEE.HpcWorkerRole.jobdata\job-1\pipe01_001.res         |
+ +--------------------------------------------------------------------+
+
+
+This run of the ANSYS CFX Solver has finished.
