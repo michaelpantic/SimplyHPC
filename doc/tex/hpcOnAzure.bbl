@@ -1,0 +1,130 @@
+\begin{thebibliography}{10}
+
+\bibitem{ec2}
+Amazon {EC2}.
+\newblock \url{http://aws.amazon.com/ec2/}.
+
+\bibitem{petsc-efficient}
+Satish Balay, William~D. Gropp, Lois~Curfman McInnes, and Barry~F. Smith.
+\newblock Efficient management of parallelism in object oriented numerical
+  software libraries.
+\newblock In E.~Arge, A.~M. Bruaset, and H.~P. Langtangen, editors, {\em Modern
+  Software Tools in Scientific Computing}, pages 163--202. Birkh{\"{a}}user
+  Press, 1997.
+
+\bibitem{BenBelgacem2015}
+Mohamed {Ben Belgacem} and Bastien Chopard.
+\newblock {A hybrid HPC/cloud distributed infrastructure: Coupling EC2 cloud
+  resources with HPC clusters to run large tightly coupled multiscale
+  applications}.
+\newblock {\em Future Generation Computer Systems}, 42:11--21, January 2015.
+
+\bibitem{cloudScores}
+Cloud scores.
+\newblock URL \url{https://cloudharmony.com/cloudscores}.
+
+\bibitem{CloudStack}
+Cloud stack.
+\newblock \url{http://cloudstack.apache.org}.
+
+\bibitem{Delimitrou:2014:QRQ:2541940.2541941}
+Christina Delimitrou and Christos Kozyrakis.
+\newblock Quasar: Resource-efficient and qos-aware cluster management.
+\newblock In {\em Proceedings of the 19th International Conference on
+  Architectural Support for Programming Languages and Operating Systems},
+  ASPLOS '14, pages 127--144, New York, NY, USA, 2014. ACM.
+
+\bibitem{eucalyptus}
+Eucalyptus.
+\newblock \url{https://www.eucalyptus.com/}.
+
+\bibitem{Garg2013}
+Saurabh~Kumar Garg, Steve Versteeg, and Rajkumar Buyya.
+\newblock {A framework for ranking of cloud computing services}.
+\newblock {\em Future Generation Computer Systems}, 29(4):1012--1023, June
+  2013.
+
+\bibitem{ubercloud}
+Wolfgang Gentzsch.
+\newblock How cost efficient is hpc in the cloud?
+
+\bibitem{google}
+Google cloud platform.
+\newblock URL \url{https://cloud.google.com/}. Accessed in December 2014.
+
+\bibitem{twister4azure}
+Thilina Gunarathne, Bingjing Zhang, Tak-Lon Wu, and Judy Qiu.
+\newblock {Scalable parallel computing on clouds using Twister4Azure iterative
+  MapReduce}.
+\newblock {\em Future Generation Computer Systems}, 29(4):1035--1048, June
+  2013.
+
+\bibitem{Gutknecht2005}
+Martin~H Gutknecht.
+\newblock {A Brief Introduction to Krylov Space Methods for Solving Linear
+  Systems}.
+\newblock In H.~{Sasai, M. Kaneda, Y. Kawamura}, editor, {\em Proceedings of
+  the International Symposium on Frontiers of Computational Science}, pages
+  53--62, Berlin Heidelberg, 2005. Springer-Verlag.
+
+\bibitem{Heroux2013}
+Michael~A Heroux and Sandia~National Laboratories.
+\newblock {HPCG Technical Specification}.
+\newblock Technical Report October, Sandia National Laboratories, 2013.
+
+\bibitem{Lu2014}
+Lu~Lu, Xuanhua Shi, Hai Jin, Qiuyue Wang, Daxing Yuan, and Song Wu.
+\newblock {Morpho: A decoupled MapReduce framework for elastic cloud
+  computing}.
+\newblock {\em Future Generation Computer Systems}, 36:80--90, July 2014.
+
+\bibitem{catlett2013cloud}
+Trunfio~Paolo Marozzo~Fabrizio, Talia~Dominico.
+\newblock {\em A cloud framework for big data analytics Workflows on Azure}.
+\newblock Advances in Parallel Computing. IOS Press, 2013.
+
+\bibitem{mpiBlas}
+Mpi blas.
+\newblock URL \url{http://www.mpiblast.org}.
+
+\bibitem{OpenStack}
+Open stack.
+\newblock \url{http://www.openstack.org}.
+
+\bibitem{Perry2007}
+Randy Perry and Al~Gillen.
+\newblock {Demonstrating Business Value : Selling to Your C-Level Executives}.
+\newblock Technical report, IDC, 2007.
+
+\bibitem{Popinet2003}
+St\'{e}phane Popinet.
+\newblock {Gerris: a tree-based adaptive solver for the incompressible Euler
+  equations in complex geometries}.
+\newblock {\em Journal of Computational Physics}, 190(2):572--600, September
+  2003.
+
+\bibitem{theuebercloud}
+The uebercloud.
+\newblock URL \url{https://theuebercloud.com/}.
+
+\bibitem{azure}
+Windows azure.
+\newblock \url{http://azure.microsoft.com}.
+
+\bibitem{Wong2013}
+Adam~K.L. Wong and Andrzej~M. Goscinski.
+\newblock {A unified framework for the deployment, exposure and access of HPC
+  applications as services in clouds}.
+\newblock {\em Future Generation Computer Systems}, 29(6):1333--1344, August
+  2013.
+
+\bibitem{Xianyi2014}
+Zhang Xianyi, Yang Chao, Liu Fangfang, Liu Yiqun, and Lu~Yutong.
+\newblock {Algorithms and Architectures for Parallel Processing}.
+\newblock In Xian-he Sun, Wenyu Qu, Ivan Stojmenovic, Wanlei Zhou, Zhiyang Li,
+  Hua Guo, Geyong Min, Tingting Yang, Yulei Wu, and Lei Liu, editors, {\em
+  Lecture Notes in Computer Science}, volume 8630 of {\em Lecture Notes in
+  Computer Science}, chapter Optimizing, pages 28--41. Springer International
+  Publishing, Cham, 2014.
+
+\end{thebibliography}

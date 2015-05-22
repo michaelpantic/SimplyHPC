@@ -116,25 +116,26 @@ year = {2007}
   publisher={IOS Press}
 }
 
+
 @misc{azure,
 url	 = {http://azure.microsoft.com},
 title = {Windows azure},
 key = {Windows azure},
-note = {\url{http://azure.microsoft.com}. }
+note = {\url{http://azure.microsoft.com}. Accessed in May 2015.}
 }
 
 @misc{ec2,
 url	 = {http://aws.amazon.com/ec2/},
 title = {Amazon {EC2}},
 key = {Amazon EC2},
-note = {\url{http://aws.amazon.com/ec2/}. }
+note = {\url{http://aws.amazon.com/ec2/}. Accessed in May 2015.}
 }
  
 @misc{google,
 url	 = {https://cloud.google.com/},
 title = {Google Cloud Platform},
 key = {Google Cloud Platform},
-note = {URL \url{https://cloud.google.com/}. Accessed in December 2014.}
+note = {URL \url{https://cloud.google.com/}. Accessed in May 2015.}
 }
 
 @misc{ubercloud,
@@ -150,45 +151,58 @@ urldate = {December 2012}
 url	 = {https://theuebercloud.com/},
 title = {The Uebercloud},
 key = {The Uebercloud},
-note = {URL \url{https://theuebercloud.com/}}
+note = {URL \url{https://theuebercloud.com/}. Accessed in May 2015.}
 }
 
 @misc{mpiBlas,
 url	 = {http://www.mpiblast.org},
 title = {MPI BLAS},
 key = {MPI BLAS},
-note = {URL \url{http://www.mpiblast.org}}
+note = {URL \url{http://www.mpiblast.org}. Accessed in May 2015.}
 }
 
 @misc{OpenStack,
 url	 = {http://www.openstack.org},
 key = {Open Stack},
 title = {Open Stack},
-note = {\url{http://www.openstack.org}}
+note = {\url{http://www.openstack.org}. Accessed in May 2015.}
 }
 
 @misc{CloudStack,
 url	 = {http://cloudstack.apache.org},
 key = {Cloud Stack},
 title = {Cloud Stack},
-note = {\url{http://cloudstack.apache.org}}
+note = {\url{http://cloudstack.apache.org}. Accessed in May 2015.}
 }
 
 @misc{eucalyptus,
 url	 = {https://www.eucalyptus.com/},
 key = {Eucalyptus},
 title = {Eucalyptus},
-note = {\url{https://www.eucalyptus.com/}}
+note = {\url{https://www.eucalyptus.com/}. Accessed in May 2015.}
 }
 
 @misc{cloudScores,
 url	 = {https://cloudharmony.com/cloudscores},
 key = {Cloud Scores},
 title = {Cloud Scores},
-note = {URL \url{https://cloudharmony.com/cloudscores}}
+note = {URL \url{https://cloudharmony.com/cloudscores}. Accessed in May 2015.}
+}
+
+@misc{openfoam,
+url	 = {http://openfoam.org},
+key = {OpenFOAM},
+title = {OpenFOAM},
+note = {URL \url{http://openfoam.org}. Accessed in May 2015.}
 }
 
 
+@misc{mcae2012,
+url	 = {http://www.01consulting.net/02_2011_MCAE_GLOBAL_Market_ES.html},
+key = {MCAE},
+title = {MCAE Global Market 2011 - Executive Summary},
+note = {URL \url{http://www.01consulting.net/02_2011_MCAE_GLOBAL_Market_ES.html}. Accessed in May 2015.}
+}
 
 @article{Garg2013,
 abstract = {Cloud computing is revolutionizing the IT industry by enabling them to offer access to their infrastructure and application services on a subscription basis. As a result, several enterprises including IBM, Microsoft, Google, and Amazon have started to offer different Cloud services to their customers. Due to the vast diversity in the available Cloud services, from the customer’s point of view, it has become difficult to decide whose services they should use and what is the basis for their selection. Currently, there is no framework that can allow customers to evaluate Cloud offerings and rank them based on their ability to meet the user’s Quality of Service (QoS) requirements. In this work, we propose a framework and a mechanism that measure the quality and prioritize Cloud services. Such a framework can make a significant impact and will create healthy competition among Cloud providers to satisfy their Service Level Agreement (SLA) and improve their QoS. We have shown the applicability of the ranking framework using a case study.},
@@ -284,4 +298,31 @@ title = {{Scalable parallel computing on clouds using Twister4Azure iterative Ma
 url = {http://www.sciencedirect.com/science/article/pii/S0167739X12001379},
 volume = {29},
 year = {2013}
+}
+
+
+@article{tomczak2013,
+author = { Tadeusz   Tomczak  and  Katarzyna   Zadarnowska  and  Zbigniew   Koza  and  Maciej   Matyka  and  Łukasz   Mirosław },
+title = {Acceleration of iterative Navier-Stokes solvers on graphics processing units},
+journal = {International Journal of Computational Fluid Dynamics},
+volume = {27},
+number = {4-5},
+pages = {201-209},
+year = {2013},
+doi = {10.1080/10618562.2013.804178},
+URL = { 
+        http://dx.doi.org/10.1080/10618562.2013.804178 },
+eprint = { 
+        http://dx.doi.org/10.1080/10618562.2013.804178 }
+}
+
+@article{Che09042015,
+author = {Che, Yonggang and Xu, Chuanfu and Fang, Jianbin and Wang, Yongxian and Wang, Zhenghua}, 
+title = {Realistic Performance Characterization of CFD Applications on Intel Many Integrated Core Architecture},
+year = {2015}, 
+doi = {10.1093/comjnl/bxv022}, 
+abstract ={This paper studies the performance characteristics of computational fluid dynamics (CFD) applications on Intel Many Integrated Core (MIC) architecture. Three CFD applications, BT-MZ, LM3D and HOSTA, are evaluated on Intel Knights Corner (KNC) coprocessor, the first public MIC product. The results show that the pure OpenMP scalability of these applications is not sufficient to utilize the potential of a KNC coprocessor. While utilizing the hybrid MPI/OpenMP programming model helps to improve the parallel scalability, the maximum parallel speedup relative to a single thread is still not satisfactory. The OpenCL version of BT-MZ performs better than the OpenMP version but is not comparable to the MPI version and the hybrid MPI/OpenMP version. At the micro-architecture level, while the three CFD applications achieve reasonable instruction execution rates and L1 data cache hit rates, use a large percent of vector instructions, they have low arithmetic density, incur very high branch misprediction rates and do not utilize the Vector Processing Unit efficiently. As a result, they achieve very low single thread floating-point efficiency. For these applications to attain competitive performance on the MIC architecture as on the Xeon processors, both the parallel scalability and the single thread performance should be improved, which is a difficult task.}, 
+URL = {http://comjnl.oxfordjournals.org/content/early/2015/04/09/comjnl.bxv022.abstract}, 
+eprint = {http://comjnl.oxfordjournals.org/content/early/2015/04/09/comjnl.bxv022.full.pdf+html}, 
+journal = {The Computer Journal} 
 }
