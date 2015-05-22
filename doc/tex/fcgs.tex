@@ -342,136 +342,56 @@ In addition to the numerical tools, we have selected ANSYS CFX, a high performan
 
 \section{SimplyHPC Architecture}
 \label{sec:architecture}
+In this chapter, the two main architectural aspects of SimplyHPC are discussed. Firstly, the system architecture (software stack, cluster settings, communication setup, Azure specifics) is explained on different levels (node and cluster). Secondly, the structure of the SimplyHPC framework, which automatizes the setup of nodes and clusters using the given system architecture, is presented.
 
-%Blob storage is used to upload deployment templates, upload job data and download results. 
-%Table storage is used to indicate to our Cloud Service that the job is waiting to be executed and that there is a result to be downloaded.
 
-SimplyHPC framework enables users without any cloud-related knowledge to run their single- and multi-threaded applications on the cloud instead of a local machine or a private cluster. This way they can take advantage of the computing power of Microsoft Azure cloud and release their local resources for other tasks. The software hides from the user the whole cloud-related complexity, i.e. required installation and deployment procedures are not exposed to the user and performed in the background. Similarly, all necessary Microsoft Azure and third-party dependencies are included and configured automatically. \\
-The whole process of exposing the scientific application in the cloud can be controlled with the command line scripts called commandlets. 
-
-\begin{table}
-	\centering		
-		\begin{tabular}{|l|l|}
-		\hline
-      \textbf{Commandlet} & \textbf{Description} \\ \hline
-      NewAzureService & Create a new cloud service and the cluster \\ \hline
-			NewAzureJob & Create and execute a new job \\ \hline
-			NewAzureParameters & Create a set of parameters required by other commandlets    \\ \hline
-			GetJobStatus & Get the status of a given job    \\ \hline
-			GetJobResults & Get the results of a given job  \\ \hline
-			GetAvailableRoleSizes & Get Available VMs with their roles and sizes \\ \hline
-			RemoveAzureJobs & Remove Azure Jobs such as unfinished jobs \\ \hline
-			RemoveAzureService & Remove the cloud service and destroy the cluster \\ \hline
-    \end{tabular}
-	\caption{Commandlets of SimplyHPC framework.}
-	\label{tab:CommandletsOfSimplyHPC}
-\end{table}
-
-The commandlets are PowerShell modules executed in a specific order and realize specific tasks needed to deploy a scientific application in the cloud, execute it, download the results back to the user and destroy the cluster (see Tab~\ref{tab:CommandletsOfSimplyHPC}). The commandlets call methods from Controller API and prepare the application to be deployed as a cloud service. 
-%The module defines how many instances are run and other settings Template mechanism is  and Job Scheduler. 
-The Controller is a shared library with the high-level API that takes advantage of Microsoft Azure Cloud API to assign computational jobs to Azure resources, to communicate with deployment entities and Microsoft Azure components such as Storage. Commandlets use this API to automatize the set-up and deployment tasks as well as uploading the job and downloading the results. 
-% In the full paper : high-availability subsection. Blob and Table storage is used to ensure the data mirroring and high-availability provided by the cloud
-The configuration of the cloud service is managed by the Deployment Template Module (DTM). DTM is a library with a set of C\# interfaces for running MPI jobs in the cloud service. Once uploaded the cloud service is invoked as a windows service on each node of the cluster where it installs Microsoft MPI library and the deployed application automatically.
-In addition, the service periodically checks the blob and table storage for new enqueued jobs. Every new job is automatically executed,  removed from the queue and the new results are downloaded to the local machine. This way the service takes also the responsibility of a simple job scheduler that executed the jobs one by one on available resources. \\
-The architecture of the whole system is presented in Fig. \ref{fig:architecture} while the deployment procedure is presented in Section \ref{sec:deploymentProcedure}. 
-
-\subsection{High Availability}
-\label{sec:high_avilability}
-Each of the deployed instance has access to a local drive. Although theoretically it is possible to store the job data in this location, such a mechanism is not fail-safe. A failure of any of the nodes will endanger the whole execution since part of the results will be missing.\\
-A simple mechanism was implemented to ensure the data persistence and high availability. For that purpose a special components of Microsoft Azure were used, called Azure Storage. Azure storage is a massively scalable, durable and highly available auto-partitioning system that automatically load-balance data based on traffic. It scales automatically when the application demands more resources in terms of amount of data and the number of requests. It is accessible from either from the deployed nodes or the on-premise machine. SimplyHPC uses Blob and Table storage to separate the data from other system components. The packed application, job data, its input and output results are stored in the Blob storage while Table Storage is used to store the job metadata and information about it status. Both the Table and Blob Storage entities are accessible to local and remote machines. Every time the job is uploaded a new entry with the job metadata is appended to the Table. %Job Scheduler configured as a windows service on the head node examines the Table regularly and executes the jobs one by one. \\
 
 \begin{figure}
-\centering
-  \includegraphics[width=10cm,height=7cm]{architecture.png}%
-  \caption{Architecture of the SimplyHPC framework with the relationship between the modules and local and cloud resources.}
-	\label{fig:architecture}
+	\centering
+	\includegraphics[width=.5\linewidth]{azureWorkerRole.pdf}
+	\caption{Schematic view of a single compute node on Azure}
+
+	\label{fig:schemaRole}
 \end{figure}
 
-% discuss the architecture
+\subsection{Node architecture}
+As implied before, there are different type of machines available on Azure. Here, \textit{Worker Roles} (PaaS) are used, as they do have various advantages over traditional virtual machines, especially in terms of manageability and scalability. 
 
-\subsection{Deployment procedure}
-\label{sec:deploymentProcedure}
+Instead of configuring a machine and setting up software manually as on regular virtual machines, worker roles are set up using a \textit{Deployment Package}. This package contains machine-specific configuration (e.g. needed network adapters, local storage partitions etc) as well as all software that is run on the worker role. 
 
-Deployment procedure is logically consistent with the natural way of running a job in the cluster and can be invoked entirely with the commandlets listed in Tab.~\ref{tab:CommandletsOfSimplyHPC}. During the procedure a cluster with the arbitrary number of VMs is created including the head and compute nodes, the job data get submitted to the Blob Storage, executed and after it finishes the results are retrieved and the cluster is destroyed while leaving the job results in the storage for later analysis. This includes the resulting data files, standard output and standard error. The whole process can be described as follows:
-	
+New worker roles are then set up by supplying this deployment package to the Azure Cloud Controller.
+
+%% TODO
+%% something about scaling and how this allows many machines to be done at the same time etc etc
+%% TODO
+
+In figure \ref{fig:schemaRole}, the schematic architecture of a single node is shown. The particular components are explained in the following, using the example of a MPI job execution.
+
 \begin{enumerate}
+	\item During the set up of the worker role, everything inside the dashed line (the deployment package) is installed and set up by the Azure Cloud Controller. Some parts are set up as a Windows Service in a different user context ("MPI Context"). This MPI context is set up identically on each node and is used for authentication between nodes (e.g. during the execution of a distributed MPI job).
 
-	\item \textit{NewAzureService} script creates the {\it Cloud Service} and configuration data like regional settings, logging and storage information are specified in a configuration file and stored in a separated variable (NewAzureParameters script). The application is not executed yet.
+	\item After set up is finished, the job scheduler inside the SimplyHPC Role DLL is executed by the Azure Framework. This scheduler periodically checks for new jobs in the configured Azure Table/Blob storage. If such a new job is found, it is downloaded to local storage and executed according to its parameters. Because the MPI execution takes place in another user context, the start of the process is offloaded to the MPIWrapper (using inter-process communication via WCF/Named Pipes).
 
-	\item \textit{NewAzureJob} script uploads the DTM to the Cloud Service. This script also effectively advises the Azure cloud to create the head and compute nodes as non-persistent virtual machines with a pre-installed and pre-configured operating system. They can be removed and recreated with the DTM template any time.  The CM controller then applies the deployment template to each of this machine and Microsoft MPI as well as a custom written job scheduler is installed. After this step, billing for the instances starts and the cluster is ready to be used.
+	\item MPIWrapper (custom .Net Windows Service) starts the process configured in the job definition (e.g. PETSc, ANSYS, MPIEXEC,..). Because it runs inside the MPI Context, it has full access to all other nodes using MPI. MPIWrapper also tracks the execution of the process and reports results back to the Role DLL.
 
-	\item Jobs are uploaded to the Blob storage from a client computer. A job includes the executable and library files, data files and information about execution parameters, etc. The job is distributed to all the nodes automatically. 
-
-	\item Using MPI, the head node executes the job on all nodes in the deployed cluster.
-
- 	\item \textit{GetJobResults} script informs the node with the lowest id to upload the job results directly to the Azure Blob storage. Job results include log files, standard error/output of the process and any files that were newly created or changed by the running application.
-
-	\item After running one or multiple jobs, the deployment can be removed with the \textit{RemoveAzureJobs}. This effectively stops billing as the virtual machines are deleted. Configuration data and reserved addresses are preserved.
-
-	\item If no further deployments are needed, the cloud service is removed with the \textit{RemoveAzureService}. The job results remain intact in the Azure storage.
-
-The only manual step in this case is to run \textit{NewAzureParameters} script to create a variable with configuration data. This variable is used by other remaining scripts. It is also assumed that Affinity Group and the Storage account have been created. This can be done very easily in the Azure Management Portal.
-
+	\item SMPD/MSMPI: Infrastructure needed to run MPI jobs. SMPD ("Simple Multi-Purpose Daemon") is installed on each node and is used for starting parallel, distributed jobs. MSMPI is the installed MPI implementation of Microsoft, which is able to use fast interconnects such as Infiniband.
 \end{enumerate}
 
-%\begin{wrapfigure}{r}{0.2\textwidth}
-               %
-%\begin{tikzpicture}[shorten >=1pt,node distance=2.5cm,on grid,auto,anchor=east,scale=0.6, every node/.style={transform shape}] 
-%
-%\usetikzlibrary{shapes,arrows,positioning}
-%\usetikzlibrary{decorations.pathreplacing, automata}
-%
-%\tikzstyle{every state}=[minimum size=18mm]
-%
-   %\node[state, align=center] (create)                     {1\\Create\\Service}; 
-   %\node[state, align=center, below =of create] (deploy)   {2\\Deploy\\Template};    
-   %\node[state, align=center, below= of deploy] (upload)   {3\\Upload\\Job}; 
-   %\node[state, align=center, below =of upload] (run)      {4\\Run\\Job}; 
-   %\node[state, align=center, below =of run] (retrieve)    {5\\Retrieve\\Results}; 
-   %\node[state, align=center, below =of retrieve] (delete) {6\\Delete\\Dep.};
-   %\node[state, align=center, below =of delete](delservice){7\\Delete\\Service};
-   %
-   %\path[->] 
-   	%(create) edge  node {} (deploy)
-   	%(deploy) edge  node {} (upload)
-   	%(upload) edge   node {} (run)
-   	%(run) edge   node {} (retrieve)
-   	%(retrieve) edge [bend right=50 ]  node {} (upload)
-   	%(retrieve) edge  node {} (delete)
-   	%(delete) edge  node {} (delservice);
-            %
-  %\draw [decorate,decoration={brace,amplitude=20pt}]
- %(delete.west) -- (deploy.west) node [black,align=right,rotate=90,yshift=1cm,midway, xshift=1.5cm] { Billable Period};
-  %\end{tikzpicture}
-%
-%\caption{Deployment process.}
-%\label{fig:process}
- %\end{wrapfigure}
+\subsection{Cluster architecture}
+
+
+
+\subsection{Software architecture}
 
 \begin{figure}
-\centering
-\begin{subfigure}{.5\textwidth}
-  \centering
-			\includegraphics[width=\linewidth]{hpcPackSeq}	
-  %\caption{A subfigure}
-  \label{fig:hpcg}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{simplyHpcSeq}
-  %\caption{A subfigure}
-  \label{fig:cost}
-\end{subfigure}
-\caption{Sequential diagram of HPC Pack (left) and SimplyHPC framework (right). Dottet and solid lines refer to manual and automated processes, respectively.}
-\label{fig:seqDiagram}
+	\centering
+	\includegraphics[width=.9\linewidth]{azureDeployment.pdf}
+
+	\caption{Schematic view of a SimplyHPC Cluster on Azure}	
+	\label{fig:schemaService}
 \end{figure}
 
 
-There are manifold differences between SimplyHPC framework and HPC Pack. Although the HPC pack includes more features, such as scheduler or graphical user interface for job management, deployment with a HPC pack has certain disadvantages. First, the user needs a certain degree of expertise to be able to run HPC Pack as well as manual interaction with the head node which prohibits the automation. In contrary in SimplyHPC deployment procedure can be performed from the command line with a few configuration steps. Second, deploying a HPC Pack cluster needs a big infrastructure. For the simplest deployment it is required to have an MS SQL Database, Domain controller, a head node machine and every compute node being configured as a worker role. Such an infrastructure is usually not needed in case of scientific applications run from the command line. In our framework these entities have been removed from the procedure, therefore the head node can also take the role of the compute node, reducing the resources. \\
-Third, creation time of a cluster with HPC Pack is much longer (see Fig.~\ref{fig:deployTime}). Fourth, HPC Pack does not provide a way to automatically check if the job has been successfully executed. If the user wants to reduce the costs and shut down the cluster once his jobs are finished he is forced to perform a manual check of the job status. In contrary, SimplyHPC framework allows to deploy a cluster, run jobs and delete the cluster automatically as soon as the jobs finished. %The windows service checks for the results in the job directory and results are uploaded to the storage. \\
-Fifth, HPC Pack uses Microsoft MPI implementation that requires a Simple Multipurpose Daemon Service (SMPD) to run on every compute nodes. The installation of SMPD as a windows service is permitted to HPC Pack only which is a strong limitation is situation when the user wants to use another application to start and stop windows services. The proposed framework removes the limitation by creating a separated MPI service that automatically runs SMPD on every deployed virtual machine. \\
-Last but least, after the initial deployment the user needs to move the job data to the Storage account manually and run the job from the HPC Pack Scheduler via Remote Desktop Connection or web interface. In SimplyHPC for command-line applications these tasks are performed automatically without user interaction (see Fig.~\ref{fig:seqDiagram}).
- 
 
 \section{Results}
 \label{sec:results}
@@ -518,7 +438,7 @@ First objective was to compare deployment time of a cluster with different numbe
 \label{fig:deployTime}
 \end{figure}
 
-Fig.~\label{fig:deployTime} shows the HPC Pack needs almost an hour to deploy the cluster while the SimplyHPC platform needs about six minutes in average. Such long deployment time lies in the fact HPC Pack performs also additional deployment steps such as creating a domain controller, SQL database or installing many additional services that are not needed for command-line scientific applications.
+Fig. \ref{fig:deployTime} shows the HPC Pack needs almost an hour to deploy the cluster while the SimplyHPC platform needs about six minutes in average. Such long deployment time lies in the fact HPC Pack performs also additional deployment steps such as creating a domain controller, SQL database or installing many additional services that are not needed for command-line scientific applications.
 
 The objective of the second experiment was to compare the performance of Microsoft Azure with a private cluster by running sparse matrix solver called PETSc. PETSc was run with two matrices: \textit{ruep} and \textit{nord}. The first one comes from thermal transient heat conduction simulation of electrical cabinet on a large unstructured mesh composed of 2.3 millions cells and the second matrix was generated from a thermal transient heat conduction simulation on a 3-dimensional Cartesian mesh of moderate size. Due to different mesh types, the second matrix converges much quicker than the first one. 
 
