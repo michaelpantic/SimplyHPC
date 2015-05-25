@@ -415,6 +415,8 @@ The tests were performed in Microsoft Azure cloud from the same subscription as 
 \caption{Performance in GFlops of PETSc solving ruep (left) and nord (right) matrix systems on different Microsoft Azure nodes and a private HSR cluster. }
 \label{fig:test}
 \end{figure}
+
+
  
 First objective was to compare deployment time of a cluster with different number of nodes in both systems. This time should be of the same order regardless the type of role instances because the deployment processes are similar, therefore we performed the tests with a one type of the role instances, namely A4 (see Tab.\ref{tab:azureVMs}). HPC Pack provides a precise statistics on the deployment procedure seperated into individual processes, namely creating a storage account, a virtual network, a cloud service, a domain controller as well as  deployment and configuration time for the head node and compute nodes. Since in SimplyAzure most of these processes were omitted, only the time to deploy the head node and compute nodes was measured, e.g. the time needed to run NewAzureService and NewAzureJob scripts (\textcolor[rgb]{1,0,0}{Vladimir, I noticed there is only one entry in the xls file}). Since HPC Pack neither provides automatic job submission nor does it retrieve the result we have not taken these processes into account in our measurements. 
 
@@ -474,17 +476,16 @@ Compressors generate air pressure that is critical in a wide range of applicatio
 \begin{figure}
 \centering
 \begin{subfigure}{.4\textwidth}
-  \centering
-			\includegraphics[width=\linewidth]{pipe}	
-  %\caption{A subfigure}
-  \label{fig:pipe}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{compressor}
-  %\caption{A subfigure}
-  \label{fig:compressor}
+	\centering
+	\includegraphics[width=\linewidth]{pipe_nobg}	
+	\label{fig:pipe}
 \end{subfigure}
+\begin{subfigure}{.5\textwidth}
+	\centering
+	\includegraphics[width=.7\linewidth]{compressor_nobg}
+	\label{fig:compressor}
+\end{subfigure}
+
 \caption{The geometries of the heat exchange system (left) and compressor (right) used for the simulations. }
 \label{fig:cfx}
 \end{figure}
@@ -494,21 +495,46 @@ To understand the potential scaling impediments on the most powerful Azure nodes
 
 \begin{figure}
 \centering
-\begin{subfigure}{.4\textwidth}
-  \centering
-			\includegraphics[width=\linewidth]{strongHSR}	
-  %\caption{A subfigure}
-  \label{fig:strongA8}
-\end{subfigure}%
 \begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{strongA8}
-  %\caption{A subfigure}
-  \label{fig:strongHSR}
+	\centering
+	\includegraphics[width=\linewidth]{gplt-a8-strong-pipe}	
+	\label{fig:strongA8}
 \end{subfigure}
+\begin{subfigure}{.5\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{gplt-hsr-strong-pipe}
+	\label{fig:strongHSR}
+\end{subfigure}
+
 \caption{Strong scaling in Microsoft Azure on A8 nodes (left) and HSR cluster (right). }
-\label{fig:strongPipe}
+\label{fig:strongHSR}
 \end{figure}
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{gplt-a8-weak-pipe}	
+	\label{fig:weakA8}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{gplt-hsr-weak-pipe}
+	\label{fig:weakHSR}
+\end{subfigure}
+
+\caption{Weak scaling in Microsoft Azure on A8 nodes (left) and HSR cluster (right). }
+\label{fig:weakPipe}
+\end{figure}
+
+%Todo: Fix caption
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{gplt-compressor}
+	\caption{Strong scaling comparison for the compressor geometry). }
+	\label{fig:compressor}
+\end{figure}
+
 
 \subsection{Cost efficiency}
 
