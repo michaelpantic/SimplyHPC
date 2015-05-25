@@ -198,8 +198,8 @@
 %% \address[label2]{<address>}
 
 \author[hsr]{Lukasz Miroslaw}
-\author[hsr]{Vladimir Baros}
 \author[hsr]{Michael Pantic}
+\author[hsr]{Vladimir Baros}
 \author[hsr]{Henrik Nordborg}
 
 \address[hsr]{Institute for Energy Technology, Hochschule Rapperswil, Switzerland}
@@ -346,24 +346,16 @@ In this chapter, the two main architectural aspects of SimplyHPC are discussed. 
 
 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=.5\linewidth]{azureWorkerRole.pdf}
-	\caption{Schematic view of a single compute node on Azure}
-
-	\label{fig:schemaRole}
-\end{figure}
 
 \subsection{Node architecture}
+
 As implied before, there are different type of machines available on Azure. Here, \textit{Worker Roles} (PaaS) are used, as they do have various advantages over traditional virtual machines, especially in terms of manageability and scalability. 
+
 
 Instead of configuring a machine and setting up software manually as on regular virtual machines, worker roles are set up using a \textit{Deployment Package}. This package contains machine-specific configuration (e.g. needed network adapters, local storage partitions etc) as well as all software that is run on the worker role. 
 
-New worker roles are then set up by supplying this deployment package to the Azure Cloud Controller.
 
-%% TODO
-%% something about scaling and how this allows many machines to be done at the same time etc etc
-%% TODO
+New worker roles are then set up by supplying this deployment package to the Azure Cloud Controller.
 
 In figure \ref{fig:schemaRole}, the schematic architecture of a single node is shown. The particular components are explained in the following, using the example of a MPI job execution.
 
@@ -376,20 +368,39 @@ In figure \ref{fig:schemaRole}, the schematic architecture of a single node is s
 
 	\item SMPD/MSMPI: Infrastructure needed to run MPI jobs. SMPD ("Simple Multi-Purpose Daemon") is installed on each node and is used for starting parallel, distributed jobs. MSMPI is the installed MPI implementation of Microsoft, which is able to use fast interconnects such as Infiniband.
 \end{enumerate}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.5\linewidth]{azureWorkerRole.pdf}
+	\caption{Schematic view of a single compute node on Azure}
+
+	\label{fig:schemaRole}
+\end{figure}
+
+It is important to note that this node architecture applies to all nodes in a cluster, and is automatically set up using the aforementioned deployment package. 
+
 
 \subsection{Cluster architecture}
 
+Figure \ref{fig:schemaService} visualizes all relevant components of a compute cluster that has been set up using our framework. 	
+\begin{itemize}
+	\item A \textit{cloud service} is a bundle of multiple nodes using the same deployment template. Using the logical entity of a cloud service, nodes can be configure (number, size, network) at once. E.g. increasing the number of nodes can be done by increasing the number in the cloud service configuration. The azure cloud controller then automatically creates a new node and applies the deployment template.
 
+	\item Interconnect: When using A8/A9 nodes for scientific computing, the internode network (the upper arrow in figure \ref{fig:schemaService}) is realized by infiniband. All internode storage (SMBv3) and MPI (MSMPIv2) requests are transparently redirected to this very low latency, high bandwidth interconnect. This is crucial for good scaling and performance.
 
-\subsection{Software architecture}
-
-\begin{figure}
+	\item Storage: There are 4 storage types in use: Local storage, which uses local SSD drives and can be shared between nodes. Azure Table and Blob Storage, which is accessible using HTTP/REST interfaces and Azure Virtual Drives, which can be mounted using SMB. Of these 4 types, only the local storage can be accessed transparently using infiniband between the nodes. All other types are accessed using internet access and/or internal Azure networks, and are therefore much less performant.
+\end{itemize}
+\begin{figure}[ht]
 	\centering
-	\includegraphics[width=.9\linewidth]{azureDeployment.pdf}
+	\includegraphics[width=.6\linewidth]{azureDeployment.pdf}
 
 	\caption{Schematic view of a SimplyHPC Cluster on Azure}	
 	\label{fig:schemaService}
 \end{figure}
+
+
+
+
+\subsection{Software architecture}
 
 
 
