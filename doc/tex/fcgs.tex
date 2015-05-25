@@ -355,12 +355,12 @@ As implied before, there are different type of machines available on Azure. Here
 Instead of configuring a machine and setting up software manually as on regular virtual machines, worker roles are set up using a \textit{Deployment Package}. This package contains machine-specific configuration (e.g. needed network adapters, local storage partitions etc) as well as all software that is run on the worker role. 
 
 
-New worker roles are then set up by supplying this deployment package to the Azure Cloud Controller.
+New worker roles are then set up by supplying this deployment package to the Azure Fabric Controller.
 
 In figure \ref{fig:schemaRole}, the schematic architecture of a single node is shown. The particular components are explained in the following, using the example of a MPI job execution.
 
 \begin{enumerate}
-	\item During the set up of the worker role, everything inside the dashed line (the deployment package) is installed and set up by the Azure Cloud Controller. Some parts are set up as a Windows Service in a different user context ("MPI Context"). This MPI context is set up identically on each node and is used for authentication between nodes (e.g. during the execution of a distributed MPI job).
+	\item During the set up of the worker role, everything inside the dashed line (the deployment package) is installed and set up by the Azure Fabric Controller. Some parts are set up as a Windows Service in a different user context ("MPI Context"). This MPI context is set up identically on each node and is used for authentication between nodes (e.g. during the execution of a distributed MPI job).
 
 	\item After set up is finished, the job scheduler inside the SimplyHPC Role DLL is executed by the Azure Framework. This scheduler periodically checks for new jobs in the configured Azure Table/Blob storage. If such a new job is found, it is downloaded to local storage and executed according to its parameters. Because the MPI execution takes place in another user context, the start of the process is offloaded to the MPIWrapper (using inter-process communication via WCF/Named Pipes).
 
@@ -381,14 +381,28 @@ It is important to note that this node architecture applies to all nodes in a cl
 
 \subsection{Cluster architecture}
 
-Figure \ref{fig:schemaService} visualizes all relevant components of a compute cluster that has been set up using our framework. 	
+Figure \ref{fig:schemaService} visualizes all relevant components of a compute cluster that has been set up using the SimplyHPC framework. 
+A \textit{cloud service} (dashed rectangle in figure) is a bundle of multiple nodes using the same deployment template. Using the logical entity of a cloud service, nodes can be configured (number, size, network) at once. E.g. increasing the number of nodes can be done by increasing the number in the cloud service configuration. The Azure Fabric Controller then automatically creates a new node and applies the deployment template.
+
+When using A8/A9 nodes for scientific computing, the internode network (depicted as the upper arrow in figure \ref{fig:schemaService}) is realized by infiniband. All internode storage (SMBv3) and MPI (MSMPIv2) requests are transparently redirected to this very low latency, high bandwidth interconnect, which is crucial for good scaling.
+
+The availability of fast internode connections strongly influences the choice of storage for different tasks. In total, there are 4 storage types in use:
+
 \begin{itemize}
-	\item A \textit{cloud service} is a bundle of multiple nodes using the same deployment template. Using the logical entity of a cloud service, nodes can be configure (number, size, network) at once. E.g. increasing the number of nodes can be done by increasing the number in the cloud service configuration. The azure cloud controller then automatically creates a new node and applies the deployment template.
 
-	\item Interconnect: When using A8/A9 nodes for scientific computing, the internode network (the upper arrow in figure \ref{fig:schemaService}) is realized by infiniband. All internode storage (SMBv3) and MPI (MSMPIv2) requests are transparently redirected to this very low latency, high bandwidth interconnect. This is crucial for good scaling and performance.
 
-	\item Storage: There are 4 storage types in use: Local storage, which uses local SSD drives and can be shared between nodes. Azure Table and Blob Storage, which is accessible using HTTP/REST interfaces and Azure Virtual Drives, which can be mounted using SMB. Of these 4 types, only the local storage can be accessed transparently using infiniband between the nodes. All other types are accessed using internet access and/or internal Azure networks, and are therefore much less performant.
+	\item \textit{Azure Table Storage} is a schemaless database accessible by HTTP/REST. Here it is used to store configuration information, node synchronization data and job meta data, which is read by the head node (Arrow 'A' in Figure \ref{fig:schemaService}).
+	
+	\item \textit{Azure Blob Storage} is a storage service used to store large data blocks and accessible by HTTP/REST. Job data (such as geometry,matrices etc) are uploaded from a client to Azure Blob Storage, and are then copied to the much faster local storage by the head node (Arrow 'B' in Figure \ref{fig:schemaService}). Job results are also uploaded back to this storage and thus made available via internet.	
+	
+	\item \textit{Local Storage} is used during job execution for job data (Arrows 'C' in Figure \ref{fig:schemaService}). Local storage is realised using local SSD drives an can be shared between nodes using SMBv3/Infiniband, making it the fastest storage available. Note that local storage is not persistent, it is lost after a node has been recreated/restored/updated. Also, local storage is not directly accessible from outside a cloud service.
+	
+	\item \textit{Azure Virtual Drive} provides storage which is mountable as a network drive in Windows, and is here used to make software packages available to the worker roles. Large software suites such as ANSYS cannot be included into deployment packages and can therefore not be directly installed on worker roles. Here we used a prepared ANSYS installation on a shared network drive, hosted via Azure Virtual Drive.
+	
+
 \end{itemize}
+
+
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=.6\linewidth]{azureDeployment.pdf}
@@ -400,8 +414,33 @@ Figure \ref{fig:schemaService} visualizes all relevant components of a compute c
 
 
 
-\subsection{Software architecture}
 
+\subsection{Software architecture}
+SimplyHPC mainly consists of a .Net/C\# software that automatizes the set up of a cluster as described before.
+There are multiple levels, at which the SimplyHPC library/processes interfere with Azure:
+
+\begin{itemize}
+	\item SDK level: Integration into the Microsoft Azure SDK in order to automatically compile the deployment packages
+	
+	\item Cloud API / Fabric Controller level: Creation of cloud services, uploading of deployment packages, monitoring node state etc.
+	
+	\item Framework level: Uses Azure Libraries to access storage, hook into Worker Role startup points, get information about the execution environment (such as addresses, capabilities)
+\end{itemize}
+
+Additionally, different front ends to the user are available:
+
+\begin{itemize}
+
+\item Powershell interface that allows the user to compile scripts with high-level methods (such as CreateCluster, UploadJob)
+
+\item .Net Api access, that exposes a high-level facade abstracting the cluster 
+\end{itemize}
+
+These architecture is reflected in the internal structure of the SimplyHPC software.
+
+
+
+\textcolor[rgb]{1,0,0}{Maybe a drawing here as well? API Example?}
 
 
 \section{Results}
