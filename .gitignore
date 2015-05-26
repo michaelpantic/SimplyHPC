@@ -6,7 +6,8 @@
 *.aux
 *.pdf
 *.synctex.gz
-
+*.spl
+*.tcp
 
 #Visual Studio files
 *.[Oo]bj
