@@ -527,7 +527,7 @@ $$
 where the numerator is the running time of the sequential version of the software on a single core, the denominator is the parallel version running on $K$ cores and $N$ is the data size. Ideally the speedup should be equal to $K$. Since this is often not the case, we also calculate the \textit{efficiency} ($E(N,K)$), a metric that measures how close to the ideal scaling the speedup actually is (see \ref{kaminsky15} for more details):
 
 $$
-E(N,K) = Speedup (N,K) / K
+E(N,K) = S(N,K) / K
 $$
  
 Since ANSYS CFX is a commercial software we could not judge what is the sequential and parallizable fraction of the solver. One can only speculate that since the performance degrades, the significant 
