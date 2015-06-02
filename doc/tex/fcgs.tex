@@ -428,13 +428,13 @@ The tests were performed in Microsoft Azure cloud from the same subscription as 
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-	\includegraphics[width=\linewidth]{ruppel}  
+	\includegraphics[width=\linewidth]{gplt-gflops-ruep}  
   %\caption{A subfigure}
   \label{fig:ruepel}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[width=\linewidth]{nord.png}
+  \includegraphics[width=\linewidth]{gplt-gflops-nord}
   %\caption{A subfigure}
   \label{fig:nord}
 \end{subfigure}
@@ -449,19 +449,11 @@ First objective was to compare deployment time of a cluster with different numbe
 
 \begin{figure}
 \centering
-\begin{subfigure}{.5\textwidth}
-  \centering
-			\includegraphics[width=\linewidth]{hpcDeployTime}	
-  %\caption{A subfigure}
-  \label{fig:hpcgDeploy}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{simplyHpcDeployTime}
-  %\caption{A subfigure}
-  \label{fig:simplyHpcDeploy}
-\end{subfigure}
-\caption{Deployment time of cluster composed of different number of A4 nodes with Microsoft HPC pack (left) and SimplyHPC framework (right). Time is provided in hh:mm:ss format.}
+
+  \includegraphics[width=\linewidth]{gplt-creation-simplyvshpc}
+
+
+\caption{Deployment time of cluster composed of different number of A4 nodes with Microsoft HPC pack (right) and SimplyHPC framework (left). Time is provided in hh:mm:ss format.}
 \label{fig:deployTime}
 \end{figure}
 
@@ -471,7 +463,7 @@ The objective of the second experiment was to compare the performance of Microso
 
 \begin{figure}
 \centering
-	\includegraphics[width=.6\linewidth]{hpcg}
+	\includegraphics[width=.6\linewidth]{gplt-gflops-hpcg}
 	
 	\caption{Performance in GFlops of HPCG benchmark on different Microsoft Azure nodes and a private HSR cluster. }
 	\label{fig:hpcg}

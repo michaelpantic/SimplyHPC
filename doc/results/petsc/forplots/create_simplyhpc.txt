@@ -1,0 +1,8 @@
+"SimplyHPC, A4 nodes"	"Create cluster"
+1	00:06:41
+2	00:06:33
+4	00:06:44
+8	00:06:47
+
+
+
