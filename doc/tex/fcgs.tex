@@ -247,15 +247,16 @@ Our paper focuses on following aspects. Chapter \ref{sec:architecture} describes
 \subsection{Motivation}
 
 % there are a few frameworks, not for Azure
-Each of the previously mentioned cloud platforms offers different strategies to communicate with the cloud infrastructure and different virtualization procedures. The user is free to manage the cloud resources by using standard approach, or use cloud orchestrators that automate the management of the cloud-based infrastructure. 
+Each of the previously mentioned cloud platforms offers different strategies to communicate with the cloud infrastructure and different virtualization procedures. The user is free to manage the cloud resources by deploying the cluster manually or with the help of accompanying scripts and APIs, or use the cloud orchestrators that automate the management of the cloud-based infrastructure. The motivation for our development was twofold.
 
 \begin{description}
 \item[Complex deployment] The IaaS cloud requires the user to deploy the application in a similar and often complex way as on the local cluster. Cloud orchestrators manage the interactions and interconnections among cloud-based and on-premises business units as well as expose various automated processes and associated resources. They have become a desired alternative to standard deployment procedures because of lower level of expertise and reduced deployment time. Tools for cloud orchestration and vertical and horizontal scaling are fundamental to the adoption of the framework aiming at simplifying the whole procedure.
 
 \item[Complicated access] Although cloud orchestrators play an important role, still there are only a few easy to use, out-of-the box platforms that simplify deployment, monitoring and accessing scientific applications in the cloud. Companies offering cloud-based software in PaaS model limit their offering to applications of the highest commercial impact while neglecting other types of software such as numerical simulations \cite{CloudStack} \cite{OpenStack}. The best situation is in Amazon EC2 where frameworks to simplify the process of orchestration of specific scientific applications exist. Wong and Goscinski propose a unified framework composed of a series of scripts for running gene sequencing analysis jobs through a web portal \cite{Wong2013} on Amazon EC2 (IaaS) infrastructure. For this purpose they designed a HPC service software library for accessing high level HPC resources from the IaaS cloud and demostrate their framework in running mpiBLAS \cite{mpiBlas}. Balgacem et al. measured the multiphase flow on a hybrid platform combined with Amazon $EC2$ and a private cluster \cite{BenBelgacem2015}. Morpho is a modified version of Hadoop MapReduce framework that decouples storage and computation into physical and virtual clusters to reduce costly data movement of user data \cite{Lu2014}. The authors demonstrate the efficiency of the  framework in text mining application compared with the Hadoop MapReduce running in Amazon mode. Twister4Azure is a MapReduce frameworks designed specifically for Microsoft Azure. It extends the native Hadoop framework in Azure cloud platform and provides multi-level data caching mechanism to overcome the latencies of cloud services as well as a decentralized task scheduling to avoid single point of failure. Still, the framework requires a programming knowledge since it is relased as .NET Project. The platform has been demonstrated in applications that are well fitted to MapReduce paradigm, such as BLAS sequence searching or KMean Clustering. Marozzo et. al \cite{catlett2013cloud} present a web-based framework for running pre-defined workflows composed of web services in Microsoft Azure. The authors demonstrate the framework in data mining applications by deploying an execution workflow running a single classification algorithm and measure strong scalability in classifying different data sets that were previously partitioned. Unfortunately, it is not clear if the algorithm was multi- or single-threaded or if is possible to add own applications to the framework that are no exposed as web-services and not related to data mining. 
 Another interesting frameworks are Eucalyptus \cite{eucalyptus} or CloudStack \cite{CloudStack} that were designed to deploy IaaS hybrid clouds, e.g. scalable IaaS cloud computing platform composed of a private cloud and public one based on Amazon EC2.
-
 \end{description}
+
+Due to the fact that the cloud providers are commercial entities that compete on the market, it is hardly impossible to create a single orchestrator that supports the major cloud platforms. The cloud infrastructure changes very quickly, the new APIs, services and tools are released frequently and addressing them in one consistent software is ineffective from a strategical point of view. This is a reason why we preferred to focus on a single provider, namely Microsoft Azure.
 
 
 %many scientific groups run their scientific code on the cloud
@@ -293,10 +294,10 @@ A8 and A9 are special Azure VM instances which include Infiniband network stack 
 				A5     & 2     & 14 GB   & 135 GB     & - & \$0.33/hr (\~\$246/mo)   \\ \hline
 				A6     & 4     & 28 GB   & 285 GB     & - & \$0.66/hr (\~\$491/mo)   \\ \hline
 				A7     & 8     & 56 GB   & 605 GB     & - & \$1.32/hr (\~\$982/mo)  \\ \hline
-				A8     & 8     & 56 GB    & 382 GB    & Intel Xeon E5-2670 & \$2.45/hr (\~\$1,823/mo) \\ \hline
+				A8     & 8     & 56 GB   & 382 GB     & Intel Xeon E5-2670 & \$2.45/hr (\~\$1,823/mo) \\ \hline
 				A9     & 16    & 112 GB  & 382 GB     & Intel Xeon E5-2670 & \$4.90/hr (\~\$3,646/mo) \\ \hline
-				A10     & 8     & 56 GB    & 382 GB    & Intel Xeon E5-2670 & \$1.64/hr (\~\$1,220/mo) \\ \hline
-				A11     & 16    & 112 GB  & 382 GB     & Intel Xeon E5-2670 & \$3.04/hr (\~\$2,262/mo) \\ \hline
+				A10    & 8     & 56 GB   & 382 GB     & Intel Xeon E5-2670 & \$1.64/hr (\~\$1,220/mo) \\ \hline
+				A11    & 16    & 112 GB  & 382 GB     & Intel Xeon E5-2670 & \$3.04/hr (\~\$2,262/mo) \\ \hline
 			\end{tabular}
 			\label{tab:azureVMs}
 			\caption{Microsoft Azure VM instances. Price list retrieved in May 2015.}
@@ -324,8 +325,6 @@ In addition to the numerical tools, we have selected ANSYS CFX, a high performan
 In this chapter, the two main architectural aspects of SimplyHPC are discussed. Firstly, the system architecture (software stack, cluster settings, communication setup, Azure specifics) is explained on different levels (node and cluster). Secondly, the structure of the SimplyHPC framework, which automatizes the setup of nodes and clusters using the given system architecture, is presented.
 
 
-
-
 \subsection{Node architecture}
 
 As implied before, there are different type of machines available on Azure. Here, \textit{Worker Roles} (PaaS) are used, as they do have various advantages over traditional virtual machines, especially in terms of manageability and scalability. 
@@ -339,13 +338,13 @@ New worker roles are then set up by supplying this deployment package to the Azu
 In figure \ref{fig:schemaRole}, the schematic architecture of a single node is shown. The particular components are explained in the following, using the example of a MPI job execution.
 
 \begin{enumerate}
-	\item During the set up of the worker role, everything inside the dashed line (the deployment package) is installed and set up by the Azure Fabric Controller. Some parts are set up as a Windows Service in a different user context ("MPI Context"). This MPI context is set up identically on each node and is used for authentication between nodes (e.g. during the execution of a distributed MPI job).
+	\item During the set up of the worker role, everything inside the dashed line (the deployment package) is installed and set up by the Azure Fabric Controller. Some parts are set up as a Windows Service in a different user context (''MPI Context''). This MPI context is set up identically on each node and is used for authentication between nodes (e.g. during the execution of a distributed MPI job).
 
 	\item After set up is finished, the job scheduler inside the SimplyHPC Role DLL is executed by the Azure Framework. This scheduler periodically checks for new jobs in the configured Azure Table/Blob storage. If such a new job is found, it is downloaded to local storage and executed according to its parameters. Because the MPI execution takes place in another user context, the start of the process is offloaded to the MPIWrapper (using inter-process communication via WCF/Named Pipes).
 
 	\item MPIWrapper (custom .Net Windows Service) starts the process configured in the job definition (e.g. PETSc, ANSYS, MPIEXEC,..). Because it runs inside the MPI Context, it has full access to all other nodes using MPI. MPIWrapper also tracks the execution of the process and reports results back to the Role DLL.
 
-	\item SMPD/MSMPI: Infrastructure needed to run MPI jobs. SMPD ("Simple Multi-Purpose Daemon") is installed on each node and is used for starting parallel, distributed jobs. MSMPI is the installed MPI implementation of Microsoft, which is able to use fast interconnects such as Infiniband.
+	\item SMPD/MSMPI: Infrastructure needed to run MPI jobs. SMPD (''Simple Multi-Purpose Daemon'') is installed on each node and is used for starting parallel, distributed jobs. MSMPI is the installed MPI implementation of Microsoft, which is able to use fast interconnects such as Infiniband.
 \end{enumerate}
 \begin{figure}[h]
 	\centering
@@ -520,17 +519,38 @@ Compressors generate air pressure that is critical in a wide range of applicatio
 \label{fig:cfx}
 \end{figure}
 
-To understand the potential scaling impediments on the most powerful Azure nodes, we tested both weak and strong scaling for different simulations cases. With strong scaling, the problem size remains the same, while the number of cores increases, while in weak scaling, the problem size per core remains the same. Strong scaling defined  provides insights into parallel scalability and memory utilization while the weak scaling approximates the utilization of cores. Since it is difficult to compare different systems, namely a local cluster and the cluster in the cloud, from the data available at Figs.~\ref{fig:strongHSR} and \ref{fig:weakHSR} we calculate the speedup $S(N,K)$ as follows: 
-$$
-S(N,K) = T_{seq}(N,1) / T_{par}(N,K)
-$$
-where the numerator is the running time of the sequential version of the software on a single core, the denominator is the parallel version running on $K$ cores and $N$ is the data size. Ideally the speedup should be equal to $K$. Since this is often not the case, we also calculate the \textit{efficiency} ($E(N,K)$), a metric that measures how close to the ideal scaling the speedup actually is (see \ref{kaminsky15} for more details):
+To understand the potential scaling impediments on the most powerful Azure nodes, we tested both weak and strong scaling for different simulations cases. With strong scaling, the problem size remains the same, while the number of cores increases, while with the weak scaling, both the problem size and the number of cores increase. These scalability tests provide insights on how fast the same problem can be solved when the number of cores increases, and how to solve a larger problem in the same time. 
+
+% pointed out that there’s another way to scale up a parallel
+%program to run on more cores: increase the size of the problem being solved as you increase the number of cores. This is known as weak scaling.
+
+
+The first scaling defined  provides insights into parallel scalability and memory utilization while the weak scaling approximates the utilization of cores. Since it is difficult to compare different systems, namely a local cluster and the cluster in the cloud and use the Amdahl's Law, from the data available at Figs.~\ref{fig:strongHSR} and \ref{fig:weakHSR} we calculate the speedup $S(N,K)$ as follows: 
+
+\begin{equation}
+\label{eq:speedupStrong}
+S(N,K) = \frac{T_{seq}(N,1)}{T_{par}(N,K)}
+\end{equation}
+where the numerator is the running time of the sequential version of the software on a single core, the denominator is the parallel version running on $K$ cores and $N$ is the data size. Ideally the speedup should be equal to $K$. Since this is often not the case, we also calculated the \textit{efficiency of strong scaling} ($E_s(N,K)$), a metric that measures how close to the ideal scaling the speedup actually is (see \ref{kaminsky15} for more details):
 
 $$
-E(N,K) = S(N,K) / K
+E_s(N,K) = S(N,K) / K
 $$
  
-Since ANSYS CFX is a commercial software we could not judge what is the sequential and parallizable fraction of the solver. One can only speculate that since the performance degrades, the significant 
+
+%Since ANSYS CFX is a commercial software we could not judge what is the sequential and parallizable fraction of the solver. One can only speculate about the that since the performance degrades, the significant 
+Sizeup ($S_u$) is a chief metric for measuring the weak scaling. It can be defined as 
+
+\begin{equation}
+\label{eq:sizeup}
+S_u(N,K) = \frac{N(K)}{N(1)} \times \frac{T_{seq}(N(1),1)}{T_{par}(N(K),K).}
+\end{equation}
+Because in the weak scaling the problem size is growing as the number of cores increases we denote it as $N(K)$ to emphasize this dependence. Similarly to Eq.~\ref{eq:speedupStrong} $T_{seq}(.)$ denotes the running time of sequential version on a single core. For the scenario where the program's problem size running on K cores is K times larger than the program's problem size running on a single core, the running time for parallel and sequential execution should be the same and the sizeup should be equal to K. The efficiency is the metric that shows how close is the sizeup to the ideal one: 
+$$
+E_w(N,K) = S_u(N,K) / K
+$$
+It is equal to 1 no matter on how many cores the program is executed, for worser sizeup values the efficiency is less than 1. It is also worth noting that the sizeup (Eq.~\ref{eq:sizeup}) reduces to speedup $S(N,K)$ (Eq.~\ref{eq:speedupStrong}) because the problem size for the sequential and parallel version are the same and the first fraction in Eq.~\ref{eq:sizeup} becomes unity. Sizeup and speedup measure actually the same entity, e.g. the ratio of computation rates, but in different contexts.
+
 \begin{figure}
 \centering
 \begin{subfigure}{.4\textwidth}
