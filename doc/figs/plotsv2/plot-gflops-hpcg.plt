@@ -1,5 +1,5 @@
 reset
-set terminal pdf size 5,3 color
+set terminal pdf size 4,3 color
 load 'gnuplot-styles.plt'
 set output "../gplt-gflops-hpcg.pdf"
 set title "GFLOPs HPCG" offset 0,-0.5, 0

@@ -1,5 +1,5 @@
 reset
-set terminal pdf size 5,3 color
+set terminal pdf size 4,3 color
 load 'gnuplot-styles.plt'
 set output "../gplt-gflops-nord.pdf"
 set title "GFLOPs PETSc Solver Matrix 'nord'" offset 0,-0.5, 0
@@ -16,7 +16,6 @@ set datafile separator '\t'
 f(x) = x*1.089
 plot '../../results/petsc/forplots/gflops_nord.txt'  using 1:2 w linespoints ls 11, \
 f(x) ls 16 title 'A8 (ideal scaling)' , \
-'' using 1:3 w linespoints ls 12, \
 '' using 1:4 w linespoints ls 13, \
 '' using 1:5 w linespoints ls 14
  
