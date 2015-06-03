@@ -1,25 +1,30 @@
 reset
 set terminal pdf size 5,3 color
+load 'gnuplot-styles.plt'
 set output "../gplt-hsr-weak-pipe.pdf"
-set title "Weak Scaling on HSR cluster nodes" offset 0,-0.5, 0
-set xlabel "Total number of cores (|Nodes|*6)" offset 0,0.75,0
-set ylabel "Calculation time [s]" offset 1.5,0,0
-set grid
+set title "Weak Scaling On-Premises cluster nodes" offset 0,-0.5, 0
+set xlabel "Total number of cores" offset 0,0.5,0
+set ylabel "Calculation time [s]" offset 0.5,0,0
 
-set style line 11 lw 2 lc rgb '#0072bd' # blue
-set style line 12 lw 2 lc rgb '#d95319' # orange
-set style line 13 lw 2 lc rgb '#edb120' # yellow
-set style line 14 lw 2 lc rgb '#7e2f8e' # purple
-set style line 15 lw 2 lc rgb '#77ac30' # green
-set style line 16 lw 2 lc rgb '#4dbeee' # light-blue
-set style line 17 lw 2 lc rgb '#a2142f' # red
-set xtics (6,12,24,36,48,60)
-set xrange [6:60]
-set yrange [0:3000]
+set grid mxtics, xtics ls 21, ls 20
+set grid mytics, ytics ls 21, ls 20
+set xtics (6,12,24,48)
+set ytics 10
+
+
+set logscale y
+set logscale x 6	
+set xrange [6:48]
+set yrange [10:10000]
+set key title "Nodes per Processor"
 set key autotitle columnhead
-set key inside right top
-set datafile separator '\t'
-plot 'hsr-weak-pipe.dat'  using 1:2 w linespoints ls 11, \
-'' using 1:3 w linespoints ls 12
+set key inside right bottom
+set format y "1E%T"
+plot '../../results/ansys/pipe/HSR/weakscaling.dat'  using 1:2 w linespoints ls 22, \
+'' using 1:3 w linespoints ls 23 , \
+'' using 1:4 w linespoints ls 24, \
+'' using 1:5 w linespoints  ls 25
+
+ 
 
 unset output

@@ -19,7 +19,7 @@ set yrange [0:12000]
 set key autotitle columnhead
 set key inside right top
 set datafile separator '\t'
-plot 'hsr-compressor.dat'  using 1:2 w linespoints ls 11 ,\
-'a8-compressor.dat' using 1:2 w linespoints ls 12
+plot '../../results/ansys/compressor/hsr-compressor.dat'  using 1:2 w linespoints ls 11 ,\
+'../../results/ansys/compressor/a8-compressor.dat' using 1:2 w linespoints ls 12
 
 unset output
