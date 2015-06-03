@@ -419,7 +419,7 @@ The commandlets are PowerShell modules executed in a specific order and realize 
 \section{Results}
 \label{sec:results}
 	
-The tests were performed in Microsoft Azure cloud from the same subscription as well as in the private cluster. HSR Cluster is a privately owned and maintained cluster at Microsoft Innovation Center at University of Applied Sciences at Rapperswil (HSR), Switzerland. It is composed of $32$ nodes with 48GB RAM and two Intel Xeon E5645 6 cores each, the nodes are connected with 40Gbit Infiniband Network. On each Windows Server $2012$ R2 with HPC Pack 2012 R2. Microsoft provides description of the A8 and A9 nodes only. During the tests we used a cluster with multiple A8 and ExtraLarge instances.
+The tests were performed in Microsoft Azure cloud from the same subscription as well as in the private cluster. HSR Cluster is a privately owned and maintained cluster at Microsoft Innovation Center at University of Applied Sciences at Rapperswil (HSR), Switzerland. It is composed of $32$ nodes with 48GB RAM and two Intel Xeon E5645 6 cores each, the nodes are connected with 40Gbit Infiniband Network. On each Windows Server $2012$ R2 with HPC Pack 2012 R2. During the tests we used a cluster with multiple A8 and \textit{ExtraLarge} instances. Each A8 node has Intel Xeon E5-2670 8 cores CPU with 56 GB RAM (see Tab.~\ref{tab:azureVMs}), while \textit{ExtraLarge} .  Unfortunately, Microsoft provides a more detailed description of the A8 and A9 nodes only. 
 
 \begin{figure}
 \centering
@@ -447,7 +447,7 @@ First objective was to compare deployment time of a cluster with different numbe
 \begin{figure}
 \centering
 
-  \includegraphics[width=\linewidth]{gplt-creation-simplyvshpc}
+  \includegraphics[width=.6\linewidth]{gplt-creation-simplyvshpc}
 
 
 \caption{Deployment time of cluster composed of different number of A4 nodes with Microsoft HPC pack (right) and SimplyHPC framework (left). Time is provided in hh:mm:ss format.}
@@ -459,8 +459,8 @@ Fig. \ref{fig:deployTime} shows the HPC Pack needs almost an hour to deploy the 
 The objective of the second experiment was to compare the performance of Microsoft Azure with a private cluster by running sparse matrix solver called PETSc. PETSc was run with two matrices: \textit{ruep} and \textit{nord}. The first one comes from thermal transient heat conduction simulation of electrical cabinet on a large unstructured mesh composed of 2.3 millions cells and the second matrix was generated from a thermal transient heat conduction simulation on a 3-dimensional Cartesian mesh of moderate size. Due to different mesh types, the second matrix converges much quicker than the first one. 
 
 \begin{figure}
-\centering
-	\includegraphics[width=.6\linewidth]{gplt-gflops-hpcg}
+	\centering
+	\includegraphics[width=.5\linewidth]{gplt-gflops-hpcg}
 	
 	\caption{Performance in GFlops of HPCG benchmark on different Microsoft Azure nodes and a private HSR cluster. }
 	\label{fig:hpcg}
@@ -542,20 +542,22 @@ It is equal to 1 no matter on how many cores the program is executed, for worser
 
 \begin{figure}
 \centering
-\begin{subfigure}{.4\textwidth}
 	\centering
-	\includegraphics[width=\linewidth]{gplt-a8-strong-pipe}	
-	%\label{fig:strongA8}
-\end{subfigure}
-\begin{subfigure}{.4\textwidth}
-	\centering
-	\includegraphics[width=\linewidth]{gplt-hsr-strong-pipe}
-	%\label{fig:strongHSR}
-\end{subfigure}
-
-\caption{Strong scaling in Microsoft Azure on A8 nodes (left) and HSR cluster (right). }
-\label{fig:strongHSR}
+	\includegraphics[width=.7\linewidth]{gplt-a8-strong-pipe}	
+	\caption{Strong scaling of Ansys CFX Solver on Microsoft Azure A8 nodes. }
+	\label{fig:strongA8}
 \end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=.7\linewidth]{gplt-hsr-strong-pipe}
+	\caption{Strong scaling of Ansys CFX Solver on HSR Cluster nodes. }
+	\label{fig:strongHSR}
+\end{figure}
+
+
+
+
 
 \begin{figure}
 \centering
@@ -574,37 +576,15 @@ It is equal to 1 no matter on how many cores the program is executed, for worser
 \label{fig:weakPipe}
 \end{figure}
 
-%Todo: Fix caption
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\linewidth]{gplt-compressor}
-	\caption{Strong scaling comparison for the compressor geometry). }
+	\caption{Strong scaling for the compressor geometry in Microsoft Azure on A8 nodes. }
 	\label{fig:compressor}
 \end{figure}
 
 
-%\subsection{Cost efficiency}
-%
-%According to the IDC \cite{Perry2007} hardware generates only 7\% of Total Cost of Ownership (TCO) of a cluster operating for three years. Remaining costs are related to staffing, equipment, maintenance, middleware, and training. A yearly cost of a core hour $C_{core/h}$ can be calculated as follows \cite{ubercloud}:
-%$$ 
-%C_{core/h} = { C_p * T } / { N * 365 * 24 * U } 
-%$$
-%where $C_p$ is a cost of the cluster, $T$ is a TCO over a year being equal to $7\% * 1/3$ of the cluster cost, $N$ corresponds to the number of cores and $U$ is the average yearly utilization of the cluster. According to this formula $C_{core/h}$ is equal to $0.7\$$ with the average utilization of $30\%$. The price of the HSR cluster was $150k\$$ and according to the above equation, $C_{core/h}$ is $0.71$ for $100\%$ utilization of the system. Since the average utilization of HPC clusters is always much less. e.g. between $20$ and $30 \%$ \cite{Delimitrou:2014:QRQ:2541940.2541941} the price raises in more realistic scenarios (see Tab.~\ref{tab:cost}).
-%
-%\begin{table}[h]
-%\begin{tabular}{lccccccccc}
-%\hline
-%\multicolumn{1}{|l|}{No. of nodes}          & \multicolumn{1}{c|}{1}       & \multicolumn{1}{c|}{2}      & \multicolumn{1}{c|}{3}     & \multicolumn{1}{c|}{8}    & \multicolumn{1}{c|}{10}     & \multicolumn{1}{c|}{12}    & \multicolumn{1}{c|}{16}   & \multicolumn{1}{c|}{24}   & \multicolumn{1}{c|}{32}   \\ \hline
-%\multicolumn{1}{|l|}{Utilization {[}\%{]}}  & \multicolumn{1}{c|}{0.03125} & \multicolumn{1}{c|}{0.0625} & \multicolumn{1}{c|}{0.125} & \multicolumn{1}{c|}{0.25} & \multicolumn{1}{c|}{0.3125} & \multicolumn{1}{c|}{0.375} & \multicolumn{1}{c|}{0.5}  & \multicolumn{1}{c|}{0.75} & \multicolumn{1}{c|}{100}  \\ \hline
-%\multicolumn{1}{|l|}{$C_{core/h}$ {[}\${]}} & \multicolumn{1}{c|}{22.65}   & \multicolumn{1}{c|}{11.32}  & \multicolumn{1}{c|}{5.66}  & \multicolumn{1}{c|}{2.83} & \multicolumn{1}{c|}{2.26}   & \multicolumn{1}{c|}{1.89}  & \multicolumn{1}{c|}{1.42} & \multicolumn{1}{c|}{0.94} & \multicolumn{1}{c|}{0.71} \\ \hline
-                                            %& \multicolumn{1}{l}{}         & \multicolumn{1}{l}{}        & \multicolumn{1}{l}{}       & \multicolumn{1}{l}{}      & \multicolumn{1}{l}{}        & \multicolumn{1}{l}{}       & \multicolumn{1}{l}{}      & \multicolumn{1}{l}{}      & \multicolumn{1}{l}{}     
-%\end{tabular}
-%\label{tab:cost}
-%\caption{Cost of the core per hour for different utilizations of the cluster. }
-%\end{table}
-%
-%These calculations as well the price list in Tab.~\ref{tab:azureVMs} served to compare the cost of a single GFLOP in both systems. This metric was chosen to demonstrate the savings the cloud can bring in terms of performance since this is an important indicator when running numerical simulations (see Fig.\ref{fig:cost}). It turns out that even for less realistic utilization of the private cluster the cost for running in the cloud can be still lower in terms of computing power. For most realistic utilization of $30\%$ When the costs of a single GFLOP are compared directly it turns out the cloud can be much cheaper, especially for large deployment, for example running eight A8 machines can be $19$ times cheaper as on the cluster. Therefore for small organizations a cloud may be an attractive alternative because it eliminates an up-front commitment and provides per-per-use option. SMEs can start small and only scale out when there is a need. 
-
+ 
 \section{Conclusion}
 \label{sec:conclusions}
 
