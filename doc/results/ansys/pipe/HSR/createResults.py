@@ -30,7 +30,9 @@ column_headers = [["NumCores"]] + \
 				    str(problem[0])+"_totalSize", \
 				    str(problem[0])+"_processorSize", \
 				    str(problem[0])+"_speedup", \
-				    str(problem[0])+"_efficiency_strong" \
+				    str(problem[0])+"_efficiency_strong", \
+				    str(problem[0])+"_sizeup", \
+				    str(problem[0])+"_efficiency_weak" ] \
 				       for problem in problem_configs] 
 
 #flaten list
@@ -39,7 +41,7 @@ print(column_headers)
 
 
 
-column_per_problem = 5;
+column_per_problem = 7;
 
 column_type = ['f4' for header in column_headers]
 
@@ -48,9 +50,6 @@ complete_data = numpy.zeros(len(core_configs), dtype={'names': column_headers, \
 									  			'formats':column_type})
 
 complete_data["NumCores"] = [int(config[0])*int(config[1]) for config in core_configs]
-
-
-
 
 
 # go trough each available config
@@ -130,14 +129,14 @@ for index,config in enumerate(core_configs):
 		if(problemName in sequential_data):
 			complete_data[index][pindex*column_per_problem+4] = sequential_data[problemName]/totalWallClockTime # 4. speedup
 			complete_data[index][pindex*column_per_problem+5] = sequential_data[problemName]/totalWallClockTime/totalCores # 5. efficiency strong
-			
-		
+			complete_data[index][pindex*column_per_problem+6] = (problemSize/totalCores)/problemSize * sequential_data[problemName]/totalWallClockTime # 6. sizeup
+			complete_data[index][pindex*column_per_problem+7] = (problemSize/totalCores)/problemSize * sequential_data[problemName]/totalWallClockTime/totalCores # 7. efficiency weak
 		else:
 			complete_data[index][pindex*column_per_problem+4] = numpy.NaN
 			complete_data[index][pindex*column_per_problem+5] = numpy.NaN
-		
+			complete_data[index][pindex*column_per_problem+6] = numpy.NaN
+			complete_data[index][pindex*column_per_problem+7] = numpy.NaN
 			
-
 			#if this are the sequential values, store them in an array for later use
 			#if(configName == sequentialConfiguration):
 				#sequential_data.append()
@@ -146,4 +145,4 @@ for index,config in enumerate(core_configs):
 
 
 
-numpy.savetxt('results-strong.dat',complete_data,delimiter="\t", header="\t".join(complete_data.dtype.names), comments='')
+numpy.savetxt('results.dat',complete_data,delimiter="\t", header="\t".join(complete_data.dtype.names), comments='')
