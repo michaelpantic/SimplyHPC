@@ -471,7 +471,7 @@ Since iterative solvers are memory-bound algorithms we measured the performance 
 
 HPCG benchmark test confirms the performance achieved on Azure nodes, although a slightly better performance was achieved for the HSR cluster due to suboptimal choice of the number of cores per node.  To illustrate this we run PETSc on HSR cluster with two, four and eight nodes with a single core. For ruep matrix the performance achieved was $2.1$, $4.1$ and $8.1$ GFLOPs, respectively. HPCG benchmark aims at solving a large sparse system of equation derived from a single degree of freedom heat diffusion model with zero Dirichlet boundary conditions. The global domain dimensions were $(nx * npx ) * (ny * npy ) * (nxz * npz )$ where $(nx * ny * nz )$ are the local subgrid dimension in the $x$, $y$, and $z$ dimensions, respectively, assigned to each MPI process. For the study $nx = ny = nz = 240$ and $npx, npy, npz$ are a factoring of the MPI process space that is computed automatically in the HPCG setup phase.
 
-In terms of realistic and large physical simulations we have simulated a heat transfer in the heat exchange system and the fluid flow in a compressor used in the turbines. The heat exchange system is composed of the  pipe where the water flows with the speed of $0.05 m/s$ that is buried in the ground and heated by from external source with the temperature of $10 ^\circ C$ and the heat transfer to the flowing water is simulated. Such a system is used to optimize the energy costs in buildings through the energy reuse.  
+In terms of realistic and large physical simulations we have simulated a heat transfer in the heat exchange system and the fluid flow in a compressor used in the turbines. The heat exchange system is composed of the  pipe where the water flows with the speed of $0.1 m/s$ that is buried in the ground and heated by from external source with the temperature of $10 ^\circ C$ and the heat transfer to the flowing water is simulated. Such a system is used to optimize the energy costs in buildings through the energy reuse.  
 Compressors generate air pressure that is critical in a wide range of applications - from corner gas stations to manufacturing and power plants. In our model the air gets to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters the space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:geometries}. The size of the first mesh can be scaled  in x-direction due to symmetrical geometry while the size of the compressor has ca. 13 millions cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e\-06$ and $1e\-08$ and maximal number of iterations of $100$ and $200$, respectively. 
 
 \begin{table}
@@ -556,8 +556,7 @@ It is equal to 1 no matter on how many cores the program is executed, for worser
 	\label{fig:strongHSR}
 \end{figure}
 
-For all the simulations we measured the wall clock time that included  Unfortunately, 48 GB RAM on our cluster was not enough to successfully run the \textit{pipe08} and \textit{pipe07} case in a serial mode. However, since for \textit{pipe07} we had the results for first 180 iterations we could provide the approximate running time for a single run. It was possible since the number of iterations was always 200 and the duration of each iteration was constant. 
-
+For all the simulations we measured the wall clock time. Unfortunately, we could not compute all the values for the strong scaling. 48 GB RAM on our cluster was not enough to successfully run the \textit{pipe08} and \textit{pipe07} case in a serial mode. However, since for \textit{pipe07} we had the results for first 180 iterations we could provide the approximate running time for a single run. It was possible since the number of iterations was always 200 and the duration of each iteration was constant. Also for the weak scaling we could not calculate $S_u(N,K)$ because $N(1)$ contained too few elements and the the simulation could not converge in the same number of iterations. Finally, for 512 cores it turned out that the MPI Broadcast method takes too much time, presumably 
 
 \begin{figure}
 \centering
@@ -583,28 +582,8 @@ For all the simulations we measured the wall clock time that included  Unfortuna
 	\label{fig:stringCompressor}
 \end{figure}
 
+The results clearly show that the performance of ANSYS on Azure nodes is comparable with the one on premises.
 
-%\subsection{Cost efficiency}
-%
-%According to the IDC \cite{Perry2007} hardware generates only 7\% of Total Cost of Ownership (TCO) of a cluster operating for three years. Remaining costs are related to staffing, equipment, maintenance, middleware, and training. A yearly cost of a core hour $C_{core/h}$ can be calculated as follows \cite{ubercloud}:
-%$$ 
-%C_{core/h} = { C_p * T } / { N * 365 * 24 * U } 
-%$$
-%where $C_p$ is a cost of the cluster, $T$ is a TCO over a year being equal to $7\% * 1/3$ of the cluster cost, $N$ corresponds to the number of cores and $U$ is the average yearly utilization of the cluster. According to this formula $C_{core/h}$ is equal to $0.7\$$ with the average utilization of $30\%$. The price of the HSR cluster was $150k\$$ and according to the above equation, $C_{core/h}$ is $0.71$ for $100\%$ utilization of the system. Since the average utilization of HPC clusters is always much less. e.g. between $20$ and $3	0 \%$ \cite{Delimitrou:2014:QRQ:2541940.2541941} the price raises in more realistic scenarios (see Tab.~\ref{tab:cost}).
-%
-%\begin{table}[h]
-%\begin{tabular}{lccccccccc}
-%\hline
-%\multicolumn{1}{|l|}{No. of nodes}          & \multicolumn{1}{c|}{1}       & \multicolumn{1}{c|}{2}      & \multicolumn{1}{c|}{3}     & \multicolumn{1}{c|}{8}    & \multicolumn{1}{c|}{10}     & \multicolumn{1}{c|}{12}    & \multicolumn{1}{c|}{16}   & \multicolumn{1}{c|}{24}   & \multicolumn{1}{c|}{32}   \\ \hline
-%\multicolumn{1}{|l|}{Utilization {[}\%{]}}  & \multicolumn{1}{c|}{0.03125} & \multicolumn{1}{c|}{0.0625} & \multicolumn{1}{c|}{0.125} & \multicolumn{1}{c|}{0.25} & \multicolumn{1}{c|}{0.3125} & \multicolumn{1}{c|}{0.375} & \multicolumn{1}{c|}{0.5}  & \multicolumn{1}{c|}{0.75} & \multicolumn{1}{c|}{100}  \\ \hline
-%\multicolumn{1}{|l|}{$C_{core/h}$ {[}\${]}} & \multicolumn{1}{c|}{22.65}   & \multicolumn{1}{c|}{11.32}  & \multicolumn{1}{c|}{5.66}  & \multicolumn{1}{c|}{2.83} & \multicolumn{1}{c|}{2.26}   & \multicolumn{1}{c|}{1.89}  & \multicolumn{1}{c|}{1.42} & \multicolumn{1}{c|}{0.94} & \multicolumn{1}{c|}{0.71} \\ \hline
-                                            %& \multicolumn{1}{l}{}         & \multicolumn{1}{l}{}        & \multicolumn{1}{l}{}       & \multicolumn{1}{l}{}      & \multicolumn{1}{l}{}        & \multicolumn{1}{l}{}       & \multicolumn{1}{l}{}      & \multicolumn{1}{l}{}      & \multicolumn{1}{l}{}     
-%\end{tabular}
-%\label{tab:cost}
-%\caption{Cost of the core per hour for different utilizations of the cluster. }
-%\end{table}
-%
-%These calculations as well the price list in Tab.~\ref{tab:azureVMs} served to compare the cost of a single GFLOP in both systems. This metric was chosen to demonstrate the savings the cloud can bring in terms of performance since this is an important indicator when running numerical simulations (see Fig.\ref{fig:cost}). It turns out that even for less realistic utilization of the private cluster the cost for running in the cloud can be still lower in terms of computing power. For most realistic utilization of $30\%$ When the costs of a single GFLOP are compared directly it turns out the cloud can be much cheaper, especially for large deployment, for example running eight A8 machines can be $19$ times cheaper as on the cluster. Therefore for small organizations a cloud may be an attractive alternative because it eliminates an up-front commitment and provides per-per-use option. SMEs can start small and only scale out when there is a need. 
 
 \section{Conclusion}
 \label{sec:conclusions}
