@@ -87,3 +87,4 @@ HSR.AzureEE.GUI
 /HSR.AzureEE.cmd/Program_with_subscription_data.cs
 /Packages.dgml
 /WindowsAzureTest
+*.blg

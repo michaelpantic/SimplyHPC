@@ -276,7 +276,7 @@ Due to the fact that the cloud providers are commercial entities that compete on
 
 \subsection{Microsoft Azure}
 
-Microsoft Azure is a cloud computing platform providing three types of VM roles. Web and Worker roles in PaaS model provide a set of predefined cloud services for web applications and scalable applications, respectively. VM roles in IaaS model are just bare machines deployed with a specific OS. The platform is well positioned on the market and is competitive to other cloud providers \cite{cloudScores} \cite{twister4azure} with a large user base and third-party cloud services. As of 2015, ten types of different instances available (see \ref{tab:azureVMs}). Computational costs on Microsoft Azure depend on the number of cores, the type of machine and the time of effective usage. The time of effective usage is the time between set-up of the virtual machine and its tear-down, regardless of the actual usage or workload. \\
+Microsoft Azure is a cloud computing platform providing three types of VM roles. Web and Worker roles in PaaS model provide a set of predefined cloud services for web applications and scalable applications, respectively. VM roles in IaaS model are just bare machines deployed with a specific OS. The platform is well positioned on the market and is competitive to other cloud providers \cite{cloudScores} \cite{twister4azure} with a large user base and third-party cloud services. As of 2015, ten types of different instances available (see Tab.~\ref{tab:azureVMs}). Computational costs on Microsoft Azure depend on the number of cores, the type of machine and the time of effective usage. The time of effective usage is the time between set-up of the virtual machine and its tear-down, regardless of the actual usage or workload. \\
 A8 and A9 are special Azure VM instances which include Infiniband network stack with low latency and Remote Direct Memory Access (RDMA) enabled. Unfortunately, the specification of the CPUs is provided only for these instances, for other VMs only the number of cores, RAM and disk size is provided. There is also a special D-series virtual machines available with solid state drives and slightly faster processors.
  
 %TODO: extend the list
@@ -298,9 +298,9 @@ A8 and A9 are special Azure VM instances which include Infiniband network stack 
 				A9     & 16    & 112 GB  & 382 GB     & Intel Xeon E5-2670 & \$4.90/hr (\~\$3,646/mo) \\ \hline
 				A10    & 8     & 56 GB   & 382 GB     & Intel Xeon E5-2670 & \$1.64/hr (\~\$1,220/mo) \\ \hline
 				A11    & 16    & 112 GB  & 382 GB     & Intel Xeon E5-2670 & \$3.04/hr (\~\$2,262/mo) \\ \hline
-			\end{tabular}
-			\label{tab:azureVMs}
+			\end{tabular}			
 			\caption{Microsoft Azure VM instances. Price list retrieved in May $2015$.}
+			\label{tab:azureVMs}
 	\end{table}
 \end{center}
  
@@ -471,7 +471,7 @@ Since iterative solvers are memory-bound algorithms we measured the performance 
 HPCG benchmark test confirms the performance achieved on Azure nodes, although a slightly better performance was achieved for the HSR cluster due to suboptimal choice of the number of cores per node.  To illustrate this we run PETSc on HSR cluster with two, four and eight nodes with a single core. For ruep matrix the performance achieved was $2.1$, $4.1$ and $8.1$ GFLOPs, respectively. HPCG benchmark aims at solving a large sparse system of equation derived from a single degree of freedom heat diffusion model with zero Dirichlet boundary conditions. The global domain dimensions were $(nx * npx ) * (ny * npy ) * (nxz * npz )$ where $(nx * ny * nz )$ are the local subgrid dimension in the $x$, $y$, and $z$ dimensions, respectively, assigned to each MPI process. For the study $nx = ny = nz = 240$ and $npx, npy, npz$ are a factoring of the MPI process space that is computed automatically in the HPCG setup phase.
 
 In terms of realistic and large physical simulations we have simulated a heat transfer in the heat exchange system and the fluid flow in a compressor used in the turbines. The heat exchange system is composed of the  pipe where the water flows with the speed of $0.05 m/s$ that is buried in the ground and heated by from external source with the temperature of $10 ^\circ C$ and the heat transfer to the flowing water is simulated. Such a system is used to optimize the energy costs in buildings through the energy reuse.  
-Compressors generate air pressure that is critical in a wide range of applications - from corner gas stations to manufacturing and power plants. In our model the air gets to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters the space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:cfx}. The size of the first mesh can be scaled  in x-direction due to symmetrical geometry while the size of the compressor has ca. 13 millions cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e\-06$ and $1e\-08$ and maximal number of iterations of $100$ and $200$, respectively. 
+Compressors generate air pressure that is critical in a wide range of applications - from corner gas stations to manufacturing and power plants. In our model the air gets to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters the space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:geometries}. The size of the first mesh can be scaled  in x-direction due to symmetrical geometry while the size of the compressor has ca. 13 millions cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e\-06$ and $1e\-08$ and maximal number of iterations of $100$ and $200$, respectively. 
 
 \begin{table}
 	\centering
@@ -496,16 +496,16 @@ Compressors generate air pressure that is critical in a wide range of applicatio
 \begin{subfigure}{.4\textwidth}
 	\centering
 	\includegraphics[width=\linewidth]{pipe_nobg}	
-	\label{fig:pipe}
+	%\label{fig:pipe}
 \end{subfigure}
 \begin{subfigure}{.5\textwidth}
 	\centering
 	\includegraphics[width=.7\linewidth]{compressor_nobg}
-	\label{fig:compressor}
+	%\label{fig:compressor}
 \end{subfigure}
 
 \caption{The geometries of the heat exchange system (left) and compressor (right) used for the simulations. }
-\label{fig:cfx}
+\label{fig:geometries}
 \end{figure}
 
 To understand the potential scaling impediments on the most powerful Azure nodes, we tested both weak and strong scaling for different simulations cases. With strong scaling, the problem size remains the same, while the number of cores increases, while with the weak scaling, both the problem size and the number of cores increase. These scalability tests provide insights on how fast the same problem can be solved when the number of cores increases, and how to solve a larger problem in the same time. 
@@ -528,7 +528,7 @@ $$
  
 
 %Since ANSYS CFX is a commercial software we could not judge what is the sequential and parallizable fraction of the solver. One can only speculate about the that since the performance degrades, the significant 
-Sizeup ($S_u$) is a chief metric for measuring the weak scaling. It can be defined as 
+Sizeup ($S_u$) is a chief metric for measuring the weak scaling. It can be defined as: 
 
 \begin{equation}
 \label{eq:sizeup}
@@ -555,8 +555,7 @@ It is equal to 1 no matter on how many cores the program is executed, for worser
 	\label{fig:strongHSR}
 \end{figure}
 
-
-
+For all the simulations we measured the wall clock time that included  Unfortunately, 48 GB RAM on our cluster was not enough to successfully run the \textit{pipe08} and \textit{pipe07} case in a serial mode. However, since for \textit{pipe07} we had the results for first 180 iterations we could provide the approximate running time for a single run. It was possible since the number of iterations was always 200 and the duration of each iteration was constant. 
 
 
 \begin{figure}
@@ -576,12 +575,11 @@ It is equal to 1 no matter on how many cores the program is executed, for worser
 \label{fig:weakPipe}
 \end{figure}
 
-%Todo: Fix caption
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\linewidth]{gplt-compressor}
-	\caption{Strong scaling comparison for the compressor geometry). }
-	\label{fig:compressor}
+	\caption{Strong scaling in Microsoft Azure on A8 nodes for the compressor geometry. }
+	\label{fig:stringCompressor}
 \end{figure}
 
 
@@ -623,7 +621,7 @@ The framework has been developed in Microsoft Innovation Center in Rapperswil, S
 \section{Literature}
 \label{sec:literature}
 
-\bibliography{hpconAzure}
+\bibliography{fcgs}
 \bibliographystyle{plain}
 
 \end{document}
