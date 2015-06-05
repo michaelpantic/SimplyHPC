@@ -433,59 +433,72 @@ Here we compared the time needed for setting up a cloud cluster consisting of A4
 
 %we measured the time needed create a cluster was measured together with other tasks, i.e. a time needed to pack and send the job to the cluster before the job starts executing.  
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
 	\includegraphics[width=.6\linewidth]{gplt-creation-simplyvshpc}
 	\caption{Deployment time of cluster composed of different number of A4 nodes with Microsoft HPC pack (right) and SimplyHPC framework (left). Time is provided in hh:mm:ss format.}
 	\label{fig:deployTime}
 \end{figure}
 
-Fig. \ref{fig:deployTime} shows the HPC Pack needs almost an hour to deploy a cloud cluster while the SimplyHPC platform needs about six minutes in average. The long deployment time lies of HPC Pack is due to the fact that HPC Pack performs additional deployment steps such as creating a domain controller, SQL database or installing many additional services that are not needed in general for command-line based scientific applications.
+\textcolor[rgb]{1,0,0}{TODO: SImplyHPC detailed data -  see cmd program in github}
+
+Fig. \ref{fig:deployTime} shows the HPC Pack needs almost an hour to deploy a cloud cluster while SimplyHPC needs about six minutes in average. The long deployment time of HPC Pack is due to the fact that HPC Pack performs additional deployment steps such as creating a domain controller, SQL database or installing many additional services that are not needed in general for command-line based scientific applications.
 After this measured set-up times, the infrastracture is generally ready to run MPI-based applications, such as PETSc or ANSYS CFX.
 
 \subsection{Sparse Matrix Solver Performance}
-The objective of the second experiment was to compare the performance of Microsoft Azure with a private cluster by running sparse matrix solver called PETSc. PETSc was run with two matrices: \textit{ruep} and \textit{nord}. The first one comes from thermal transient heat conduction simulation of electrical cabinet on a large unstructured mesh composed of 2.3 millions cells and the second matrix was generated from a thermal transient heat conduction simulation on a 3-dimensional Cartesian mesh of moderate size. Due to different mesh types, the second matrix converges much quicker than the first one. 
+The objective of the second experiment was to compare the performance of a cloud cluster on Microsoft Azure with a traditional on-premises cluster using the example of distributed parallel sparse matrix solvers, as they are often used in CFD applications. The performance of these solvers depends on a multitude of factors such as CPU speed, memory bandwidth but also network speed and latency. Here we used 2 different solvers: The HPCG (High Performance Conjugate Gradients) Benchmark (see \cite{hpcg} for a detailed description) for standardized comparability and a PETSC (\cite{petsc}) solver with 2 different real world problems. PETSC is a widely used framework for scientific applications that includes parallel solver codes.
+Both solvers were parallelized using Microsoft MPI (no OpenMP / threading).
+
+On Microsoft Azure, the HPCG results scale nearly linearly with the number of cores, with a maximum speed-up of approx. $36$ with $64$ cores (compared to $1$ core) for A8 nodes. With A4 nodes, the scaling is not as desirable, probably also due to the lacking low-latency Infiniband interconnect. The dynamic cloud cluster easily outperforms the on-premises cluster. See fig. \ref{fig:hpcg} for more details.
+
+PETSc was run with two different matrices: \textit{ruep} and \textit{nord}. The first one comes from a thermal transient heat conduction simulation of an electrical cabinet on a large unstructured mesh composed of 2.3 millions cells and the second matrix was generated from a thermal transient heat conduction simulation on a 3-dimensional Cartesian mesh of moderate size. Due to different mesh types, the second matrix converges much quicker than the first one.  \textcolor[rgb]{1,0,0}{IMPORTANT: SUPPLY MATRIX SIZES here!}
+
+In figure \ref{fig:ruep} and \ref{fig:nord} the measurements for the PETSc trials are shown. On the cloud cluster using the A8 nodes scaling is close to ideal for the larger \textit{ruep} matrix, while the efficiency decreases for higher number of cores for the smaller \textit{nord} matrix. Using A4 nodes, scaling and performance is suboptimal - most likely due to the shared infrastructure and missing Infiniband interconnect.  The performance of the on-premises cluster for both cases is suboptimal. This is in part due to process starvation - the memory bandwidth is insufficient for this configuration and code. \textcolor[rgb]{1,0,0}{explanation ok like this? Maybe include the graph for a different process layout (1 process per node instead of per core) for subgraphs b/c? }
+
+%%TODO: we did, but here we present different data?
+%Since iterative solvers are memory-bound algorithms we measured the performance achieved for different combinations of cores in a single node, e.g. one node with one, two, four and eight cores and for two, four and eight nodes with eight cores. This way both vertical scaling (adding more cores to the system) and horizontal scaling (adding more nodes to the system) could be approximately measured. %More exact measurements were not executed because the private clusters had different hardware, the objective of the paper is different
+
+%HPCG benchmark test confirms the performance achieved on Azure nodes, although a slightly better performance was achieved for the HSR cluster due to suboptimal choice of the number of cores per node.  To illustrate this we run PETSc on HSR cluster with two, four and eight nodes with a single core. For ruep matrix the performance achieved was $2.1$, $4.1$ and $8.1$ GFLOPs, respectively. HPCG benchmark aims at solving a large sparse system of equation derived from a single degree of freedom heat diffusion model with zero Dirichlet boundary conditions. The global domain dimensions were $(nx * npx ) * (ny * npy ) * (nxz * npz )$ where $(nx * ny * nz )$ are the local subgrid dimension in the $x$, $y$, and $z$ dimensions, respectively, assigned to each MPI process. For the study $nx = ny = nz = 240$ and $npx, npy, npz$ are a factoring of the MPI process space that is computed automatically in the HPCG setup phase.
 
 
-Since iterative solvers are memory-bound algorithms we measured the performance achieved for different combinations of cores in a single node, e.g. one node with one, two, four and eight cores and for two, four and eight nodes with eight cores. This way both vertical scaling (adding more cores to the system) and horizontal scaling (adding more nodes to the system) could be approximately measured. %More exact measurements were not executed because the private clusters had different hardware, the objective of the paper is different
-
-HPCG benchmark test confirms the performance achieved on Azure nodes, although a slightly better performance was achieved for the HSR cluster due to suboptimal choice of the number of cores per node.  To illustrate this we run PETSc on HSR cluster with two, four and eight nodes with a single core. For ruep matrix the performance achieved was $2.1$, $4.1$ and $8.1$ GFLOPs, respectively. HPCG benchmark aims at solving a large sparse system of equation derived from a single degree of freedom heat diffusion model with zero Dirichlet boundary conditions. The global domain dimensions were $(nx * npx ) * (ny * npy ) * (nxz * npz )$ where $(nx * ny * nz )$ are the local subgrid dimension in the $x$, $y$, and $z$ dimensions, respectively, assigned to each MPI process. For the study $nx = ny = nz = 240$ and $npx, npy, npz$ are a factoring of the MPI process space that is computed automatically in the HPCG setup phase.
 
 
-\begin{figure}[ht]
+
+
+
+\begin{figure}[h]
 \centering
 \begin{subfigure}{.33\textwidth}
 	\centering
 	\includegraphics[width=\linewidth]{gplt-gflops-hpcg}
-	
+	\caption{HPCG}
 
 	\label{fig:hpcg}
 \end{subfigure}
 \begin{subfigure}{.33\textwidth}
   \centering
 	\includegraphics[width=\linewidth]{gplt-gflops-ruep}  
-  %\caption{A subfigure}
-  \label{fig:ruepel}
+
+	\caption{PETSc with Matrix 'ruep'}
+  \label{fig:ruep}
 \end{subfigure}%
 \begin{subfigure}{.33\textwidth}
   \centering
   \includegraphics[width=\linewidth]{gplt-gflops-nord}
-  %\caption{A subfigure}
+	\caption{PETSc with Matrix 'nord'}
   \label{fig:nord}
 \end{subfigure}
 
-\caption{Performance in GFlops of PETSc solving ruep (left) and nord (right) matrix systems on different Microsoft Azure nodes and a private HSR cluster. }
+\caption{Performance in GFlops of HPCG resp. PETSc solvers on cloud clusters with different node sizes on Microsoft Azure and on a on-premises cluster (HSR cluster) }
 \label{fig:test}
 \end{figure}
 
 
-
-  \includegraphics[width=.6\linewidth]{gplt-creation-simplyvshpc}
+ 
 
 \subsection{ANSYS CFX Performance Study}
 	
-	\centering
-	\includegraphics[width=.5\linewidth]{gplt-gflops-hpcg}
+
 
 In terms of realistic and large physical simulations we have simulated a heat transfer in the heat exchange system and the fluid flow in a compressor used in the turbines. The heat exchange system is composed of the  pipe where the water flows with the speed of $0.1 m/s$ that is buried in the ground and heated by from external source with the temperature of $10 ^\circ C$ and the heat transfer to the flowing water is simulated. Such a system is used to optimize the energy costs in buildings through the energy reuse.  
 Compressors generate air pressure that is critical in a wide range of applications - from corner gas stations to manufacturing and power plants. In our model the air gets to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters the space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:geometries}. The size of the first mesh can be scaled  in x-direction due to symmetrical geometry while the size of the compressor has ca. 13 millions cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e\-06$ and $1e\-08$ and maximal number of iterations of $100$ and $200$, respectively. 
@@ -610,6 +623,7 @@ The results clearly show that the performance of ANSYS on Azure nodes is compara
 \label{sec:conclusions}
 
 We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of light weight modules and a set of commandlets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from nearly an hour to couple of minutes.  This way scientific applications can access the cloud if the calculations are too time-consuming for a local machine or a private cluster. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
+
 
 
 %Further areas of work could include the following:
