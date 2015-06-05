@@ -4,6 +4,10 @@
 Amazon {EC2}.
 \newblock \url{http://aws.amazon.com/ec2/}. Accessed in May 2015.
 
+\bibitem{Balaji}
+Pavan Balaji, Darius Buntinas, David Goodell, and Sameer Kumar~Ewing Lusk.
+\newblock Mpi on a million processors.
+
 \bibitem{petsc-efficient}
 Satish Balay, William~D. Gropp, Lois~Curfman McInnes, and Barry~F. Smith.
 \newblock Efficient management of parallelism in object oriented numerical
