@@ -88,3 +88,4 @@ HSR.AzureEE.GUI
 /Packages.dgml
 /WindowsAzureTest
 *.blg
+doc/tex/fcgs.blg
