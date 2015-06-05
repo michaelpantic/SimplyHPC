@@ -453,7 +453,9 @@ On Microsoft Azure, the HPCG results scale nearly linearly with the number of co
 
 PETSc was run with two different matrices: \textit{ruep} and \textit{nord}. The first one comes from a thermal transient heat conduction simulation of an electrical cabinet on a large unstructured mesh composed of 2.3 millions cells and the second matrix was generated from a thermal transient heat conduction simulation on a 3-dimensional Cartesian mesh of moderate size. Due to different mesh types, the second matrix converges much quicker than the first one.  \textcolor[rgb]{1,0,0}{IMPORTANT: SUPPLY MATRIX SIZES here!}
 
-In figure \ref{fig:ruep} and \ref{fig:nord} the measurements for the PETSc trials are shown. On the cloud cluster using the A8 nodes scaling is close to ideal for the larger \textit{ruep} matrix, while the efficiency decreases for higher number of cores for the smaller \textit{nord} matrix. Using A4 nodes, scaling and performance is suboptimal - most likely due to the shared infrastructure and missing Infiniband interconnect.  The performance of the on-premises cluster for both cases is suboptimal. This is in part due to process starvation - the memory bandwidth is insufficient for this configuration and code. \textcolor[rgb]{1,0,0}{explanation ok like this? Maybe include the graph for a different process layout (1 process per node instead of per core) for subgraphs b/c? }
+In figure \ref{fig:ruep} and \ref{fig:nord} the measurements for the PETSc trials are shown. On the cloud cluster using the A8 nodes scaling is close to ideal for the larger \textit{ruep} matrix, while the efficiency decreases for higher number of cores for the smaller \textit{nord} matrix. Using A4 nodes, scaling and performance are suboptimal - most likely due to the shared infrastructure and missing Infiniband interconnect.  The performance of the on-premises cluster is suboptimal in both cases. This is in part due to process starvation - the memory bandwidth is insufficient for this configuration and code. \textcolor[rgb]{1,0,0}{explanation ok like this? Maybe include the graph for a different process layout (1 process per node instead of per core) for subgraphs b/c? }
+
+Based on these results only cloud clusters with A8 nodes are taken into account for subsequent tests with ANSYS on Microsoft Azure.
 
 %%TODO: we did, but here we present different data?
 %Since iterative solvers are memory-bound algorithms we measured the performance achieved for different combinations of cores in a single node, e.g. one node with one, two, four and eight cores and for two, four and eight nodes with eight cores. This way both vertical scaling (adding more cores to the system) and horizontal scaling (adding more nodes to the system) could be approximately measured. %More exact measurements were not executed because the private clusters had different hardware, the objective of the paper is different
@@ -497,9 +499,6 @@ In figure \ref{fig:ruep} and \ref{fig:nord} the measurements for the PETSc trial
  
 
 \subsection{ANSYS CFX Performance Study}
-	
-
-
 In terms of realistic and large physical simulations we have simulated a heat transfer in the heat exchange system and the fluid flow in a compressor used in the turbines. The heat exchange system is composed of the  pipe where the water flows with the speed of $0.1 m/s$ that is buried in the ground and heated by from external source with the temperature of $10 ^\circ C$ and the heat transfer to the flowing water is simulated. Such a system is used to optimize the energy costs in buildings through the energy reuse.  
 Compressors generate air pressure that is critical in a wide range of applications - from corner gas stations to manufacturing and power plants. In our model the air gets to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters the space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:geometries}. The size of the first mesh can be scaled  in x-direction due to symmetrical geometry while the size of the compressor has ca. 13 millions cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e\-06$ and $1e\-08$ and maximal number of iterations of $100$ and $200$, respectively. 
 
@@ -540,10 +539,7 @@ Compressors generate air pressure that is critical in a wide range of applicatio
 
 To understand the potential scaling impediments on the most powerful Azure nodes, we tested both weak and strong scaling for different simulations cases. With strong scaling, the problem size remains the same, while the number of cores increases, while with the weak scaling, both the problem size and the number of cores increase. These scalability tests provide insights on how fast the same problem can be solved when the number of cores increases, and how to solve a larger problem in the same time. 
 
-% pointed out that there’s another way to scale up a parallel
-%program to run on more cores: increase the size of the problem being solved as you increase the number of cores. This is known as weak scaling.
-
-
+\subsubsection{Strong scaling}
 The first scaling defined  provides insights into parallel scalability and memory utilization while the weak scaling approximates the utilization of cores. Since it is difficult to compare different systems, namely a local cluster and the cluster in the cloud and use the Amdahl's Law, from the data available at Figs.~\ref{fig:strongHSR} and \ref{fig:weakPipe} we calculate the speedup $S(N,K)$ as follows: 
 
 \begin{equation}
@@ -556,6 +552,8 @@ $$
 E_s(N,K) = S(N,K) / K
 $$
  
+\subsubsection{Weak scaling}
+
 
 %Since ANSYS CFX is a commercial software we could not judge what is the sequential and parallizable fraction of the solver. One can only speculate about the that since the performance degrades, the significant 
 Sizeup ($S_u$) is a chief metric for measuring the weak scaling. It can be defined as: 
@@ -584,6 +582,8 @@ It is equal to 1 no matter on how many cores the program is executed, for worser
 	\caption{Strong scaling of Ansys CFX Solver on HSR Cluster nodes. }
 	\label{fig:strongHSR}
 \end{figure}
+
+
 
 For all the simulations we measured the wall clock time. Unfortunately, we could not compute all the values for the strong scaling. 48 GB RAM on our cluster was not enough to successfully run the \textit{pipe08} and \textit{pipe07} case in a serial mode. However, since for \textit{pipe07} we had the results for first 180 iterations we could provide the approximate running time for a single run. It was possible since the number of iterations was always 200 and the duration of each iteration was constant. Also for the weak scaling we could not calculate $S_u(N,K)$ because $N(1)$ contained too few elements and the the simulation could not converge in the same number of iterations. \\
 Finally, for 512 cores it turned out that the MPI Broadcast overflow prohibit the simulation to execute. It is implemented as a scatter operation followed by allgather and for large messages it does not scale because during the allgather operation the message size will be too small \cite{Balaji}. This is actually consistent with the performance tests of CFX ANSYS on 16-node cluster with Six-Core Intel X5670 @ 2.93 GHz CPUs \cite{ansysScaling}. The MPI Broadcast is one of the operations that generated most of the communication overhead, even for much at the level of 96 MPI processes. Also the majority of messages being exchanged between the processes were of a small size ($< 64B$). Those two effects sum up to a large communication overhead and at a given scale the simulation may be rejected by the MPI framework.
@@ -624,6 +624,7 @@ The results clearly show that the performance of ANSYS on Azure nodes is compara
 
 We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of light weight modules and a set of commandlets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from nearly an hour to couple of minutes.  This way scientific applications can access the cloud if the calculations are too time-consuming for a local machine or a private cluster. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
 
+\textcolor[rgb]{1,0,0}{mpantic: Additional suggestions for conclusion: Something about elasticity and cost efficiency, such as "Clearly, dynamic cloud clusters can compete with traditional on-premises clusters performance wise. Additionally, cloud clusters enable very cost efficient calculations as they are billed by the hour....etc etc}
 
 
 %Further areas of work could include the following:
