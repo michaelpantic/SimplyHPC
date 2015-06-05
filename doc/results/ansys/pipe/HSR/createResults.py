@@ -69,7 +69,7 @@ for index,config in enumerate(core_configs):
 
 		#get file this folder (resultsFolder/configName) that starts with problem name
 		
-		fileName = [f for f in [d for d in next(os.walk(configFolder))][2] if re.match(r''+problemName+'.+',f)]
+		fileName = [f for f in [d for d in next(os.walk(configFolder))][2] if re.match(r''+problemName+'_\d+\.out',f)]
 		
 		foundResult = []
 

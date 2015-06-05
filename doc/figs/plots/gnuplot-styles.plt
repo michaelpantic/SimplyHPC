@@ -14,6 +14,7 @@ set style line 22 lw 4 pt 7 ps 0.5 lc rgb '#0072bd'
 set style line 23 lw 4 pt 7 ps 0.5 lc rgb '#d95319'
 set style line 24 lw 4 pt 7 ps 0.5 lc rgb '#77ac30'
 set style line 25 lw 4 pt 7 ps 0.5 lc rgb '#a2142f'
+set style line 26 lw 4 pt 7 ps 0.5 lc rgb '#4dbeee'
 set grid
  set key opaque
 set datafile missing 'nan'
