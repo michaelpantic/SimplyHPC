@@ -251,7 +251,7 @@ Our paper focuses on the following aspects. Chapter \ref{sec:architecture} descr
 Each of the previously mentioned cloud platforms offers different strategies to communicate with the cloud infrastructure and different virtualization procedures. The user is free to manage the cloud resources by deploying the cluster manually or with the help of accompanying scripts and APIs, or use the cloud orchestrators that automate the management of the cloud-based infrastructure. The motivation for our development was twofold.
 
 \begin{description}
-\item[Complex deployment] In order to run applications on a cloud, a deployment (installation) of the software is necessary first. In the Infrastructure as a Service (IaaS) approach, the user can access the cloud computers using regular remote desktop infrastructure and therefore manual/scripted installation for each node has to be done (similar to on-premises clusters). In the Platform as a Service (Paas) approach, usually accesses the cloud computers using pre-defined high-level interfaces and therefore has to use preinstalled software or submit his desired application as pre-packaged templates, which need expertise to create. For both approaches, so called \texit{Cloud orchestrators} manage the interactions and interconnections among cloud-based and on-premises business units as well as expose various automated processes and associated resources. They have become a desired alternative to standard deployment procedures because of lower level of expertise and reduced deployment time. Tools for cloud orchestration and vertical and horizontal scaling are fundamental to the adoption of the framework aiming at simplifying the whole procedure.
+\item[Complex deployment] In order to run applications on a cloud, a deployment (installation) of the software is necessary first. In the Infrastructure as a Service (IaaS) approach, the user can access the cloud computers using regular remote desktop infrastructure and therefore manual/scripted installation for each node has to be done (similar to on-premises clusters). In the Platform as a Service (Paas) approach, usually accesses the cloud computers using pre-defined high-level interfaces and therefore has to use preinstalled software or submit his desired application as pre-packaged templates, which need expertise to create. For both approaches, so called \textit{Cloud orchestrators} manage the interactions and interconnections among cloud-based and on-premises business units as well as expose various automated processes and associated resources. They have become a desired alternative to standard deployment procedures because of lower level of expertise and reduced deployment time. Tools for cloud orchestration and vertical and horizontal scaling are fundamental to the adoption of the framework aiming at simplifying the whole procedure.
 
 \item[Complicated access] Although cloud orchestrators play an important role, still there are only a few easy to use, out-of-the box platforms that simplify deployment, monitoring and accessing scientific applications in the cloud. Companies offering cloud-based software in PaaS model limit their offering to applications of the highest commercial impact while neglecting other types of software such as numerical simulations \cite{CloudStack} \cite{OpenStack}. The best situation is in Amazon EC2 where frameworks to simplify the process of orchestration of specific scientific applications exist. Wong and Goscinski propose a unified framework composed of a series of scripts for running gene sequencing analysis jobs through a web portal \cite{Wong2013} on Amazon EC2 (IaaS) infrastructure. For this purpose they designed a HPC service software library for accessing high level HPC resources from the IaaS cloud and demostrate their framework in running mpiBLAS \cite{mpiBlas}. Balgacem et al. measured the multiphase flow on a hybrid platform combined with Amazon $EC2$ and a private cluster \cite{BenBelgacem2015}. Morpho is a modified version of Hadoop MapReduce framework that decouples storage and computation into physical and virtual clusters to reduce costly data movement of user data \cite{Lu2014}. The authors demonstrate the efficiency of the  framework in text mining application compared with the Hadoop MapReduce running in Amazon mode. Twister4Azure is a MapReduce frameworks designed specifically for Microsoft Azure. It extends the native Hadoop framework in Azure cloud platform and provides multi-level data caching mechanism to overcome the latencies of cloud services as well as a decentralized task scheduling to avoid single point of failure. Still, the framework requires a programming knowledge since it is relased as .NET Project. The platform has been demonstrated in applications that are well fitted to MapReduce paradigm, such as BLAS sequence searching or KMean Clustering. Marozzo et. al \cite{catlett2013cloud} present a web-based framework for running pre-defined workflows composed of web services in Microsoft Azure. The authors demonstrate the framework in data mining applications by deploying an execution workflow running a single classification algorithm and measure strong scalability in classifying different data sets that were previously partitioned. Unfortunately, it is not clear if the algorithm was multi- or single-threaded or if is possible to add own applications to the framework that are no exposed as web-services and not related to data mining. 
 Another interesting frameworks are Eucalyptus \cite{eucalyptus} or CloudStack \cite{CloudStack} that were designed to deploy IaaS hybrid clouds, e.g. scalable IaaS cloud computing platform composed of a private cloud and public one based on Amazon EC2.
@@ -331,30 +331,27 @@ In addition to the numerical tools, we have selected ANSYS CFX, a high performan
 
 \section{SimplyHPC Architecture}
 \label{sec:architecture}
-In this chapter, three main architectural aspects of SimplyHPC are presented. First, the system architecture is explained in terms of the software stack, cluster settings, communication setup and Azure-specific components visible to a single node. Second, we discuss also the structure of the SimplyHPC framework on the cluster level and explain how the software automatizes the setup of nodes and clusters using the given system architecture. Third, the inner software architecture is briefly presented.
+In this chapter, three main architectural aspects of SimplyHPC are presented. Firstly, the system architecture is explained in terms of the software stack, cluster settings, communication setup and Azure-specific components visible to a single node. Secondly, we discuss the structure of the SimplyHPC framework on cluster level and explain how the software automatizes the setup of nodes and clusters using the given system architecture. Thirdly, the inner software architecture is briefly presented.
 
 \subsection{Node architecture}
 
-As implied in Sec.~\ref{sec:background} there are different type of machines available on Microsoft Azure. Here, PaaS VMs in \textit{Worker Roles} are used, as they have various advantages over traditional virtual machines, especially in terms of manageability and scalability. They also helped to automatize the deployment step. Instead of configuring a machine and setting up software manually as on regular virtual machines, PaaS VMs are set up using a \textit{Deployment Package}. This package contains the machine-specific configuration such as  network adapters, local storage partitions, etc. 
+As implied in Sec.~\ref{sec:background} there are different type of machines available on Microsoft Azure. Here, PaaS VMs (\textit{Worker Roles}) are used, as they have various advantages over traditional virtual machines, especially in terms of manageability and scalability. Thus, automated installation and configuration is simplified. 
 
-% Network adapters?
-% Explain what is the Azure Fabric Controller, what is the difference compared to the Azure Framework
-% SimplyHPC Role DLL -> SimplyHPC DLL
-% Azure Virtual Drive -> Azure File Storage
+Worker roles are set up using a \textit{Deployment Package}. This package contains a full description of the  virtual machine, including machine-specific configuration (such as local storage requirements, network settings, security settings) as well as software (start-up services, application to be hosted).
 
-The deployment package contains also the components of the software that is about to be executed on the cluster.
-New PaaS VMs are then deployed by supplying this deployment package to the Azure Fabric Controller.
+New Worker roles are then automatically set-up according to this deployment package. This is than by hidden Azure management software, subsequently called the \textit{Azure Cloud Controller}. 
 
-In Fig.~\ref{fig:schemaRole}, the schematic architecture of a single node is shown. The particular components are execute in the predefined order as follows. Here, we present the execution sequence for a typical MPI job:
+
+In Fig.~\ref{fig:schemaRole}, the schematic architecture of a single node is shown (1 worker role = 1 node of a cloud cluster). The particular components are execute in the predefined order as follows. Here, we present the execution sequence for a typical MPI job:
 
 \begin{enumerate}
-	\item During the set up phase of the PaaS VM, the deployment package is installed and set up by the Azure Fabric Controller. Some components are configured as a Windows Service in the ''MPI Context''. This context is set up identically on each node and is used for authentication between nodes during the execution of a distributed MPI job.
+	\item During the set up phase of the worker role, the deployment package is installed and set up by the Azure Fabric Controller. Some components are configured as a Windows Service in the ''MPI Context''. This context is set up identically on each node and allows for pass-through authentication between nodes during the execution of a distributed MPI job.
 
-	\item After the set up phase has finished, the job scheduler inside the SimplyHPC Role DLL is executed by the Azure Framework. This scheduler periodically checks for new jobs in the configured Azure Table/Blob storage. If such a new job is found, it is downloaded to the local storage and executed according to its parameters. Because the MPI execution takes place in another user context, the start of the process is off-loaded to the MPIWrapper Service with the help of inter-process communication via Windows Communication Foundation pipes.
+	\item After the set up phase has finished, the job scheduler inside the SimplyHPC DLL is executed by the Azure Framework. This scheduler periodically checks for new jobs in the configured Azure Table/Blob storage. If such a new job is found, it is downloaded to the local storage and executed according to its parameters. Because the MPI execution takes place in another user context, the start of the process is off-loaded to the MPIWrapper Service with the help of inter-process communication via Windows Communication Foundation remoting.
 
-	\item MPIWrapper that is a custom .NET Windows Service starts the application that we want to execute on the cluster and that is configured in the job definition. The application can be any executable, such PETSc, ANSYS CFX, mpiexec job, etc. Because the application runs inside the MPI Context, it has full access to all other nodes using MPI. MPIWrapper also tracks the execution of the process and reports results back to the SimplyHPC Role DLL.
+	\item MPIWrapper, a custom .NET Windows Service, starts the MPI application according to the job definition. This application can be any executable, such as PETSc, ANSYS CFX, mpiexec job, etc. Because the application runs inside the MPI Context, it has full access to all other nodes using MPI. MPIWrapper also tracks the execution of the process and reports results back to the SimplyHPC DLL.
 
-	\item Infrastructure needed to run MPI jobs is composed of SMPD (''Simple Multi-Purpose Daemon'') and Microsoft MPI (MSMPI). They are installed on each node and are used for running parallel and distributed jobs in the Microsoft cluster. MSMPI is the MPI implementation of Microsoft that is able to use fast interconnects such as Infiniband.
+	\item The infrastructure needed to run MPI jobs is composed of SMPD (''Simple Multi-Purpose Daemon'') and Microsoft MPI (MSMPI). They are installed on each node and are used for running parallel and distributed jobs. MSMPI is the MPI implementation of Microsoft that is able to use fast interconnects such as Infiniband.
 \end{enumerate}
 
 \begin{figure}[h]
@@ -365,27 +362,26 @@ In Fig.~\ref{fig:schemaRole}, the schematic architecture of a single node is sho
 	\label{fig:schemaRole}
 \end{figure}
 
-It is important to note that this node architecture applies to all nodes in a cluster, and is automatically configured using the aforementioned deployment package. 
+It is important to note that this node architecture applies to all nodes in a cloud cluster, and is automatically configured using the aforementioned deployment package. The node with the lowest node id (usually 0) is subsequently called \textit{head node}.
 
 
 \subsection{Cluster architecture}
 
 Fig.~\ref{fig:schemaService} visualizes all relevant components of a deployed HPC cluster that has been set up using the SimplyHPC framework. 
-A \textit{cloud service} (dashed rectangle in figure) is a bundle of multiple nodes using the same deployment template. Using the logical entity of a cloud service, nodes can be easily configured in terms of their number, size and the virtual network they belong to. If autoscaling (?) is needed it can be easily implemented by increasing the number of nodes in the cloud service configuration. If the nodes are overloaded the Azure Fabric Controller will automatically create a new node and applies the deployment template to it.
+A \textit{cloud service} (dashed rectangle in figure) is a bundle of multiple nodes using the same deployment template. Using the logical entity of a cloud service, nodes can be easily configured in terms of their number, size and the virtual network they belong to. 
 
-When using A8/A9 nodes for scientific computing, the internode network (depicted as the upper arrow in Fig.~\ref{fig:schemaService}) is realized with Infiniband. In this mode all internode storage and MPI requests are transparently redirected to this very low latency, high bandwidth interconnect. Such configuration is crucial when best possible scaling is required.
+When using A8/A9 nodes for scientific computing, the internode network (depicted as the upper arrow in Fig.~\ref{fig:schemaService}) is realized with Infiniband. In this mode all internode storage and MPI requests are transparently redirected to this very low latency, high bandwidth interconnect. Such configuration is crucial for performance with most parallel software.
 
-The availability of fast internode connections strongly influences the choice of storage for different tasks. In total, there are four storage types in use and all of them are used within SimplyHPC:
-
+The availability of fast internode connections strongly influences the choice of storage for different tasks. In total, our set up uses four storage types:
 \begin{itemize}
 
-	\item \textit{Azure Table Storage} is a schemaless database accessible by HTTP/REST. SimplyHPC takes advantage of table storage to store configuration information, node synchronization data and job meta data. This table is accessible by all the nodes and can be read by the head node (Arrow 'A' in Fig.~\ref{fig:schemaService}).
+	\item \textit{Azure Table Storage} is a schemaless database accessible by HTTP/REST. SimplyHPC takes advantage of table storage to store configuration information, node synchronization data and job meta data. Table storage is read and written by all nodes (Arrow 'A' in Fig.~\ref{fig:schemaService}).
 	
-	\item \textit{Azure Blob Storage} is a storage service used to store large data blocks and accessible by HTTP/REST. Job data such as geometry, matrices, etc. are uploaded from a client to the Azure Blob Storage, and are then copied to the much faster local storage by the head node (Arrow 'B' in Figure \ref{fig:schemaService}). Job results are also uploaded back to this storage and thus made available via internet.	
+	\item \textit{Azure Blob Storage} is a storage service used to store large data blocks and is accessible by HTTP/REST. Job data such as geometry, matrices, etc. are uploaded from a client to the Azure Blob Storage, and are then copied to the much faster local storage by the head node (Arrow 'B' in Figure \ref{fig:schemaService}). Job results are also uploaded back to this storage and thus made available via internet.	
 	
 	\item \textit{Azure File Storage} provides a storage which is mountable as a network drive in Windows, and is here used to make software packages available to the worker roles. Large software suites such as ANSYS cannot be included into deployment packages due to its size and can therefore not be directly installed on the PaaS worker roles. Here we used a prepared ANSYS installation on a shared network drive.
 	
-	\item \textit{Local Storage} is used during job execution for job data (Arrows 'C' in Fig.~\ref{fig:schemaService}). Local storage is realised using local SSD drives an can be shared between nodes using SMBv3 Protocol and Infiniband. Local Storage is the fastest storage available currently on Microsoft Azure. It is important to note that the local storage is not persistent, the data stored get lost after a node has been recreated, restored or updated. Also, local storage is not directly accessible outside the cloud service.
+	\item \textit{Local Storage} is used during job execution for job data (Arrows 'C' in Fig.~\ref{fig:schemaService}). Local storage is realised using local SSD drives and can be shared between nodes using the SMBv3 Protocol and Infiniband. Local Storage is the fastest storage available currently on Microsoft Azure. It is important to note that local storage is not persistent, its data is lost after a node has been recreated, restored or updated. Also, local storage is not directly accessible outside the cloud service.
 
 \end{itemize}
 
@@ -400,8 +396,14 @@ The availability of fast internode connections strongly influences the choice of
 
 \subsection{Software architecture}
 
-SimplyHPC has been written in Visual .NET in /C\# and takes in the advantage C\# and latest Azure mechanisms that automatize the process of setting up of the cluster that we described before. There are multiple levels, at which the SimplyHPC interferes with Microsoft Azure. On the Microsoft Visual SDK Level our framework is integrated in into the Microsoft Azure SDK in order to automatically compile the deployment packages. On the Cloud API Level, SimplyHPC takes advantage of the Azure Cloud Controller to automatize the creation of cloud services, uploading the  deployment packages, monitoring the statuses of the nodes, etc. Finally, on the Azure Framework level, access to the Azure storage, Worker Role startup points was possible and information information about the execution environment could be easily accessed.\\
-We expose two different front ends to the user, namely PowerShell commandlets and a high-level API with a facade that hides all the complexity of orchestrating the cloud. 
+SimplyHPC has been written in .NET  /C\# and uses Azure mechanisms that automatize the process of setting up of the cluster described before. There are multiple levels at which the SimplyHPC interacts with Microsoft Azure.
+
+It is linked to the Microsoft Azure SDK and uses parts of it to automatize the compilation of the deployment packages. On aruntime level, it interacts directly with the management interface of Microsoft Azure to create cloud services, upload deployment packages, monitor machine status etc.
+
+
+We expose two different front ends to the user, namely Powershell commandlets and a high-level API with a facade that hides all the complexity of orchestrating the cloud.  Powershell is a object-oriented command line environment used to script and automatize common tasks.
+
+Powershell command-lets are building blocks that allow administrators to prepare custom scripts. The Powershell interface provides a number of useful command-lets needed to deploy a scientific application in the cloud, execute it, download the results back to the user and destroy the cluster ( see Tab~\ref{tab:CommandletsOfSimplyHPC}). 
 
 \begin{table}
 	\centering		
@@ -421,9 +423,7 @@ We expose two different front ends to the user, namely PowerShell commandlets an
 	\label{tab:CommandletsOfSimplyHPC}
 \end{table}
 
-The commandlets are PowerShell modules executed in a specific order and realize specific tasks needed to deploy a scientific application in the cloud, execute it, download the results back to the user and destroy the cluster (see Tab~\ref{tab:CommandletsOfSimplyHPC}).  
-
-\textcolor[rgb]{1,0,0}{API Example and a drawing will help to understand the potential of SimplyHPC.}
+Figure \ref{simplyHPCArch} visualizes high-level architecture of SimplyHPC.
 
 \section{Results}
 \label{sec:results}
