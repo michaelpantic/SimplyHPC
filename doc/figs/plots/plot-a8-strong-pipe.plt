@@ -11,7 +11,7 @@ set logscale y
 set logscale x 2
 set xtics (1,8,16,32,64,128,256)
 set xrange [1:256]
-set yrange [10:120000]
+set yrange [10:400000]
 set format y "1E%T"
 set key autotitle columnhead
 set key off

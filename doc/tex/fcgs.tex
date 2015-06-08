@@ -168,7 +168,7 @@
 %% e.g. \dochead{17th International Conference on Dynamical Processes in Excited States of Solids}
 
 \title{Unified cloud orchestration framework for elastic high performance computing in the cloud}
-% NAFEMS: A unified framework for orchestration of numerical simulations in the Windows Azure cloud platform
+
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{<author name>}
@@ -208,7 +208,6 @@ Microsoft azure \sep high performance computing
 
 \section{Introduction} 
 \label{sec:introduction}
-% why we need CFD in the cloud (Henrik)
 
 Numerical simulations have become an essential part of modern R\&D, as they allow companies to develop smarter products faster. Ideally, computer simulations can be used to test the performance of a product before the first prototype has been built, providing valuable information very early in the product development cycle. Computer simulations also allow companies to test a large number of design variation and to use numerical optimization algorithms to improve the performance of products.
  
@@ -218,11 +217,8 @@ Most modern CFD solvers support parallel processing through the Message Passing 
 
 A commonly used CFD tool in industry and research is CFX by ANSYS Inc. The company is one of the largest player in the Computer Aided Engineering (CAE) market \cite{mcae2012} and its software is typically used for the largest simulations composed of millions of cells. Big Data in the CAE domain has become a challenge for HPC engineers as it requires larger and larger clusters and only recently, a shift towards cloud-based solution has been observed.
 
-% what is the cloud, what are the problems
 Cloud computing has become ubiquitous due to its flexibility and cost-efficiency. It has clear advantages over traditional on-premise systems for institutions with limited budgets as no direct investments are needed and machines can be rented on an hourly basis. Users benefit from the cloud through the possibility of launching jobs of different sizes on dynamically sized systems and the cloud operators achieve economies of scale by building large data centers where the resources can be shared between different workloads. \\
 An increasing amount of computing power is now hosted on cloud platforms such as Amazon Elastic Compute (EC2) \cite{ec2}, Cloud Foundry Google Compute Engine \cite{google} or Microsoft Azure \cite{azure} and more and more software and services are being hosted in the cloud. Many independent software vendors (ISV) started to offer cloud services to scale scientific applications for specific industries. Many ISVs like Rescale, Ciespace, Ubercloud, Sabalcore, Univa, Penguin Computing provide cloud services for weather research, computational fluid dynamics, structural mechanics, quantitative finance, combustion, electromagnetics and molecular dynamics \cite{theuebercloud}. They offer access to VMs with pre-installed software or a web portal where the scientific applications, such as ANSYS, Gromacs, OpenFOAM or Gerris solvers can be executed \cite{Popinet2003}.
-
-%of using the cloud is the security. The jobs are executed on a hardware in unknown location that is not fully controlled by the user. The cloud providers do their best to convince the user that the data is saved by using different security policies. 
 
 While this may be a satisfying solution for some, the ability to run custom or third-party software on the cloud infrastructure requires much more complicated procedures. A scientific application that needs to be deployed in the Cloud usually consists of a command line-tool that requires complex deployment steps such as installation, configuration as well as setting up system specific services and network policies, comparable to the effort of administering a on-premises cluster. Access to the deployed applications from a local machine is also a tedious procedure and requires a significant amount of effort. This partly explains why this scenario is often too cumbersome for a domain engineer or a scientist.  
 
@@ -241,8 +237,6 @@ Our paper focuses on the following aspects. Chapter \ref{sec:architecture} descr
 \section{Background}
 \label{sec:background}
 \subsection{Motivation}
-
-% there are a few frameworks, not for Azure
 Each of the previously mentioned cloud platforms offers different strategies to communicate with the cloud infrastructure and different virtualization procedures. The user is free to manage the cloud resources by deploying the cluster manually or with the help of accompanying scripts and APIs, or use the cloud orchestrators that automate the management of the cloud-based infrastructure. The motivation for our development was twofold.
 
 \begin{description}
@@ -265,10 +259,6 @@ Due to the fact that the cloud providers are commercial entities that compete on
 %In this paper we focus on th
 %Frameworks to simplify the process of orchestration of the scientific applications have also been developed. Wong and Goscinski propose a unified framework that integrates an HPC service library, Amazon EC2 for running mpiBLAS jobs through a web portal \cite{Wong2013}. 
 % Their framework exposes 
-
-%TODO: Add more frameworks. 
-
-%Still, there are only a few frameworks that simplify deployment on Windows Azure. 
 
 \subsection{Microsoft Azure}
 
@@ -440,7 +430,6 @@ The deployment time of a cloud cluster is crucial when using dynamically allocat
 
 Here we compared the time needed for setting up a cloud cluster consisting of A4 nodes with SimplyHPC and Microsoft HPC Pack. This time should be of the same order regardless the node size, because the deployment processes are similar. HPC Pack provides precise statistics on the deployment procedure separated into individual processes, namely creating a storage account, a virtual network, a cloud service, a domain controller as well as deployment and configuration time for the head node and compute nodes. Since in SimplyHPC most of these processes are omitted, only the time to deploy the head node and compute nodes was measured, e.g. the time needed to run \textit{NewAzureService} and \textit{NewAzureJob} scripts. Since HPC Pack neither provides automatic job submission nor does it retrieve the result we have not taken these processes into account in our measurements. 
 
-%we measured the time needed create a cluster was measured together with other tasks, i.e. a time needed to pack and send the job to the cluster before the job starts executing.  
 
 \begin{figure}[h]
 \centering
@@ -543,78 +532,102 @@ The coarseness of the first mesh can be varied  in x-direction due to the symmet
 \label{fig:geometries}
 \end{figure}
 
-To understand the potential scaling impediments on the most powerful Azure nodes, we tested both weak and strong scaling for different simulations cases. With strong scaling, the problem size remains the same, while the number of cores increases, while with the weak scaling, both the problem size and the number of cores increase. These scalability tests provide insights on how fast the same problem can be solved when the number of cores increases, and how to solve a larger problem in the same time. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Strong scaling of the heat exchange simulation}
-Strong scaling provides insights into parallel scalability and memory utilization while the weak scaling approximates the utilization of cores.
+\begin{figure}
 
- We calculated the scaling key figures (efficiency, speed-up) using the data visualized in Figs.~\ref{fig:strongHSR} according to Eq. \ref{eq:speedupStrong} (as in \ref{kaminsky15}).
+	\begin{subfigure}{\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{gplt-a8-strong-pipe}	
+		\caption{Cloud Cluster}
+		\label{fig:strongA8}
+	\end{subfigure}
+
+		\begin{subfigure}{\textwidth}
+			\centering
+			\includegraphics[width=.7\linewidth]{gplt-hsr-strong-pipe}
+			\caption{On-Premises Cluster}
+			\label{fig:strongHSR}
+		\end{subfigure}
+	\caption{Runtime and strong scaling efficiency of ANSYS CFX for pipe01-pipe08}
+\end{figure}
+
+For the strong scaling tests, the pipe01-pipe08 problems were solved on different cluster configurations. Note that the largest problem, pipe08, produced a memory overflow in a one core configuration and therefore the pipe08 strong scaling efficiency could not be computed. For the other cases, the strong scaling efficiency has been calculated accroding to Eq. \ref{eq:efficencyStrong}. For the second largest problem, pipe07, the sequential runtime is extrapolated, as 180 of 200 iterations could be calculated before the memory overflow and the increase of calculation time per iteration is a approximately constant fraction.
+
+
 
 \begin{equation}
-\label{eq:speedupStrong}
+\label{eq:efficencyStrong}
+E_s(N,K) = S(N,K) / K 
+\end{equation}
+where $S(N,K)$ is the speedup achieved on $K$ cores for the full problem size ($N$). The speedup is calculated according to Eq. \ref{eq:speedup}.
+
+\begin{equation}
+\label{eq:speedup}
 S(N,K) = \frac{T_{seq}(N,1)}{T_{par}(N,K)}
 \end{equation}
-where the numerator is the runtime of the sequential version of the software on a single core, the denominator is the parallel version running on $K$ cores and $N$ is the data size. Ideally the speedup should be equal to $K$. Since this is often not the case, we also calculated the \textit{efficiency of strong scaling} ($E_s(N,K)$), a metric that measures how close to the ideal scaling the speedup actually is (see \ref{kaminsky15} for more details):
+where $T_{seq}(N,1)$ is the runtime of the full problem (size $N$) using a sequential implementation of the solver on 1 core and $T_{par}(N,K)$ the runtime of a parallel implementation on $K$ cores, respectively (see \cite{kaminsky15} for more details).
 
-$$
-E_s(N,K) = S(N,K) / K
-$$
+
+Both systems showed good scaling for ANSYS	 CFX (see Fig. \ref{fig:strongA8} resp. \ref{fig:strongHSR}). The runtime is comparable, altough the strong scaling efficiency on the cloud cluster is much better - this might be due to memory bandwith limitations on the on-premises cluster (scaling from 1 to 6 greatly decreased efficiency).  Large cloud clusters (e.g. 128 cores in 32 nodes) need large problems to fully utilize their capabilities, the strong scaling efficiency for small problems rapidly decays. Even for larger problems the efficiency is suboptimal with 256 cores - in part due to communication overhead. 
+A test with 64 with a total of 512 cores resulted in a MPI Broadcast timeout which might be due to the inefficient use of MPI collective operations or suboptimal broadcast algorithms (also reflected in the measured communication overhead). A hybrid approach (multithreading together with MPI) and/or MPI tuning could circumvent such problems.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
 \subsubsection{Weak scaling of the heat exchange simulation}
 
 
-Sizeup ($S_u$) is a chief metric for measuring the weak scaling. It can be defined as: 
+\begin{figure}
+
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{gplt-a8-weak-pipe}	
+		\caption{Cloud Cluster}
+		\label{fig:weakA8}
+	\end{subfigure}
+
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{gplt-hsr-weak-pipe}
+		\caption{On-Premises Cluster}
+		\label{fig:weakHSR}
+	\end{subfigure}
+	
+	\caption{Runtime and weak scaling efficiency of ANSYS CFX}
+
+\end{figure}
+
+
+
+In order to measure weak scaling and weak scaling efficiency the problem size per processor core is kept constant while increasing the number of processor cores. The weak scaling efficiency is calculated accoring to Eq. \ref{eq:efficiencyweak}.
+
+
+
+\begin{equation}
+	\label{eq:efficiencyweak}
+	E_w(N,K) = S_u(N,K) / K
+\end{equation}
+where $S_u(N,K)$ is the size-up calculated according to Eq. \ref{eq:sizeup}, and $K$ is the number of cores.
 
 \begin{equation}
 \label{eq:sizeup}
 S_u(N,K) = \frac{N(K)}{N(1)} \times \frac{T_{seq}(N(1),1)}{T_{par}(N(K),K).}
 \end{equation}
-Because in the weak scaling the problem size is growing as the number of cores increases we denote it as $N(K)$ to emphasize this dependence. Similarly to Eq.~\ref{eq:speedupStrong} $T_{seq}(.)$ denotes the running time of sequential version on a single core. For the scenario where the program's problem size running on K cores is K times larger than the program's problem size running on a single core, the running time for parallel and sequential execution should be the same and the sizeup should be equal to K. The efficiency is the metric that shows how close is the sizeup to the ideal one: 
-$$
-E_w(N,K) = S_u(N,K) / K
-$$
-It is equal to 1 no matter on how many cores the program is executed, for worser sizeup values the efficiency is less than 1. It is also worth noting that the sizeup (Eq.~\ref{eq:sizeup}) reduces to speedup $S(N,K)$ (Eq.~\ref{eq:speedupStrong}) because the problem size for the sequential and parallel version are the same and the first fraction in Eq.~\ref{eq:sizeup} becomes unity. Sizeup and speedup measure actually the same entity, e.g. the ratio of computation rates, but in different contexts.
+where $N(K)$ resp. $N(1)$ is the problem size which is dependent on the number of cores $K$. This is due to the fact that the problem size is kept constant per core.
+ Similarly to Eq.~\ref{eq:speedup}, $T_{seq}(.)$ denotes the running time of a sequential implementation on a single core. 
 
-
-%Since ANSYS CFX is a commercial software we could not judge what is the sequential and parallel fraction of the solver. One can only speculate about the that since the performance degrades, the significant 
-
-\begin{figure}
-\centering
-	\centering
-	\includegraphics[width=.7\linewidth]{gplt-a8-strong-pipe}	
-	\caption{Strong scaling of ANSYS CFX Solver on Microsoft Azure A8 nodes. }
-	\label{fig:strongA8}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=.7\linewidth]{gplt-hsr-strong-pipe}
-	\caption{Strong scaling of ANSYS CFX Solver on On-Premises Cluster nodes. }
-	\label{fig:strongHSR}
-\end{figure}
-
-
-For all the simulations we measured the wall clock time. Unfortunately, we could not compute all the values for the strong scaling. 48 GB RAM on our cluster was not enough to successfully run the \textit{pipe08} and \textit{pipe07} case in a serial mode. However, since for \textit{pipe07} we had the results for first 180 iterations we could provide the approximate running time for a single run. It was possible since the number of iterations was always 200 and the duration of each iteration was constant. Also for the weak scaling we could not calculate $S_u(N,K)$ because $N(1)$ contained too few elements and the the simulation could not converge in the same number of iterations. \\
-Finally, for 512 cores it turned out that the MPI Broadcast overflow prohibits the simulation to execute. It is implemented as a \textit{allscatter} operation followed by \textit{allgather} and for large messages it does not scale because during the \textit{allgather} operation the message size will be too small \cite{Balaji}. This is actually consistent with the performance tests of CFX ANSYS on 16-node cluster with Six-Core Intel X5670 @ 2.93 GHz CPUs \cite{ansysScaling}. The MPI Broadcast is one of the operations that generated most of the communication overhead, even for much at the level of 96 MPI processes. Also the majority of messages being exchanged between the processes were of a small size ($< 64B$). Those two effects sum up to a large communication overhead and at a given scale the simulation may be rejected by the MPI framework.
+For more information about speedup/sizeup and strong/weak scaling efficiency, see \cite{kaminsky15}.
 
 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=.7\linewidth]{gplt-a8-weak-pipe}	
-	\label{fig:weakA8}
-	\caption{Weak scaling of ANSYS CFX Solver on Microsoft Azure A8 nodes. }
-\end{figure}
+In Figure \ref{fig:weakA8} resp. \ref{fig:weakHSR} the weak scaling measured on cloud clusters and the on-premises cluster is visualized. For ideal weak scaling a horizontal curve is observed, as the increase of problem data is proportional to the increase of cores. Here it is also evident that for large problems both clusters scale well. 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=.7\linewidth]{gplt-hsr-weak-pipe}
-	\label{fig:weakHSR}
-	\caption{Weak scaling of ANSYS CFX Solver on On-Premises Cluster nodes. }
-\end{figure}
+
 
 
 \subsubsection{Performance compressor simulation}
+
 
 \begin{figure}
 	\centering
@@ -622,10 +635,6 @@ Finally, for 512 cores it turned out that the MPI Broadcast overflow prohibits t
 	\caption{Strong scaling for the compressor test case. }
 	\label{fig:stringCompressor}
 \end{figure}
-
-The results clearly show that the performance of ANSYS on Azure nodes is comparable with the one on premises.
-xxx
-
 
  
 \section{Conclusion}

@@ -23,6 +23,11 @@ Mohamed {Ben Belgacem} and Bastien Chopard.
   applications}.
 \newblock {\em Future Generation Computer Systems}, 42:11--21, January 2015.
 
+\bibitem{ansysScaling}
+HPC~Advisory Board.
+\newblock {ANSYS Performance Benchmark and Profiling}.
+\newblock Technical Report October, 2010.
+
 \bibitem{Che09042015}
 Yonggang Che, Chuanfu Xu, Jianbin Fang, Yongxian Wang, and Zhenghua Wang.
 \newblock Realistic performance characterization of cfd applications on intel
@@ -71,6 +76,12 @@ Michael~A Heroux and Sandia~National Laboratories.
 \newblock {HPCG Technical Specification}.
 \newblock Technical Report October, Sandia National Laboratories, 2013.
 
+\bibitem{kaminsky15}
+Alan Kaminsky.
+\newblock {\em Solving the World's Toughest Computational Problems with
+  Parallel Computing}.
+\newblock Creative Commons Attribution, 2015.
+
 \bibitem{Lu2014}
 Lu~Lu, Xuanhua Shi, Hai Jin, Qiuyue Wang, Daxing Yuan, and Song Wu.
 \newblock {Morpho: A decoupled MapReduce framework for elastic cloud
@@ -99,10 +110,6 @@ Mpi blas.
 \bibitem{OpenStack}
 Open stack.
 \newblock \url{http://www.openstack.org}. Accessed in May 2015.
-
-\bibitem{openfoam}
-Openfoam.
-\newblock URL \url{http://openfoam.org}. Accessed in May 2015.
 
 \bibitem{Popinet2003}
 St\'{e}phane Popinet.

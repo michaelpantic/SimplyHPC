@@ -19,7 +19,7 @@ set yrange [0:12000]
 set key autotitle columnhead
 set key inside right top
 set datafile separator '\t'
-plot '../../results/ansys/compressor/hsr-compressor.dat'  using 1:2 w linespoints ls 11 ,\
-'../../results/ansys/compressor/a8-compressor.dat' using 1:2 w linespoints ls 12
+plot '../../results/ansys/compressor/hsr-compressor.dat'  using 1:2 w linespoints ls 11 title "On-premises cluster",\
+'../../results/ansys/compressor/a8-compressor.dat' using 1:2 w linespoints ls 12 title "Azure A8 nodes"
 
 unset output

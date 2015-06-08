@@ -37,7 +37,7 @@ set ylabel "Efficiency" offset 0.5,0,0
 set xtics 2
 set xrange [1:256]
 set yrange [0:1.1]
-set key title "Nodes per Processor"
+set key title "Elements per Processor"
 set key autotitle columnhead
 set ytics 0.1
 

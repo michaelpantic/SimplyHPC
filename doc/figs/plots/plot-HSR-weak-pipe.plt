@@ -10,12 +10,12 @@ set ylabel "Calculation time [s]" offset 0.5,0,0
 
 set grid mxtics, xtics ls 21, ls 20
 set grid mytics, ytics ls 21, ls 20
-set xtics (1,6,12,24,48)
+set xtics (1,6,12,24,48,256)
 set ytics 10
 
 set logscale y
 set logscale x 6
-set xrange [1:48]
+set xrange [1:256]
 set yrange [10:20000]
 set key off
 set format y "1E%T"
@@ -32,10 +32,10 @@ set format y "%.1f"
 set title "Efficiency" offset 0,-0.5, 0
 set xlabel "Total number of cores" offset 0,0.75,0
 set ylabel "Efficiency" offset 0.5,0,0
-set xtics (1,6,12,24,48)
-set xrange [1:60]
+set xtics (1,6,12,24,48,256)
+set xrange [1:256]
 set yrange [0:1.1]
-set key title "Nodes per Processor"
+set key title "Elements per Processor"
 set key autotitle columnhead
 set ytics 0.1
 
