@@ -264,10 +264,12 @@ Due to the fact that the cloud providers are commercial entities that compete on
 
 Microsoft Azure is a cloud computing platform that provides, among many other services, virtual machines (VMs) in both (IaaS/Paas) models. \textit{Worker roles} (PaaS) are mainly targeted at developers seeking to execute custom software in a high-availability or distributed fashion.
 Software running on worker roles can be automatically scaled/copied to many nodes, provided the software is supporting this dynamic environment. 
+A set of worker roles constitutes a {\it Cloud Service} on Microsoft Azure. Instead of configuring all VMs manually, the user uploads a packaged application together with configuration files for a cloud service. This ''deployment package'' is then installed on fresh VMs automatically and in parallel. Worker role VMs are not persistent; if there are any configuration changes the VMs are removed and reinstalled using the updated deployment package. This procedure takes usually a few minutes and is attractive in terms of usage costs, as these non-persistent VM's can be created when needed and deleted immediately after usage. \\
 
 Regular VMs (IaaS) are bare machines deployed with a specific OS and therefore cannot be scaled automatically nor deployed automatically.
 The Microsoft Azure platform is well positioned on the market and is competitive to other cloud providers \cite{cloudScores} \cite{twister4azure}, has a large user base and many third-party cloud services. As of 2015, ten types of different VMs resp. worker roles are available (see Tab.~\ref{tab:azureVMs}). Computational costs on Microsoft Azure are dependent on the number of cores, the type of machine and the time of effective usage. The time of effective usage is defined as the time between set-up of the virtual machine and its tear-down, regardless of the actual usage or workload. \\
 
+ 
 Among the available VM sizes, A8 and A9 are physical machines, that are not shared between VM's and that are connected with a fast Infiniband network with low latency and Remote Direct Memory Access (RDMA) enabled. For these types of VMs, detailed specification such as CPU type are available, whereas for the other, shared machines these details are hidden from the user.
  
 %TODO: extend the list
@@ -297,10 +299,9 @@ Among the available VM sizes, A8 and A9 are physical machines, that are not shar
 	\end{table}
 \end{center}
  
-For the tests in this paper, we used PaaS worker role VMs. These worker roles are exposed as light-weight virtual machines. A set of worker roles constitutes a {\it Cloud Service} on Microsoft Azure. Instead of configuring all VMs manually, the user uploads a packaged application together with configuration files for a cloud service. This ''deployment package'' is then installed on fresh VMs automatically and in parallel. Worker role VMs are not persistent; if there are any configuration changes the VMs are removed and reinstalled using the updated deployment package. This procedure takes usually a few minutes and is attractive in terms of usage costs, as these non-persistent VM's can be created when needed and deleted immediately after usage. \\
 
 Additionally to the VM's, Microsoft Azure exposes four storage types to store, manage and control data in the cloud: Blob, Table, Queue and File. Each storage type is able to host different types of data of arbitrary sizes, namely binary files of any type, structured datasets, messages and shared files, respectively. 
-We decided to take advantage of the cloud service (PaaS) to simplify the orchestration procedure and use Blob and Table storage entities for data management. 
+
 
 \subsection{HPC Pack}
 
@@ -316,7 +317,7 @@ In addition to the numerical tools, we have selected ANSYS CFX, a high performan
 
 \section{SimplyHPC Architecture}
 \label{sec:architecture}
-In this chapter, three main architectural aspects of SimplyHPC are presented. Firstly, the system architecture is explained in terms of the software stack, cluster settings, communication setup and Azure-specific components visible to a single node. Secondly, we discuss the structure of the SimplyHPC framework on cluster level and explain how the software automatizes the setup of nodes and clusters using the given system architecture. Thirdly, the inner software architecture is briefly presented.
+In this chapter, the three main architectural aspects of SimplyHPC are presented. Firstly, the system architecture is explained in terms of the software stack, cluster settings, communication setup and Azure-specific components visible to a single node. Secondly, we discuss the structure of the SimplyHPC framework on cluster level and explain how the software automatizes the setup of nodes and clusters using the given system architecture. Thirdly, the inner software architecture is briefly presented.
 
 \subsection{Node architecture}
 
@@ -324,13 +325,13 @@ As implied in Sec.~\ref{sec:background} there are different type of machines ava
 
 Worker roles are set up using a \textit{Deployment Package}. This package contains a full description of the  virtual machine, including machine-specific configuration (such as local storage requirements, network settings, security settings) as well as software (start-up services, application to be hosted).
 
-New Worker roles are then automatically set-up according to this deployment package. This is than by hidden Azure management software, subsequently called the \textit{Azure Cloud Controller}. 
+New Worker roles are then automatically set-up according to this deployment package. This is done by the server side management software which exposes these APIs, subsequently called the \textit{Azure Cloud Controller}. 
 
 
-In Fig.~\ref{fig:schemaRole}, the schematic architecture of a single node is shown (1 worker role = 1 node of a cloud cluster). The particular components are execute in the predefined order as follows. Here, we present the execution sequence for a typical MPI job:
+In Fig.~\ref{fig:schemaRole}, the schematic architecture of a single node is shown (one worker role equals one node of a cloud cluster). The particular components are executed in the predefined order as follows. Here, we present the execution sequence for a typical MPI job:
 
 \begin{enumerate}
-	\item During the set up phase of the worker role, the deployment package is installed and set up by the Azure Fabric Controller. Some components are configured as a Windows Service in the ''MPI Context''. This context is set up identically on each node and allows for pass-through authentication between nodes during the execution of a distributed MPI job.
+	\item During the set up phase of the worker role, the deployment package is installed and set up by the Azure Cloud Controller. Some components are configured as a Windows Service in the ''MPI Context''. This context is set up identically on each node and allows for pass-through authentication between nodes during the execution of a distributed MPI job.
 
 	\item After the set up phase has finished, the job scheduler inside the SimplyHPC DLL is executed by the Azure Framework. This scheduler periodically checks for new jobs in the configured Azure Table/Blob storage. If such a new job is found, it is downloaded to the local storage and executed according to its parameters. Because the MPI execution takes place in another user context, the start of the process is off-loaded to the MPIWrapper Service with the help of inter-process communication via Windows Communication Foundation remoting.
 
@@ -408,7 +409,7 @@ PowerShell command-lets are building blocks that allow administrators to prepare
 	\label{tab:CommandletsOfSimplyHPC}
 \end{table}
 
-Figure \ref{simplyHPCArch} visualizes the high-level architecture of SimplyHPC.
+Figure \ref{fig:simplyHPCArch} visualizes the high-level architecture of SimplyHPC.
 
 \begin{figure}[h]
 \centering
@@ -428,7 +429,7 @@ On Microsoft Azure different node types were used: A8 (8 core Intel Xeon E5-2670
 \subsection{Set-up time}
 The deployment time of a cloud cluster is crucial when using dynamically allocated systems, as they are newly set up for single jobs or a small series of jobs and taken down afterwards. These measurements obviously do not apply to on-premises clusters, as they are static.
 
-Here we compared the time needed for setting up a cloud cluster consisting of A4 nodes with SimplyHPC and Microsoft HPC Pack. This time should be of the same order regardless the node size, because the deployment processes are similar. HPC Pack provides precise statistics on the deployment procedure separated into individual processes, namely creating a storage account, a virtual network, a cloud service, a domain controller as well as deployment and configuration time for the head node and compute nodes. Since in SimplyHPC most of these processes are omitted, only the time to deploy the head node and compute nodes was measured, e.g. the time needed to run \textit{NewAzureService} and \textit{NewAzureJob} scripts. Since HPC Pack neither provides automatic job submission nor does it retrieve the result we have not taken these processes into account in our measurements. 
+Here we compared the time needed for setting up a cloud cluster consisting of A8 nodes with SimplyHPC and Microsoft HPC Pack. This time should be of the same order regardless of the node size, because the deployment processes are similar. HPC Pack provides precise statistics on the deployment procedure separated into individual processes, namely creating a storage account, a virtual network, a cloud service, a domain controller as well as deployment and configuration time for the head node and compute nodes. Since in SimplyHPC most of these processes are omitted, only the time to deploy the head node and compute nodes was measured, e.g. the time needed to run \textit{NewAzureService} and \textit{NewAzureJob} scripts. Since HPC Pack neither provides automatic job submission nor does it retrieve the result we have not taken these processes into account in our measurements. 
 
 
 \begin{figure}[h]
@@ -438,7 +439,7 @@ Here we compared the time needed for setting up a cloud cluster consisting of A4
 	\label{fig:deployTime}
 \end{figure}
 
-Fig. \ref{fig:deployTime} shows the HPC Pack needs usually more than an hour to deploy a cloud cluster while SimplyHPC needs about ten minutes in average. The long deployment time of HPC Pack is due to the fact that HPC Pack deploys a fully functional cluster with a job scheduler, domain controller and SQL database. Although such a solution is desirable for business--oriented usage scenarios, there are many scenarios where applications need only an IaaS infrastructure and access to the MPI stack. In such a case the cluster can be deployed and destroyed much faster. Also, instead of deploying IaaS VMs sequentially like it is the case for HPC Pack, we just submit the deployment template to the cloud fabric with the request to set up a whole cloud service, consisting of multiple worker roles, simultaneously. This way the deployment time could be kept constant regardless of the cluster size.
+Fig. \ref{fig:deployTime} shows the HPC Pack needs usually more than an hour to deploy a cloud cluster while SimplyHPC needs about ten minutes in average. The long deployment time of HPC Pack is due to the fact that HPC Pack deploys a fully functional cluster with a job scheduler, domain controller and SQL database. Although such a solution is desirable for business--oriented usage scenarios, there are many scenarios where applications need only storage infrastructure and access to the MPI stack. In such a case the cluster can be deployed and destroyed much faster. Also, instead of deploying IaaS VMs sequentially like it is the case for HPC Pack, we just submit the deployment template to the Azure cloud controller with the request to set up a whole cloud service, consisting of multiple PaaS worker roles, simultaneously. This way the deployment time could be kept constant regardless of the cluster size.
 
 \subsection{Sparse Matrix Solver Performance}
 The objective of the second experiment was to compare the performance of a cloud cluster on Microsoft Azure with a traditional on-premises cluster using the example of distributed parallel sparse matrix solvers, as they are often used in CFD applications. The performance of these solvers depends on a multitude of factors such as CPU speed, memory bandwidth but also network speed and latency. Here we used 2 different solvers: The HPCG (High Performance Conjugate Gradients) Benchmark (see \cite{hpcg} for a detailed description) for standardized comparability and a PETSC (\cite{petsc-web-page}) solver with 2 different real world problems. PETSC is a widely used framework for scientific applications that includes parallel solver codes.
