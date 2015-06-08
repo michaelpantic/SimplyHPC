@@ -7,7 +7,7 @@
 %% Using standard LaTeX should work but may produce clashes %%
 %%                                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% The '3p' and 'times' class options of elsarticle are used for Elsevier CRC
 %% Add the 'procedia' option to approximate to the Word template
@@ -176,23 +176,16 @@
 %% \address[label2]{<address>}
 
 \author[hsr,pwr]{Lukasz Miroslaw}
-\author[eth]{Michael Pantic}
+\author[hsr]{Michael Pantic}
 %\author[hsr]{Vladimir Baros}
 \author[hsr]{Henrik Nordborg}
 
 \address[hsr]{Institute for Energy Technology, Hochschule Rapperswil, Switzerland}
-\address[eth]{ETH Zurich, Switzerland}
+%\address[eth]{ETH Zurich, Switzerland}
 \address[pwr]{Wroclaw University of Technology, Poland}
 
 \begin{abstract}
-%The efficient use of numerical simulations, such as computational fluid dynamics, requires significant computing power, usually only available through large and expensive cluster systems. This effectively hinders small and medium organizations from simulating, as those clusters need to be sized sufficiently large and highly utilized to be profitable.
-%Those problems can be solved using elastic, pay-per-use cloud computing. In this paper, we show how well different problems scale with different machines and cluster configurations within Microsoft Azure. We also focused on decreasing computational time without increasing the total costs of operation, using dynamic, short-term allocation of nodes. Additionally, we give a short introduction on how MPI jobs can be executed with no pre-existing infrastructure. Performance estimates and comparisons with traditional on-site clusters are made using the HPL and HPCG benchmarks.
-%\todo[inline]{maybe say something about the goal of lowering the entry barriers for simulating.} 
-
-Numerical simulations stand in need for scalable computing power, storage and high availability that can be provided only through expensive and large clusters. While this is still a preferred option for research institutions, government agencies and large companies, institutions with smaller budget usually can not afford large investments. Apparently, the reasonable return of investment is only possible when the clusters are highly utilized and sized optimally depending on the actual demands. 
-Those problems can be solved using elastic, pay-per-use cloud computing platforms. Still, accessing own applications in the cloud is a tedious task and requires a significant amount of effort and expertise in cloud computing. Bringing a specific application to the IaaS infrastructure is difficult to achieve. A numerical application that needs to be deployed is usually a command line-tool that requires a similarly complex deployment steps as on the private cluster, e.g. installation, configuration as well as setting up system specific services and network policies. This can be too cumbersome for a domain engineer or a scientist. A simple mechanism is needed to simplify the whole process and lower the entry barrier for cloud-based simulations.
-Therefore, we present a unified framework to submit an application directly to the cloud in a simple way. The platform integrates Microsoft Azure specific HPC libraries with PowerShell commandlets to ease the submission process while keeping the desired command line environment. The framework provides tools with the ability to deploy necessary number of virtual machines dynamically, submit the packed application together with input and configuration files, execute the simulation and, once the results are ready, download them to the local machine and stop the virtual machines. 
-We demonstrate our framework in orchestration of two scalable and large simulations in the domain of Computational Fluid Dynamics where the Big Data has always been a concern. In addition, we also show how well selected computational problems scale with different machines and cluster configurations within Microsoft Azure. We also provide performance estimates and comparison with a traditional on-site cluster.
+\input{abstract.tex}
 
 
 \end{abstract}
@@ -216,12 +209,13 @@ microsoft azure \sep high performance computing
 \label{sec:introduction}
 % why we need CFD in the cloud (Henrik)
 
-Computational fluid dynamics (CFD) and numerical simulations are powerful methods to support engineering designs and reduce development costs in both industry and research. Since Navier-Stokes equations have been formulated in the XIX. century, it became possible to study the motion of viscous fluids and model many physical phenomena of great importance for industry, science and society. For example CFD can be used to model the water flow in a pipe, the development of an electrical arc, blood flow in the human aorta, ocean currents or the air flow around a wing. 
+Numerical simulations have become an essential part of modern R\&D, as they allow companies to develop smarter products faster. Ideally, computer simulations can be used to test the performance of a product before the first prototype has been built, providing valuable information very early in the product development cycle. Computer simulations also allow companies to test a large number of design variation and to use numerical optimization algorithms to improve the performance of products.
+ 
+Computational fluid dynamics (or CFD for short) represents the greatest challenge in terms of computational requirements. This kind of simulations can only be used efficiently on parallel compute clusters with hundreds of CPU cores connected through a fast high-performance network such as Infiniband. Unfortunately, such a computational infrastructure represents a significant investment and only makes sense if the computational cluster is heavily utilized to amortize the costs. This is generally not an issue for universities and research institutes, but represents a real problem for profit driven companies, who only occasionally need access to significant computing power. An underutilized compute cluster is simply too expensive to maintain.
+ 
+Most modern CFD solvers support parallel processing through the Message Passing Interface\cite{MPI}. Recently, support for multi-core processors, GPUs, and the Intel Phi have begun to be implemented \cite{tomczak2013} \cite{Che09042015}. Generally speaking, CFD simulation are very well suited for parallel processing. They can be easily parallelized using domain decomposition and the computational performance is mainly limited by memory bandwidth. In addition, the linear equations are reasonably well conditioned and therefore suitable for scalable linear solvers. Finally, the simulations typically produce enormous amounts of data, making the Big Data an issue for computer aided engineering (CAE).
 
-The recent advances in information technology made it possible to analyze larger models with higher precision in shorter time. This requirement calls for large amounts of computational power, which typically is provided by large, expensive on-premise clusters. On the one hand, such systems are unavailable to small or medium enterprises that have limited access to clusters and thus numerical simulations are often not considered as viable alternatives to traditional prototyping. On the other hand, research groups are not capable of solving their models locally, making them dependent on external clusters.
-
-%\todo[inline]{describe existing tools} 
-A majority of the advanced CFD solvers are able to run concurrently. They take advantage of the Message Passing Interface Standard \cite{openfoam}, OpenMP or both. There are also solvers that run on hardware accelerators such as General Processing Graphics Processing Units \cite{tomczak2013} or Intel Phi \cite{Che09042015}. "CFX" by ANSYS is a commonly used solver in both industry and research. The company is one of the largest player in the Computer Aided Engineering (CAE) market \cite{mcae2012} and its software is typically used for the largest simulations composed of millions of cells. Big Data in the CAE domain has become a challenge for HPC engineers as it requires larger and larger clusters and only recently, a shift towards cloud-based solution has been observed.
+A commonly used CFD tool in industry and research is CFX by ANSYS Inc. The company is one of the largest player in the Computer Aided Engineering (CAE) market \cite{mcae2012} and its software is typically used for the largest simulations composed of millions of cells. Big Data in the CAE domain has become a challenge for HPC engineers as it requires larger and larger clusters and only recently, a shift towards cloud-based solution has been observed.
 
 % what is the cloud, what are the problems
 Cloud computing has become ubiquitous due to its flexibility and cost-efficiency. It has clear advantages over traditional on-premise systems for institutions with limited budgets as no direct investments are needed and machines can be rented on an hourly basis. Users benefit from the cloud through the possibility of launching jobs of different sizes on dynamically sized systems and the cloud operators achieve economies of scale by building large data centers where the resources can be shared between different workloads. \\
@@ -423,7 +417,15 @@ Powershell command-lets are building blocks that allow administrators to prepare
 	\label{tab:CommandletsOfSimplyHPC}
 \end{table}
 
-Figure \ref{simplyHPCArch} visualizes high-level architecture of SimplyHPC.
+Figure \ref{simplyHPCArch} visualizes the high-level architecture of SimplyHPC.
+
+\begin{figure}[h]
+\centering
+	\includegraphics[width=.8\linewidth]{simplyHPCArch}
+	\caption{Component Diagram of SimplyHPC}
+	\label{fig:simplyHPCArch}
+\end{figure}
+
 
 \section{Results}
 \label{sec:results}
@@ -505,9 +507,9 @@ Based on these results only cloud clusters with A8 nodes are taken into account 
 
 \subsection{ANSYS CFX Performance Study}
 We used ANSYS CFX as an example of a widely used tool for large physical simulations.
-Using ANSYS CFX, two independent simulations were run, the heat transfer in a heat exchange system and the fluid flow in a compressor used in turbines.
+Using ANSYS CFX, two independent simulations were run, a heat transfer simulation in a heat exchange system and a fluid flow simulation in a compressor used in turbines.
 The heat exchange system is composed of a buried pipe, transporting water that flows with a speed of $0.1 m/s$, and that is heated by an external source with a temperature of $10 ^\circ C$. In this use case, the heat transfer to the flowing water is simulated. Such pipe heating systems are used to optimize energy costs in buildings through the reuse of energy.
-In the compressor model, air enters to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters a space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:geometries}. The coarseness of the first mesh can be varied  in x-direction due to the symmetrical geometry (cases pipe01-pipe08), while the mesh of the compressor case is fixed and has approx 13 millions cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e-06$ and $1e-08$ and maximal number of iterations of $100$ and $200$, respectively. 
+In the compressor model, air enters to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters a space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:geometries}. The coarseness of the first mesh can be varied  in x-direction due to the symmetrical geometry (cases pipe01-pipe08), while the mesh of the compressor case is fixed and has approx 13 million cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e-06$ resp. $1e-08$ and maximal number of iterations of $200$ and $100$, respectively. 
 
 \begin{table}
 	\centering
@@ -547,7 +549,9 @@ In the compressor model, air enters to the compressor through a filtered intake 
 To understand the potential scaling impediments on the most powerful Azure nodes, we tested both weak and strong scaling for different simulations cases. With strong scaling, the problem size remains the same, while the number of cores increases, while with the weak scaling, both the problem size and the number of cores increase. These scalability tests provide insights on how fast the same problem can be solved when the number of cores increases, and how to solve a larger problem in the same time. 
 
 \subsubsection{Strong scaling}
-Strong scaling provides insights into parallel scalability and memory utilization while the weak scaling approximates the utilization of cores. We calculated the scaling key figures (efficiency, speed-up) using the data visualized in Figs.~\ref{fig:strongHSR} according to Eq. \ref{eq:speedupStrong} (as in \ref{kaminsky15}).
+Strong scaling provides insights into parallel scalability and memory utilization while the weak scaling approximates the utilization of cores.
+
+ We calculated the scaling key figures (efficiency, speed-up) using the data visualized in Figs.~\ref{fig:strongHSR} according to Eq. \ref{eq:speedupStrong} (as in \ref{kaminsky15}).
 
 \begin{equation}
 \label{eq:speedupStrong}
@@ -562,7 +566,6 @@ $$
 \subsubsection{Weak scaling}
 
 
-%Since ANSYS CFX is a commercial software we could not judge what is the sequential and parallizable fraction of the solver. One can only speculate about the that since the performance degrades, the significant 
 Sizeup ($S_u$) is a chief metric for measuring the weak scaling. It can be defined as: 
 
 \begin{equation}
@@ -575,6 +578,9 @@ E_w(N,K) = S_u(N,K) / K
 $$
 It is equal to 1 no matter on how many cores the program is executed, for worser sizeup values the efficiency is less than 1. It is also worth noting that the sizeup (Eq.~\ref{eq:sizeup}) reduces to speedup $S(N,K)$ (Eq.~\ref{eq:speedupStrong}) because the problem size for the sequential and parallel version are the same and the first fraction in Eq.~\ref{eq:sizeup} becomes unity. Sizeup and speedup measure actually the same entity, e.g. the ratio of computation rates, but in different contexts.
 
+
+%Since ANSYS CFX is a commercial software we could not judge what is the sequential and parallizable fraction of the solver. One can only speculate about the that since the performance degrades, the significant 
+
 \begin{figure}
 \centering
 	\centering
@@ -586,7 +592,7 @@ It is equal to 1 no matter on how many cores the program is executed, for worser
 \begin{figure}
 	\centering
 	\includegraphics[width=.7\linewidth]{gplt-hsr-strong-pipe}
-	\caption{Strong scaling of Ansys CFX Solver on HSR Cluster nodes. }
+	\caption{Strong scaling of Ansys CFX Solver on On-Premises Cluster nodes. }
 	\label{fig:strongHSR}
 \end{figure}
 
@@ -598,26 +604,25 @@ Finally, for 512 cores it turned out that the MPI Broadcast overflow prohibits t
 
 
 \begin{figure}
-\centering
-\begin{subfigure}{.4\textwidth}
 	\centering
-	\includegraphics[width=\linewidth]{gplt-a8-weak-pipe}	
-	%\label{fig:weakA8}
-\end{subfigure}
-\begin{subfigure}{.4\textwidth}
-	\centering
-	\includegraphics[width=\linewidth]{gplt-hsr-weak-pipe}
-	%\label{fig:weakHSR}
-\end{subfigure}
-
-\caption{Weak scaling in Microsoft Azure on A8 nodes (left) and HSR cluster (right). }
-\label{fig:weakPipe}
+	\includegraphics[width=.7\linewidth]{gplt-a8-weak-pipe}	
+	\label{fig:weakA8}
+	\caption{Weak scaling of Ansys CFX Solver on Microsoft Azure A8 nodes. }
 \end{figure}
 
 \begin{figure}
 	\centering
+	\includegraphics[width=.7\linewidth]{gplt-hsr-weak-pipe}
+	\label{fig:weakHSR}
+	\caption{Weak scaling of Ansys CFX Solver on On-Premises Cluster nodes. }
+\end{figure}
+
+
+
+\begin{figure}
+	\centering
 	\includegraphics[width=0.5\linewidth]{gplt-compressor}
-	\caption{Strong scaling in Microsoft Azure on A8 nodes for the compressor geometry. }
+	\caption{Strong scaling for the compressor test case. }
 	\label{fig:stringCompressor}
 \end{figure}
 
