@@ -1,0 +1,3 @@
+•	We demonstrate the feasibility of using Microsoft Azure in large scale scientific applications
+•	We present a cloud orchestrator for the simple deployment and scaling out of scientific application on Microsoft Azure
+•	We measure the performance of ANSYS CFX and PETSc on Microsoft Azure compared to on-premise clusters

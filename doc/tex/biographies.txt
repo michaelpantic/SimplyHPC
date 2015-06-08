@@ -1,0 +1,12 @@
+Lukasz Miroslaw, Dr. sc. nat.
+
+Lukasz Miroslaw, Ph.D. is a computer scientist and active researcher. His expertise encompasses software design in life sciences and fluid dynamics. A grant holder from Max Planck Society, Herbert Quandt Foundation, Saxony Ministry and Polish-Swiss Research Programme. He was working on various research projects at Max Planck Institute of Cell Biology, University of Zurich, University of Applied Science Rapperswil, University of Dresden, Biotechnological Center and Wroclaw University of Technology. Program Committee Member of IEEE Int. Conf. on e-Science and Int J for Num. Methods in Biomedical Eng. Author and co-author of several book chapters and publications in peer-reviewed journals. Currently he is responsible for cloud computing at Microsoft Innovation Center, Rapperswil.
+
+Michael Pantic, B.Sc.
+
+Michael Pantic received his BSc degree in Computer Science from the Lucerne University of Applied Sciences in 2013, with studies at KTH in Stockholm. He is currently pursuing his MSc. in Robotics, Systems and Control at ETH Zürich, and also contributes to the research at University of Applied Sciences Eastern Switzerland.
+
+Henrik Nordborg, Dr. sc. nat. ETZH
+
+Henrik Nordborg received his PhD in Theoretical Physics form the ETH in Zurich in 1997. The topic of the thesis was the phenomenological properties of high-temperature superconductors. He then spent 3 years at Argonne National Laboratory before joining ABB Corporate Research in Switzerland in 2000, where he was in charge of numerical simulations of power devices. In particular, he specialized in simulation of electrical arcs in circuit breakers. Since 2010 he is a professor at the HSR University of Applied Sciences in Switzerland, where he is active in the areas of energy technology, computational fluid dynamics, and plasma simulations.
+
