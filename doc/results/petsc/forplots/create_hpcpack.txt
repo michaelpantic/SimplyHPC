@@ -1,5 +1,5 @@
-HPC Pack, A4 nodes	Create storage account	Create virtual network	Create cloud service	Create domain controller	Create compute nodes	Configure head node	Storage, Network, Cloudservice Combined
-1	00:05:41	00:00:41	00:00:12	00:25:09	00:27:00	00:04:51	00:06:34
-2	00:00:46	00:00:48	00:00:20	00:18:08	00:29:00	00:02:56	00:01:54
-4	00:00:40	00:00:41	00:00:13	00:14:43	00:34:00	00:03:35	00:01:34
-8	00:00:40	00:00:41	00:00:13	00:22:48	00:40:00	00:02:42	00:01:34
+HPC Pack, A8 nodes	Prepare Cloud Service	Create domain controller	Create nodes
+8	00:01:32	00:25:00	01:04:54
+16	00:01:29	00:20:25	01:46:44
+32	00:01:19	00:21:03	02:33:24
+
