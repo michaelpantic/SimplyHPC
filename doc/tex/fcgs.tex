@@ -450,7 +450,7 @@ Here we compared the time needed for setting up a cloud cluster consisting of A4
 
 %\textcolor[rgb]{1,0,0}{TODO: SImplyHPC detailed data -  see cmd program in github}
 
-Fig. \ref{fig:deployTime} shows the HPC Pack needs usually more than an hour to deploy a cloud cluster while SimplyHPC needs about ten minutes in average. The long deployment time of HPC Pack is due to the fact that HPC Pack deploys a fully functional cluster with a job scheduler, domain controller and SQL database. Although such a solution is desirable for business--oriented usage scenarios, there are many scenarios where applications need only an IaaS infrastructure and access to the MPI stack. In such a case the cluster can be deployed and destroyed much faster. 
+Fig. \ref{fig:deployTime} shows the HPC Pack needs usually more than an hour to deploy a cloud cluster while SimplyHPC needs about ten minutes in average. The long deployment time of HPC Pack is due to the fact that HPC Pack deploys a fully functional cluster with a job scheduler, domain controller and SQL database. Although such a solution is desirable for business--oriented usage scenarios, there are many scenarios where applications need only an IaaS infrastructure and access to the MPI stack. In such a case the cluster can be deployed and destroyed much faster. Also, instead of deploying IaaS VMs sequentially like it is the case for HPC Pack, we just submit the deployment template to the cloud fabric with the request to use it on multiple cloud services. This way the deployment time could be kept constant regardless of the cluster size.
 
 \subsection{Sparse Matrix Solver Performance}
 The objective of the second experiment was to compare the performance of a cloud cluster on Microsoft Azure with a traditional on-premises cluster using the example of distributed parallel sparse matrix solvers, as they are often used in CFD applications. The performance of these solvers depends on a multitude of factors such as CPU speed, memory bandwidth but also network speed and latency. Here we used 2 different solvers: The HPCG (High Performance Conjugate Gradients) Benchmark (see \cite{hpcg} for a detailed description) for standardized comparability and a PETSC (\cite{petsc}) solver with 2 different real world problems. PETSC is a widely used framework for scientific applications that includes parallel solver codes.
@@ -595,7 +595,6 @@ It is equal to 1 no matter on how many cores the program is executed, for worser
 \end{figure}
 
 
-
 For all the simulations we measured the wall clock time. Unfortunately, we could not compute all the values for the strong scaling. 48 GB RAM on our cluster was not enough to successfully run the \textit{pipe08} and \textit{pipe07} case in a serial mode. However, since for \textit{pipe07} we had the results for first 180 iterations we could provide the approximate running time for a single run. It was possible since the number of iterations was always 200 and the duration of each iteration was constant. Also for the weak scaling we could not calculate $S_u(N,K)$ because $N(1)$ contained too few elements and the the simulation could not converge in the same number of iterations. \\
 Finally, for 512 cores it turned out that the MPI Broadcast overflow prohibits the simulation to execute. It is implemented as a \textit{allscatter} operation followed by \textit{allgather} and for large messages it does not scale because during the \textit{allgather} operation the message size will be too small \cite{Balaji}. This is actually consistent with the performance tests of CFX ANSYS on 16-node cluster with Six-Core Intel X5670 @ 2.93 GHz CPUs \cite{ansysScaling}. The MPI Broadcast is one of the operations that generated most of the communication overhead, even for much at the level of 96 MPI processes. Also the majority of messages being exchanged between the processes were of a small size ($< 64B$). Those two effects sum up to a large communication overhead and at a given scale the simulation may be rejected by the MPI framework.
 
@@ -616,10 +615,7 @@ Finally, for 512 cores it turned out that the MPI Broadcast overflow prohibits t
 \end{figure}
 
 
-
-
-
-\subsubsection{Perfromance compressor simulation}
+\subsubsection{Performance compressor simulation}
 
 \begin{figure}
 	\centering
@@ -640,7 +636,7 @@ We presented SimplyHPC framework, a novel distributed framework for Microsoft Az
 
 This way scientific applications can access the cloud if the calculations are too time-consuming for a local machine or a private cluster. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
 
-\textcolor[rgb]{1,0,0}{mpantic: Additional suggestions for conclusion: Something about elasticity and cost efficiency, such as "Clearly, dynamic cloud clusters can compete with traditional on-premises clusters performance wise. Additionally, cloud clusters enable very cost efficient calculations as they are billed by the hour....etc etc}
+%\textcolor[rgb]{1,0,0}{mpantic: Additional suggestions for conclusion: Something about elasticity and cost efficiency, such as "Clearly, dynamic cloud clusters can compete with traditional on-premises clusters performance wise. Additionally, cloud clusters enable very cost efficient calculations as they are billed by the hour....etc etc}
 
 
 %Further areas of work could include the following:
