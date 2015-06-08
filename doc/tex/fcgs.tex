@@ -623,13 +623,13 @@ For more information about speedup/sizeup and strong/weak scaling efficiency, se
 
 
 
-In Figure \ref{fig:weakA8} resp. \ref{fig:weakHSR} the weak scaling measured on cloud clusters and the on-premises cluster is visualized. For ideal weak scaling a horizontal curve is observed, as the increase of problem data is proportional to the increase of cores. Here it is also evident that for large problems both clusters scale well. 
+In Figure \ref{fig:weakA8} resp. \ref{fig:weakHSR} the weak scaling measured on cloud clusters and on the on-premises cluster is visualized. For ideal weak scaling a horizontal curve is observed, as the increase of problem data is proportional to the increase of cores. Here it is also evident that for large problems both clusters scale well. 
 
 
 
 
 \subsubsection{Performance compressor simulation}
-Addition
+In addition to the pipe01-08 cases, the aforementioned compressor simulation was run on different configurations in the cloud and on the on-premises cluster. 
 
 \begin{figure}
 	\centering
@@ -642,7 +642,7 @@ Addition
 \section{Conclusion}
 \label{sec:conclusions}
 
-We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of a light--weight API and a set of commandlets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from more than an hour to couple of minutes.  We have demonstrated that the framework supports the deployment of both commercial and the open--source application on the cluster provided they are MPI--based and have a command line interface. scientific Big Data applications from Computational Fluid Dynamics domain, where both input and output data are usually massive. We also show that for extreme scaling  fine-tunning the hardware configuration is still necessary.
+We presented the SimplyHPC framework, a novel framework for orchestrating the Microsoft Azure Cloud. The framework is composed of a light--weight API and a set of commandlets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from more than an hour to a couple of minutes.  We have demonstrated that the framework supports the deployment of both commercial and the open--source application on the cluster provided they are MPI--based and have a command line interface. scientific Big Data applications from Computational Fluid Dynamics domain, where both input and output data are usually massive. We also show that for extreme scaling, fine-tunning the hardware configuration is still necessary.
 \begin{figure}
 	\centering
 	\includegraphics[width=.5\linewidth]{gplt-cost}
@@ -650,15 +650,14 @@ We presented SimplyHPC framework, a novel distributed framework for Microsoft Az
 	\label{fig:costs}
 \end{figure}
 
-We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of light weight modules and a set of command-lets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from nearly an hour to couple of minutes.  This way scientific applications can access the cloud if the calculations are too time-consuming for a local machine or a private cluster. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
 
-The paper clearly shows that scientists and engineers applications can access the cloud if the calculations are too time--consuming for a local machine or a private cluster and that they can benefit from competitive prices. Today, it is possible to deploy a 64--cores cluster for less than $\$30$ and this price is likely to be lower when the reader reads this paper. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
+The paper clearly shows that scientists and engineers applications can access the cloud if the calculations are too time--consuming for a local machine or a private cluster and that they can benefit from competitive prices. At the time of writing, it is possible to deploy a 64--cores cluster for less than $\$30$ an hour and this price is likely to be lower when the reader reads this paper. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
 
 
 %\textcolor[rgb]{1,0,0}{mpantic: Additional suggestions for conclusion: Something about elasticity and cost efficiency, such as "Clearly, dynamic cloud clusters can compete with traditional on-premises clusters performance wise. Additionally, cloud clusters enable very cost efficient calculations as they are billed by the hour....etc etc}
 
 
-%Further areas of work could include the following:
+Further areas of work could include 
 
 \section{Acknowledgments}
 \label{sec:ackn}
