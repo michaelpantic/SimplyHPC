@@ -14,8 +14,9 @@ set style line 15 lw 2 lc rgb '#77ac30' # green
 set style line 16 lw 2 lc rgb '#4dbeee' # light-blue
 set style line 17 lw 2 lc rgb '#a2142f' # red
 set xtics (6,8,12,16,24,36,48,60,64)
-set xrange [6:64]
+set xrange [6:256]
 set yrange [0:12000]
+set logscale x
 set key autotitle columnhead
 set key inside right top
 set datafile separator '\t'
