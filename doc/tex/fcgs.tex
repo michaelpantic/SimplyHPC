@@ -191,11 +191,12 @@
 \end{abstract}
 
 \begin{keyword}
-microsoft azure \sep high performance computing
+microsoft azure \sep high performance computing \sep computational fluid dynamics \sep big data \sep cloud computing
 %% keywords here, in the form: keyword \sep keyword
 
 %% PACS codes here, in the form: \PACS code \sep code
 
+\MSC[2010] 74F10 \sep 68Uxx	\sep 65Y20
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
 
@@ -227,7 +228,7 @@ While this may be a satisfying solution for some, the ability to run custom or t
 
 A simple mechanism is needed to simplify the whole process and lower the entry barrier for cloud-based numerical simulations. Such mechanisms exist for Amazon EC2 \cite{ec2} \cite{eucalyptus} but Microsoft Azure still lacks an easy-to-use framework to simplify cloud  orchestration, although it is a platform that is well positioned on the market \cite{Garg2013}.
 
-We present a unified framework, named "SimplyHPC",  that greatly simplifies the use of a distributed application on Microsft Azure. The framework combines Azure specific HPC libraries, deployment tools, machine and MPI configuration into a common platform. Its functionality is, among others, exposed through PowerShell commandlets that ease the submission process while keeping the desired command line environment and flexibility. The framework provides tools with the ability to deploy an arbitrarly number of virtual machines dynamically, submit the packed application together with input and configuration files, execute it as a cloud service using Message Passing Interface (MPI) and, once the results are ready, download them to the local machine and stop the virtual machines. 
+We present a unified framework, named ''SimplyHPC'',  that greatly simplifies the use of a distributed application on Microsoft Azure. The framework combines Azure specific HPC libraries, deployment tools, machine and MPI configuration into a common platform. Its functionality is, among others, exposed through PowerShell commandlets that ease the submission process while keeping the desired command line environment and flexibility. The framework provides tools with the ability to deploy an arbitrary number of virtual machines dynamically, submit the packed application together with input and configuration files, execute it as a cloud service using Message Passing Interface (MPI) and, once the results are ready, download them to the local machine and stop the virtual machines. 
 
 Our paper focuses on the following aspects. Chapter \ref{sec:architecture} describes the main components of the proposed framework as well as the platform architecture. Chapter \ref{sec:results} demonstrates the utility of the tool on two scientific applications, namely PETSc and HPCG. In addition we present the scalability study of ANSYS CFX, a commercial fluid dynamics code for realistic, industrial simulations in a Big Data scenario. The paper ends with conclusions and future plans.
 
@@ -632,9 +633,9 @@ xxx
 \section{Conclusion}
 \label{sec:conclusions}
 
-We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of a light--weight API and a set of commandlets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from more than an hour to couple of minutes.  We have demonstrated that the framework supports the deployment of both commercial and the open--source application on the cluster provided they are MPI--based and have a command line interface. scientific Big Data applications from Computational Fluid Dynamics domain, where both input and output data are usually massive.
+We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of a light--weight API and a set of commandlets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from more than an hour to couple of minutes.  We have demonstrated that the framework supports the deployment of both commercial and the open--source application on the cluster provided they are MPI--based and have a command line interface. scientific Big Data applications from Computational Fluid Dynamics domain, where both input and output data are usually massive. We also show that for extreme scaling  fine-tunning the hardware configuration is still necessary.
 
-This way scientific applications can access the cloud if the calculations are too time-consuming for a local machine or a private cluster. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
+The paper clearly shows that scientists and engineers applications can access the cloud if the calculations are too time--consuming for a local machine or a private cluster and that they can benefit from competitive prices. Today, it is possible to deploy a 64--cores cluster for less than $\$30$ and this price is likely to be lower when the reader reads this paper. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
 
 %\textcolor[rgb]{1,0,0}{mpantic: Additional suggestions for conclusion: Something about elasticity and cost efficiency, such as "Clearly, dynamic cloud clusters can compete with traditional on-premises clusters performance wise. Additionally, cloud clusters enable very cost efficient calculations as they are billed by the hour....etc etc}
 
