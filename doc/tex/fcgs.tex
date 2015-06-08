@@ -460,16 +460,9 @@ On Microsoft Azure, the HPCG results scale nearly linearly with the number of co
 
 PETSc was run with two different matrices: \textit{ruep} and \textit{nord}. The first one comes from a thermal transient heat conduction simulation of an electrical cabinet on a large unstructured mesh composed of 2.3 millions cells and the second matrix was generated from a thermal transient heat conduction simulation on a 3-dimensional Cartesian mesh of moderate size. Due to different mesh types, the second matrix converges much quicker than the first one.  \textcolor[rgb]{1,0,0}{IMPORTANT: SUPPLY MATRIX SIZES here!}
 
-In figure \ref{fig:ruep} and \ref{fig:nord} the measurements for the PETSc trials are shown. On the cloud cluster using the A8 nodes scaling is close to ideal for the larger \textit{ruep} matrix, while the efficiency decreases for higher number of cores for the smaller \textit{nord} matrix. Using A4 nodes, scaling and performance are suboptimal - most likely due to the shared infrastructure and missing Infiniband interconnect.  The performance of the on-premises cluster is suboptimal in both cases. This is in part due to process starvation - the memory bandwidth is insufficient for this configuration and code. \textcolor[rgb]{1,0,0}{explanation ok like this? Maybe include the graph for a different process layout (1 process per node instead of per core) for subgraphs b/c? }
+In figure \ref{fig:ruep} and \ref{fig:nord} the measurements for the PETSc trials are shown. On the cloud cluster using the A8 nodes scaling is close to ideal for the larger \textit{ruep} matrix, while the efficiency for large scaling decreases for the smaller \textit{nord} matrix. Using A4 nodes, scaling and performance are suboptimal - most likely due to the shared infrastructure and missing Infiniband interconnect.  The performance of the on-premises cluster is suboptimal in both cases. This is in part due to process starvation - the memory bandwidth is insufficient for this configuration and code. The same process layout was used on both systems (Azure/On-premises) and seems to be very unfavorable in the on-premises case.
 
-Based on these results only cloud clusters with A8 nodes are taken into account for subsequent tests with ANSYS on Microsoft Azure.
-
-%%TODO: we did, but here we present different data?
-%Since iterative solvers are memory-bound algorithms we measured the performance achieved for different combinations of cores in a single node, e.g. one node with one, two, four and eight cores and for two, four and eight nodes with eight cores. This way both vertical scaling (adding more cores to the system) and horizontal scaling (adding more nodes to the system) could be approximately measured. %More exact measurements were not executed because the private clusters had different hardware, the objective of the paper is different
-
-%HPCG benchmark test confirms the performance achieved on Azure nodes, although a slightly better performance was achieved for the HSR cluster due to suboptimal choice of the number of cores per node.  To illustrate this we run PETSc on HSR cluster with two, four and eight nodes with a single core. For ruep matrix the performance achieved was $2.1$, $4.1$ and $8.1$ GFLOPs, respectively. HPCG benchmark aims at solving a large sparse system of equation derived from a single degree of freedom heat diffusion model with zero Dirichlet boundary conditions. The global domain dimensions were $(nx * npx ) * (ny * npy ) * (nxz * npz )$ where $(nx * ny * nz )$ are the local subgrid dimension in the $x$, $y$, and $z$ dimensions, respectively, assigned to each MPI process. For the study $nx = ny = nz = 240$ and $npx, npy, npz$ are a factoring of the MPI process space that is computed automatically in the HPCG setup phase.
-
-
+Based on these results, especially the huge difference in performance between A8 and A4 nodes, only cloud clusters with A8 nodes are taken into account for subsequent tests with ANSYS CFX on Microsoft Azure.
 
 
 
@@ -507,9 +500,12 @@ Based on these results only cloud clusters with A8 nodes are taken into account 
 
 \subsection{ANSYS CFX Performance Study}
 We used ANSYS CFX as an example of a widely used tool for large physical simulations.
-Using ANSYS CFX, two independent simulations were run, a heat transfer simulation in a heat exchange system and a fluid flow simulation in a compressor used in turbines.
-The heat exchange system is composed of a buried pipe, transporting water that flows with a speed of $0.1 m/s$, and that is heated by an external source with a temperature of $10 ^\circ C$. In this use case, the heat transfer to the flowing water is simulated. Such pipe heating systems are used to optimize energy costs in buildings through the reuse of energy.
-In the compressor model, air enters to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters a space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:geometries}. The coarseness of the first mesh can be varied  in x-direction due to the symmetrical geometry (cases pipe01-pipe08), while the mesh of the compressor case is fixed and has approx 13 million cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e-06$ resp. $1e-08$ and maximal number of iterations of $200$ and $100$, respectively. 
+Two independent simulations were run: a heat transfer simulation in a heat exchange system (subsequently called the \textit{pipe} case) and a fluid flow simulation in a compressor used in turbines (subsequently called the \textit{compressor} case).
+
+The heat exchange system is composed of a buried pipe which is heated by an external source with a temperature of  $10 ^\circ C$. Water flows inside the pipe with a pseed of $0.1m/s$. Such pipe heating systems are used to optimize energy costs in buildings through the reuse of energy. In this use case, the heat transfer to the flowing water is simulated. A visualization of the problem geometry is available in Fig.~\ref{fig:pipe}. By taking advantage of symmetrical problem geometry, test cases in different sizes (\textit{pipe01-pipe08}) were constructed by varying the coarseness of the mesh in x-direction. Using these test cases, the measurement of weak scaling is possible (fixed problem size per processor).
+
+In the compressor model, air enters to the compressor through a filtered intake that removes the contaminants at the speed of $2.83\ m/s$ at $9.85 ^\circ C$. It then enters a space with three rotors where the air is compressed. Geometries of both systems are presented in Fig.~\ref{fig:geometries}. 
+The coarseness of the first mesh can be varied  in x-direction due to the symmetrical geometry (cases pipe01-pipe08), while the mesh of the compressor case is fixed and has approx 13 million cells (see Tab~\ref{tab:MeshSize}). In both cases we modeled the steady state flows with residual targets of $1e-06$ resp. $1e-08$ and maximal number of iterations of $200$ and $100$, respectively. 
 
 \begin{table}
 	\centering
@@ -534,21 +530,23 @@ In the compressor model, air enters to the compressor through a filtered intake 
 \begin{subfigure}{.4\textwidth}
 	\centering
 	\includegraphics[width=\linewidth]{pipe_nobg}	
-	%\label{fig:pipe}
+	\caption{Heat exchange system (\textit{pipe01-08})}
+ 	\label{fig:pipe}
 \end{subfigure}
 \begin{subfigure}{.5\textwidth}
 	\centering
 	\includegraphics[width=.7\linewidth]{compressor_nobg}
-	%\label{fig:compressor}
+	\caption{Compressor}
+	\label{fig:compressor}
 \end{subfigure}
 
-\caption{The geometries of the heat exchange system (left) and compressor (right) used for the simulations. }
+\caption{Geometries of the used simulations.}
 \label{fig:geometries}
 \end{figure}
 
 To understand the potential scaling impediments on the most powerful Azure nodes, we tested both weak and strong scaling for different simulations cases. With strong scaling, the problem size remains the same, while the number of cores increases, while with the weak scaling, both the problem size and the number of cores increase. These scalability tests provide insights on how fast the same problem can be solved when the number of cores increases, and how to solve a larger problem in the same time. 
 
-\subsubsection{Strong scaling}
+\subsubsection{Strong scaling of the heat exchange simulation}
 Strong scaling provides insights into parallel scalability and memory utilization while the weak scaling approximates the utilization of cores.
 
  We calculated the scaling key figures (efficiency, speed-up) using the data visualized in Figs.~\ref{fig:strongHSR} according to Eq. \ref{eq:speedupStrong} (as in \ref{kaminsky15}).
@@ -563,7 +561,7 @@ $$
 E_s(N,K) = S(N,K) / K
 $$
  
-\subsubsection{Weak scaling}
+\subsubsection{Weak scaling of the heat exchange simulation}
 
 
 Sizeup ($S_u$) is a chief metric for measuring the weak scaling. It can be defined as: 
@@ -618,6 +616,10 @@ Finally, for 512 cores it turned out that the MPI Broadcast overflow prohibits t
 \end{figure}
 
 
+
+
+
+\subsubsection{Perfromance compressor simulation}
 
 \begin{figure}
 	\centering

@@ -1,4 +1,4 @@
-Total Num Cores	A8	VeryLarge	HSR Cluster
+Total Num Cores	Azure A8	Azure A4	On-Premises Cluster
 1	0.761287	0.20673	0.569746
 2	1.39091	0.396832	1.0184
 4	2.43654	0.673309	1.63595
