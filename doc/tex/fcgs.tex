@@ -630,7 +630,16 @@ xxx
 \section{Conclusion}
 \label{sec:conclusions}
 
+\begin{figure}
+	\centering
+	\includegraphics[width=.5\linewidth]{gplt-cost}
+	\caption{Comparison of costs for Azure and a On-Premises Cluster}
+	\label{fig:costs}
+\end{figure}
+
 We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of light weight modules and a set of command-lets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from nearly an hour to couple of minutes.  This way scientific applications can access the cloud if the calculations are too time-consuming for a local machine or a private cluster. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
+
+
 
 %\textcolor[rgb]{1,0,0}{mpantic: Additional suggestions for conclusion: Something about elasticity and cost efficiency, such as "Clearly, dynamic cloud clusters can compete with traditional on-premises clusters performance wise. Additionally, cloud clusters enable very cost efficient calculations as they are billed by the hour....etc etc}
 
