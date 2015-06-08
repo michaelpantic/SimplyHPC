@@ -167,7 +167,7 @@
 %% \dochead can also be used to include a conference title, if directed by the editors
 %% e.g. \dochead{17th International Conference on Dynamical Processes in Excited States of Solids}
 
-\title{Unified cloud orchestration framework for elastic high performance computing in the cloud}
+\title{Unified cloud orchestration framework for Big Data and High Performance Applications in the cloud}
 % NAFEMS: A unified framework for orchestration of numerical simulations in the Windows Azure cloud platform
 
 %% use optional labels to link authors explicitly to addresses:
@@ -435,20 +435,20 @@ On Microsoft Azure different node types were used: A8 (8 core Intel Xeon E5-2670
 \subsection{Set-up time}
 The deployment time of a cloud cluster is crucial when using dynamically allocated systems, as they are newly set up for single jobs or a small series of jobs and taken down afterwards. These measurements obviously do not apply to on-premises clusters, as they are static.
 
-Here we compared the time needed for setting up a cloud cluster consisting of A4 nodes with SimplyHPC and Microsoft HPC Pack. This time should be of the same order regardless the node size, because the deployment processes are similar. HPC Pack provides precise statistics on the deployment procedure seperated into individual processes, namely creating a storage account, a virtual network, a cloud service, a domain controller as well as deployment and configuration time for the head node and compute nodes. Since in SimplyHPC most of these processes are omitted, only the time to deploy the head node and compute nodes was measured, e.g. the time needed to run \textit{NewAzureService} and \textit{NewAzureJob} scripts. Since HPC Pack neither provides automatic job submission nor does it retrieve the result we have not taken these processes into account in our measurements. 
+Here we compared the time needed for setting up a cloud cluster consisting of A4 nodes with SimplyHPC and Microsoft HPC Pack. This time should be of the same order regardless the node size, because the deployment processes are similar. HPC Pack provides precise statistics on the deployment procedure separated into individual processes, namely creating a storage account, a virtual network, a cloud service, a domain controller as well as deployment and configuration time for the head node and compute nodes. Since in SimplyHPC most of these processes are omitted, only the time to deploy the head node and compute nodes was measured, e.g. the time needed to run \textit{NewAzureService} and \textit{NewAzureJob} scripts. Since HPC Pack neither provides automatic job submission nor does it retrieve the result we have not taken these processes into account in our measurements. 
 
 %we measured the time needed create a cluster was measured together with other tasks, i.e. a time needed to pack and send the job to the cluster before the job starts executing.  
 
 \begin{figure}[h]
 \centering
 	\includegraphics[width=.6\linewidth]{gplt-creation-simplyvshpc}
-	\caption{Deployment time of cluster composed of different number of A4 nodes with Microsoft HPC pack (right) and SimplyHPC framework (left). Time is provided in hh:mm:ss format.}
+	\caption{Deployment time of cluster composed of different number of A8 nodes with Microsoft HPC pack (right) and SimplyHPC framework (left). Time is provided in hh:mm:ss format.}
 	\label{fig:deployTime}
 \end{figure}
 
-\textcolor[rgb]{1,0,0}{TODO: SImplyHPC detailed data -  see cmd program in github}
+%\textcolor[rgb]{1,0,0}{TODO: SImplyHPC detailed data -  see cmd program in github}
 
-Fig. \ref{fig:deployTime} shows the HPC Pack needs almost an hour to deploy a cloud cluster while SimplyHPC needs about six minutes in average. The long deployment time of HPC Pack is due to the fact that HPC Pack performs additional deployment steps such as creating a domain controller, SQL database or installing many additional services that are not needed in general for command-line based scientific applications.
+Fig. \ref{fig:deployTime} shows the HPC Pack needs usually more than an hour to deploy a cloud cluster while SimplyHPC needs about ten minutes in average. The long deployment time of HPC Pack is due to the fact that HPC Pack deploys a fully functional cluster with a job scheduler, domain controller and SQL database. Although such a solution is desirable for business--oriented usage scenarios, there are many scenarios where applications need only an IaaS infrastructure and access to the MPI stack. In such a case the cluster can be deployed and destroyed much faster. 
 
 \subsection{Sparse Matrix Solver Performance}
 The objective of the second experiment was to compare the performance of a cloud cluster on Microsoft Azure with a traditional on-premises cluster using the example of distributed parallel sparse matrix solvers, as they are often used in CFD applications. The performance of these solvers depends on a multitude of factors such as CPU speed, memory bandwidth but also network speed and latency. Here we used 2 different solvers: The HPCG (High Performance Conjugate Gradients) Benchmark (see \cite{hpcg} for a detailed description) for standardized comparability and a PETSC (\cite{petsc}) solver with 2 different real world problems. PETSC is a widely used framework for scientific applications that includes parallel solver codes.
@@ -629,7 +629,9 @@ xxx
 \section{Conclusion}
 \label{sec:conclusions}
 
-We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of light weight modules and a set of commandlets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from nearly an hour to couple of minutes.  This way scientific applications can access the cloud if the calculations are too time-consuming for a local machine or a private cluster. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
+We presented SimplyHPC framework, a novel distributed framework for Microsoft Azure Cloud. The framework is composed of a light--weight API and a set of commandlets on top of that. The modules automate the complex deployment procedure that is necessary to run third-party applications from the local machine. In contrary to HPC Pack from Microsoft, all unnecessary system components and services have been omitted. As a result the time needed to deploy the cluster has been reduced from more than an hour to couple of minutes.  We have demonstrated that the framework supports the deployment of both commercial and the open--source application on the cluster provided they are MPI--based and have a command line interface. scientific Big Data applications from Computational Fluid Dynamics domain, where both input and output data are usually massive.
+
+This way scientific applications can access the cloud if the calculations are too time-consuming for a local machine or a private cluster. Specially designed mechanism keeps track of running jobs in the cluster. A special service in the head node regularly checks the job status and uploads the results to the blob storage as soon as the job finished successfully. Since a table and blob storage are distributed and mirrored, a high-availability and persistence of the job data is also provided. SimplyHPC software is available at GitHub at https://github.com/vbaros/SimplyHPC.
 
 \textcolor[rgb]{1,0,0}{mpantic: Additional suggestions for conclusion: Something about elasticity and cost efficiency, such as "Clearly, dynamic cloud clusters can compete with traditional on-premises clusters performance wise. Additionally, cloud clusters enable very cost efficient calculations as they are billed by the hour....etc etc}
 
