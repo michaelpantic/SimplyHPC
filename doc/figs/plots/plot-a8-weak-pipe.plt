@@ -24,7 +24,9 @@ set format y "1E%T"
 plot '../../results/ansys/pipe/A8/weakscaling.dat'  using 1:2 w linespoints ls 11, \
 '' using 1:5 w linespoints ls 12 , \
 '' using 1:8 w linespoints ls 13, \
-'' using 1:11 w linespoints  ls 14
+'' using 1:11 w linespoints  ls 14,\
+'' using 1:14 w linespoints  ls 15,\
+'' using 1:17 w linespoints  ls 16,\
 
 
 unset logscale y
@@ -34,7 +36,7 @@ set xlabel "Total number of cores" offset 0,0.75,0
 set ylabel "Efficiency" offset 0.5,0,0
 set xtics 2
 set xrange [1:256]
-set yrange [0:2]
+set yrange [0:1.1]
 set key title "Nodes per Processor"
 set key autotitle columnhead
 set ytics 0.1
@@ -45,6 +47,8 @@ plot '../../results/ansys/pipe/A8/weakscaling.dat'  using 1:4 w linespoints ls 1
 '' using 1:7 w linespoints ls 12 title '2.98E+04', \
 '' using 1:10 w linespoints ls 13 title '6.13E+04', \
 '' using 1:13 w linespoints ls 14 title '1.26E+05', \
+'' using 1:16 w linespoints ls 15 title '2.50E+05', \
+'' using 1:19 w linespoints ls 16 title '5.01E+05', \
 (1) w lines ls 1
 
  
