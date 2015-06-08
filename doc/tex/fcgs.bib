@@ -205,6 +205,14 @@ title = {Cloud Scores},
 note = {URL \url{https://cloudharmony.com/cloudscores}. Accessed in May 2015.}
 }
 
+
+@misc{MPI,
+url	 = {http://www.mpi-forum.org},
+key = {MPI},
+title = {MPI Forum},
+note = {URL \url{http://www.mpi-forum.org}. Accessed in June 2015.}
+}
+
 @misc{openfoam,
 url	 = {http://openfoam.org},
 key = {OpenFOAM},
@@ -280,7 +288,7 @@ year = {2003}
 }
 
 @article{Lu2014,
-abstract = {MapReduce as a service enjoys wide adoption in commercial clouds today  [3,23]. But most cloud providers just deploy native Hadoop  [24] systems on their cloud platforms to provide MapReduce services without any adaptation to these virtualized environments  [6,25]. In cloud environments, the basic executing units of data processing are virtual machines. Each user’s virtual cluster needs to deploy HDFS  [26] every time when it is initialized, while the user’s input and output data should be transferred between the HDFS and external persistent data storage to ensure that the native Hadoop works properly. These costly data movements can lead to significant performance degradation of MapReduce jobs in the cloud. We present Morpho—a modified version of the Hadoop MapReduce framework, which decouples storage and computation into physical clusters and virtual clusters respectively. In Morpho, the map/reduce tasks are still running in VMs without corresponding ad-hoc HDFS deployments; instead, HDFS is deployed on the underlying physical machines. When MapReduce computation is performing, the map tasks can get data directly from physical machines without any extra data transfers. We design data location perception module to improve the cooperativity of the computation and storage layers, which means that the map tasks can intelligently fetch information about the network topology of physical machines and the VM placements. Additionally, Morpho also achieves high performance by two complementary strategies for data placement and VM placement, which can provide better map and reduce input locality. Furthermore, our data placement strategy can mitigate the resource contentions between jobs. The evaluation of our Morpho system prototype shows it achieves a nearly 62\% speedup of job execution time and a significant reduction in network traffic of the entire system compared with the traditional cloud computing scheme of Amazon and other cloud providers.},
+abstract = {MapReduce as a service enjoys wide adoption in commercial clouds today  [3,23]. But most cloud providers just deploy native Hadoop  [24] systems on their cloud platforms to provide MapReduce services without any adaptation to these virtualized environments  [6,25]. In cloud environments, the basic executing units of data processing are virtual machines. Each user’s virtual cluster needs to deploy HDFS  [26] every time when it is initialized, while the user’s input and output data should be transferred between the HDFS and external persistent data storage to ensure that the native Hadoop works properly. These costly data movements can lead to significant performance degradation of MapReduce jobs in the cloud. We present Morpho—a modified version of the Hadoop MapReduce framework, which decouples storage and computation into physical clusters and virtual clusters respectively. In Morpho, the map/reduce tasks are still running in VMs without corresponding ad-hoc HDFS deployments; instead, HDFS is deployed on the underlying physical machines. When MapReduce computation is performing, the map tasks can get data directly from physical machines without any extra data transfers. We design data location perception module to improve the cooperativity of the computation and storage layers, which means that the map tasks can intelligently fetch information about the network topology of physical machines and the VM placements. Additionally, Morpho also achieves high performance by two complementary strategies for data placement and VM placement, which can provide better map and reduce input locality. Furthermore, our data placement strategy can mitigate the resource contentions between jobs. The evaluation of our Morpho system prototype shows it achieves a nearly 62\% speedup of job execution time and a significant reduction in network traffic of the entire system compared with the traditional cloud computing scheme of Amazon and other cloud providers.},
 annote = {Morpho, with its decoupled MapReduce mechanism and complementary data and VM placement, is unique in exploiting MapReduce in cloud computing.},
 author = {Lu, Lu and Shi, Xuanhua and Jin, Hai and Wang, Qiuyue and Yuan, Daxing and Wu, Song},
 doi = {10.1016/j.future.2013.12.026},

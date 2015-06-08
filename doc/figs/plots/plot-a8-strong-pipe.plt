@@ -8,8 +8,9 @@ set title "Runtime" offset 0,-0.5, 0
 set xlabel "Total number of cores" offset 0,0.75,0
 set ylabel "Calculation time [s]" offset 0.5,0,0
 set logscale y
-set xtics (1,8,16,24,32,40,48,56,64)
-set xrange [1:64]
+set logscale x 2
+set xtics (1,8,16,32,64,128,256)
+set xrange [1:256]
 set yrange [10:120000]
 set format y "1E%T"
 set key autotitle columnhead
@@ -33,12 +34,13 @@ plot '../../results/ansys/pipe/A8/results.dat'  using 1:2 w linespoints ls 11 ti
 #load 'gnuplot-styles.plt'
 #set output "../gplt-a8-strong-pipe-efficiency.pdf"
 unset logscale y
+set logscale x 2
 set format y "%.1f"
 set title "Efficiency" offset 0,-0.5, 0
 set xlabel "Total number of cores" offset 0,0.75,0
 set ylabel "Efficiency" offset 0.5,0,0
-set xtics (1,8,16,24,32,40,48,56,64)
-set xrange [1:64]
+set xtics (1,8,16,32,64,128,256)
+set xrange [1:256]
 set yrange [0:1.1]
 set key autotitle columnhead
 
