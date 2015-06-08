@@ -245,8 +245,14 @@ Due to the fact that the cloud providers are commercial entities that compete on
 \subsection{Microsoft Azure}
 
 Microsoft Azure is a cloud computing platform that provides, among many other services, virtual machines (VMs) in both (IaaS/Paas) models. \textit{Worker roles} (PaaS) are mainly targeted at developers seeking to execute custom software in a high-availability or distributed fashion.
+
 Software running on worker roles can be automatically scaled/copied to many nodes, provided the software is supporting this dynamic environment. Regular VMs (IaaS) are bare machines deployed with a specific OS and therefore cannot be scaled automatically nor deployed automatically.\\
-Among the available VM sizes, A8 and A9 are physical machines, that are not shared between VM's and that are connected with a fast Infiniband network with low latency and Remote Direct Memory Access (RDMA) enabled. For these types of VMs, detailed specification such as CPU type are available, whereas for the other, shared machines these details are hidden from the user.  A set of worker roles constitutes a {\it Cloud Service} on Microsoft Azure. Instead of configuring all VMs manually, the user uploads a packaged application together with configuration files for a cloud service. This ''deployment package'' is then installed on fresh VMs automatically and in parallel. Worker role VMs are not persistent; if there are any configuration changes the VMs are removed and reinstalled using the updated deployment package. This procedure takes usually a few minutes and is attractive in terms of usage costs, as these non-persistent VM's can be created when needed and deleted immediately after usage. \\
+
+A set of worker roles constitutes a {\it Cloud Service} on Microsoft Azure. Instead of configuring all VMs manually, the user uploads a packaged application together with configuration files for a cloud service. This ''deployment package'' is then installed on fresh VMs automatically and in parallel. Worker role VMs are not persistent; if there are any configuration changes the VMs are removed and reinstalled using the updated deployment package. This procedure takes usually a few minutes and is attractive in terms of usage costs, as these non-persistent VM's can be created when needed and deleted immediately after usage. \\
+
+
+
+
 Regular VMs (IaaS) are bare machines deployed with a specific OS and therefore cannot be scaled automatically nor deployed automatically.
 The Microsoft Azure platform is well positioned on the market and is competitive to other cloud providers \cite{cloudScores} \cite{twister4azure}, has a large user base and many third-party cloud services. As of 2015, ten types of different VMs resp. worker roles are available (see Tab.~\ref{tab:azureVMs}). Computational costs on Microsoft Azure are dependent on the number of cores, the type of machine and the time of effective usage. The time of effective usage is defined as the time between set-up of the virtual machine and its tear-down, regardless of the actual usage or workload. \\
 
@@ -274,7 +280,8 @@ The Microsoft Azure platform is well positioned on the market and is competitive
 	\end{table}
 \end{center}
  
-For the tests in this paper, we used PaaS worker role VMs. These worker roles are exposed as light-weight virtual machines. A set of worker roles constitutes a {\it Cloud Service} on Microsoft Azure. Instead of configuring all VMs manually, the user uploads a packaged application together with configuration files for a cloud service. This ''deployment package'' is then installed on fresh VMs automatically and in parallel. Worker role VMs are not persistent; if there are any configuration changes the VMs are removed and reinstalled using the updated deployment package. This procedure takes usually a few minutes and is attractive in terms of usage costs, as these non-persistent VM's can be created when needed and deleted immediately after usage. \\
+Among the available VM sizes, A8 and A9 are physical machines, that are not shared between VM's and that are connected with a fast Infiniband network with low latency and Remote Direct Memory Access (RDMA) enabled. For these types of VMs, detailed specification such as CPU type are available, whereas for the other, shared machines these details are hidden from the user.  
+
 Additionally to the VM's, Microsoft Azure exposes four storage types to store, manage and control data in the cloud: Blob, Table, Queue and File. Each storage type is able to host different types of data of arbitrary sizes, namely binary files of any type, structured datasets, messages and shared files, respectively. We decided to take advantage of the cloud service (PaaS) to simplify the orchestration procedure and use Blob and Table storage entities for data management. 
 Because the storage can be locally or geo-redundant, the high availability and persistance of the results from the simulations could be easily guaranteed.
 
@@ -396,7 +403,7 @@ We compared the time needed for setting up a cloud cluster consisting of A8 node
 \begin{figure}[h]
 \centering
 	\includegraphics[width=.6\linewidth]{gplt-creation-simplyvshpc}
-	\caption{Deployment time of cluster composed of different number of A4 nodes with Microsoft HPC pack (right) and SimplyHPC framework (left). Time is provided in hh:mm:ss format.}
+	\caption{Deployment time of cluster composed of different number of A8 nodes with Microsoft HPC pack (right) and SimplyHPC framework (left). Time is provided in hh:mm:ss format.}
 	\label{fig:deployTime}
 \end{figure}
 
@@ -564,12 +571,14 @@ In Figure \ref{fig:weakA8} resp. \ref{fig:weakHSR} the weak scaling measured on 
 
 \subsubsection{Performance compressor simulation}
 In addition to the pipe01-08 cases, the aforementioned compressor simulation was run on different configurations in the cloud and on the on-premises cluster. 
+Figure \ref{fig:scalingCompressor} shows that Cloud Clusters can easily compete with on-premises clusters in terms of calculation time for real-world problems.
+
  
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\linewidth]{gplt-compressor}
 	\caption{Strong scaling for the compressor test case. }
-	\label{fig:stringCompressor}
+	\label{fig:scalingCompressor}
 \end{figure}
 
  
@@ -581,11 +590,11 @@ We presented SimplyHPC framework, a novel distributed framework for Microsoft Az
 \begin{figure}
 	\centering
 	\includegraphics[width=.5\linewidth]{gplt-cost}
-	\caption{Comparison of costs for Azure and a On-Premises Cluster}
+	\caption{Comparison of costs for Azure and a On-Premises Cluster for different utilization}
 	\label{fig:costs}
 \end{figure}
 
-The paper clearly shows that scientists and engineers applications can benefit from the cloud if the calculations are too time--consuming for a local machine or a private cluster and that they can advantage of the competitive prices and the most recent hardware. Today, it is possible to deploy a 64--cores cluster for less than $\$30$ (see \ref{tab:azureVMs}) and this price is likely to be lower when the reader reads this statement. Further, our scalability tests provide insights into the expected performance on Microsoft Azure up to 256 cores. SimplyHPC software is freely available at GitHub at https://github.com/vbaros/SimplyHPC.
+The paper clearly shows that scientists and engineers applications can benefit from the cloud if the calculations are too time--consuming for a local machine or a private cluster and that they can advantage of the competitive prices and the most recent hardware. Today, it is possible to deploy a 64--cores cluster for less than $\$30$ (see \ref{tab:azureVMs}) and this price is likely to be lower when the reader reads this statement. Cloud computing proved to be very cost efficient, also due to its dynamic allocation schemes. Figure \ref{fig:costs} shows a cost comparison to a on-premises cluster. Further, our scalability tests provide insights into the expected performance on Microsoft Azure up to 256 cores. SimplyHPC software is freely available at GitHub at https://github.com/vbaros/SimplyHPC.
 
   
 \section{Acknowledgments}
