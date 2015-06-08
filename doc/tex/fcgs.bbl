@@ -4,9 +4,13 @@
 Amazon {EC2}.
 \newblock \url{http://aws.amazon.com/ec2/}. Accessed in May 2015.
 
-\bibitem{Balaji}
-Pavan Balaji, Darius Buntinas, David Goodell, and Sameer Kumar~Ewing Lusk.
-\newblock Mpi on a million processors.
+\bibitem{petsc-web-page}
+Satish Balay, Shrirang Abhyankar, Mark~F. Adams, Jed Brown, Peter Brune, Kris
+  Buschelman, Lisandro Dalcin, Victor Eijkhout, William~D. Gropp, Dinesh
+  Kaushik, Matthew~G. Knepley, Lois~Curfman McInnes, Karl Rupp, Barry~F. Smith,
+  Stefano Zampini, and Hong Zhang.
+\newblock {PETS}c {W}eb page.
+\newblock \url{http://www.mcs.anl.gov/petsc}, 2014.
 
 \bibitem{petsc-efficient}
 Satish Balay, William~D. Gropp, Lois~Curfman McInnes, and Barry~F. Smith.
@@ -23,11 +27,6 @@ Mohamed {Ben Belgacem} and Bastien Chopard.
   applications}.
 \newblock {\em Future Generation Computer Systems}, 42:11--21, January 2015.
 
-\bibitem{ansysScaling}
-HPC~Advisory Board.
-\newblock {ANSYS Performance Benchmark and Profiling}.
-\newblock Technical Report October, 2010.
-
 \bibitem{Che09042015}
 Yonggang Che, Chuanfu Xu, Jianbin Fang, Yongxian Wang, and Zhenghua Wang.
 \newblock Realistic performance characterization of cfd applications on intel
@@ -41,6 +40,11 @@ Cloud scores.
 \bibitem{CloudStack}
 Cloud stack.
 \newblock \url{http://cloudstack.apache.org}. Accessed in May 2015.
+
+\bibitem{hpcg}
+Jack Dongarra and Michael~A. Heroux.
+\newblock Toward a new metric for ranking high performance computing systems.
+\newblock {\em Sandia Report}, SAND2013-4744, 2013.
 
 \bibitem{eucalyptus}
 Eucalyptus.

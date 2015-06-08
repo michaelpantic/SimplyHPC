@@ -441,7 +441,7 @@ Here we compared the time needed for setting up a cloud cluster consisting of A4
 Fig. \ref{fig:deployTime} shows the HPC Pack needs usually more than an hour to deploy a cloud cluster while SimplyHPC needs about ten minutes in average. The long deployment time of HPC Pack is due to the fact that HPC Pack deploys a fully functional cluster with a job scheduler, domain controller and SQL database. Although such a solution is desirable for business--oriented usage scenarios, there are many scenarios where applications need only an IaaS infrastructure and access to the MPI stack. In such a case the cluster can be deployed and destroyed much faster. Also, instead of deploying IaaS VMs sequentially like it is the case for HPC Pack, we just submit the deployment template to the cloud fabric with the request to set up a whole cloud service, consisting of multiple worker roles, simultaneously. This way the deployment time could be kept constant regardless of the cluster size.
 
 \subsection{Sparse Matrix Solver Performance}
-The objective of the second experiment was to compare the performance of a cloud cluster on Microsoft Azure with a traditional on-premises cluster using the example of distributed parallel sparse matrix solvers, as they are often used in CFD applications. The performance of these solvers depends on a multitude of factors such as CPU speed, memory bandwidth but also network speed and latency. Here we used 2 different solvers: The HPCG (High Performance Conjugate Gradients) Benchmark (see \cite{hpcg} for a detailed description) for standardized comparability and a PETSC (\cite{petsc}) solver with 2 different real world problems. PETSC is a widely used framework for scientific applications that includes parallel solver codes.
+The objective of the second experiment was to compare the performance of a cloud cluster on Microsoft Azure with a traditional on-premises cluster using the example of distributed parallel sparse matrix solvers, as they are often used in CFD applications. The performance of these solvers depends on a multitude of factors such as CPU speed, memory bandwidth but also network speed and latency. Here we used 2 different solvers: The HPCG (High Performance Conjugate Gradients) Benchmark (see \cite{hpcg} for a detailed description) for standardized comparability and a PETSC (\cite{petsc-web-page}) solver with 2 different real world problems. PETSC is a widely used framework for scientific applications that includes parallel solver codes.
 Both solvers were parallelized using Microsoft MPI (no OpenMP / threading).
 
 On Microsoft Azure, the HPCG results scale nearly linearly with the number of cores, with a maximum speed-up of approx. $36$ with $64$ cores (compared to $1$ core) for A8 nodes. With A4 nodes, the scaling is not as desirable, probably also due to the lacking low-latency Infiniband interconnect. The dynamic cloud cluster easily outperforms the on-premises cluster. See fig. \ref{fig:hpcg} for more details.
@@ -627,7 +627,7 @@ In Figure \ref{fig:weakA8} resp. \ref{fig:weakHSR} the weak scaling measured on 
 
 
 \subsubsection{Performance compressor simulation}
-
+Addition
 
 \begin{figure}
 	\centering
