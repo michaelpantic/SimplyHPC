@@ -18,8 +18,8 @@ set key inside left top
 set datafile separator '\t'
 f(x) = x*0.761287
 plot '../../results/petsc/forplots/gflops_hpcg.txt'  using 1:2 w linespoints ls 11, \
-f(x) ls 16 title 'A8 (ideal scaling)' , \
 '' using 1:3 w linespoints ls 12, \
+f(x) ls 16 title 'Azure A8 (ideal scaling)' , \
 '' using 1:4 w linespoints ls 14
 
  
