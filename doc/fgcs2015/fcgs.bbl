@@ -4,6 +4,14 @@
 Amazon {EC2}.
 \newblock \url{http://aws.amazon.com/ec2/}. Accessed in May 2015.
 
+\bibitem{jclouds}
+Apache jclouds.
+\newblock \url{https://jclouds.apache.org}. Accessed in November 2015.
+
+\bibitem{libcloud}
+Apache libcloud.
+\newblock \url{https://libcloud.apache.org}. Accessed in November 2015.
+
 \bibitem{petsc-web-page}
 Satish Balay, Shrirang Abhyankar, Mark~F. Adams, Jed Brown, Peter Brune, Kris
   Buschelman, Lisandro Dalcin, Victor Eijkhout, William~D. Gropp, Dinesh
